@@ -1,0 +1,40 @@
+# Scala / sbt
+/target/
+/**/target/
+project/target/
+project/project/
+project/boot/
+*.class
+*.log
+
+# Build tools / caches
+.bloop/
+.metals/
+.bsp/
+.cache/
+coursier/
+ammonite/
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# IntelliJ
+.idea/
+*.iml
+
+# Editor temp files
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Coverage / reports
+coverage/
+test-reports/
+target-universal/
+
+# Misc
+.history
+*.lock
