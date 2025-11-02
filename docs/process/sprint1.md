@@ -66,12 +66,6 @@ La scadenza dello sprint è il 09/11/2025.
       <td>0</td>
     </tr>
     <tr>
-      <td>Implementazione posizione e direzione</td>
-      <td>Marco</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
       <td>Creazione mappa</td>
       <td>Marco</td>
       <td>3</td>
@@ -86,63 +80,15 @@ La scadenza dello sprint è il 09/11/2025.
     <tr>
       <td>DSL mappa</td>
       <td>Marco</td>
-      <td>8</td>
+      <td>5</td>
       <td>0</td>
     </tr>
-     <tr>
-      <td rowspan="1">3</td>
-      <td rowspan="1">Fantasmi</td>
-      <td rowspan="1">Introduzione dei fantasmi nella mappa con movimenti semplici</td>
-      <td>Implementazione fantasmi</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-     <tr>
-      <td rowspan="3">4</td>
-      <td rowspan="3">Muri e tunnel</td>
-      <td rowspan="3">Come utente, mi aspetto di non poter oltrepassare un muro e di poter utilizzare i tunnel presenti nella mappa</td>
-      <td>Creazione muri</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Gestione delle collisioni</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-      <tr>
-      <td>Creazione dei tunnel</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-     <tr>
-      <td rowspan="1">5</td>
-      <td rowspan="1">Punti</td>
-      <td rowspan="1">Introduzione dei punti e dello score che permettono di concludere il gioco</td>
-      <td>Creazione punti e assegnazione score</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td rowspan="2">6</td>
-      <td rowspan="2">Gestione generale del gioco</td>
-      <td rowspan="2">Creazione di un manager che gestisce tutti gli elementi implementati in precedenza</td>
-      <td>Implementazione del game manager</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Creazione di un game loop</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
+    <!-- <tr>
+      <td>Fantasmi statici</td>
+      <td>Francesco</td>
+      <td>3</td>
+      <td>0</td>
+    </tr> -->
     </tbody>
 </table>
 
