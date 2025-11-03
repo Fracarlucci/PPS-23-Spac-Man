@@ -1,0 +1,30 @@
+name: sbt test
+
+on:
+  pull_request:
+
+jobs: 
+    build-test:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          java-version: [17, 21] # test in more java versions
+      concurrency:
+        group: build-${{ github.workflow }}-${{ matrix.java-version }}-${{ github.event.number || github.ref }} # setup test concurrency
+        cancel-in-progress: true
+      steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: SetupJDK
+              uses: actions/setup-java@v4 
+              with: 
+                java-version: ${{ matrix.java-version }}
+                distribution: 'temurin'
+                cache: 'sbt'
+            - name: Setup sbt launcher
+              uses: sbt/setup-sbt@v1
+            - name: Build and Test
+              run: sbt +test
+            
+
+
