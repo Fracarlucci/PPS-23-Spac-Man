@@ -2,10 +2,11 @@ package model
 
 import model.map.GameMap
 import model.map.GameMapImpl
+import model.map.GameMapFactory
         
 
 object board:
-    def apply(width: Int, height: Int): GameMap = GameMapImpl(width, height)
+    def apply(width: Int, height: Int): GameMap = GameMapFactory.apply(width, height)
 
 class MapDSL(var map: GameMap):
     
@@ -14,7 +15,9 @@ class MapDSL(var map: GameMap):
 
     class GameEntityBuilder(e: GameEntity):
             infix def at(pos: Position2D): Unit = 
-                map = map.place(pos, e)
+                map = map.place(pos, e).fold(_ => map, identity)
+
+
 
     /** DSL helper per scrivere at(x, y) */
     object position:
