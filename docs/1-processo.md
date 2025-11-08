@@ -1,4 +1,4 @@
-# Processo di sviluppo adottato
+# Processo di sviluppo
 
 Il gruppo ha adottato una metodologia **Agile** per la gestione e lo sviluppo del progetto.
 
