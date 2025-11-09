@@ -6,4 +6,6 @@ case class Position2D(x: Int, y: Int):
         case Direction.Down  => Position2D(x, y - 1)
         case Direction.Left  => Position2D(x - 1, y)
         case Direction.Right => Position2D(x + 1, y)
+
+    override def toString(): String = s"($x, $y)"
     
