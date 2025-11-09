@@ -10,18 +10,6 @@ La scadenza dello sprint è il 09/11/2025.
 
 ## Backlog
 
-<style>
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-table th, table td {
-    border: 1px solid #ddd;
-}
-table td[rowspan] {
-    vertical-align: middle;
-}
-</style>
 <table>
   <thead>
     <tr>
@@ -157,3 +145,11 @@ table td[rowspan] {
     </tr>
     </tbody>
 </table>
+
+---
+
+0. [Introduzione](../../README.md)
+1. [Sprint 1](process/sprint1.md)
+2. [**Sprint 2 (next)**](process/sprint2.md)
+3. [Sprint 3](process/sprint3.md)
+4. [Sprint 4](process/sprint4.md)
