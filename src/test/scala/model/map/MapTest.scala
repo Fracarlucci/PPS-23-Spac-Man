@@ -18,7 +18,7 @@ class MapTest extends AnyFlatSpec with Matchers:
         map.width shouldBe 5
         map.height shouldBe 5
 
-    "DSL" should "create the entity" in:
+    it should "create the entity" in:
         val dsl = MapDSL(board(5, 5))
         val wall = Wall(Position2D(2, 1))
         val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
@@ -30,7 +30,7 @@ class MapTest extends AnyFlatSpec with Matchers:
         place a pacMan at position (3, 1)
         place a ghost at position (4, 1)
 
-    it should "get entity of a position" in:
+    "Map" should "get entity of a position" in:
         val dsl = MapDSL(map)
 
         import dsl.*
@@ -39,8 +39,8 @@ class MapTest extends AnyFlatSpec with Matchers:
         place a PacMan at position (4, 1)
         place a Ghost at position (4, 1)
 
-        dsl.map.entityAt(position(2, 1)) shouldBe Right(Set(Wall))
-        dsl.map.entityAt(position(4, 1)) shouldBe Right(Set(GhostBasic, SpacManBasic))
+        dsl.map.entityAt(position(2, 1)) shouldBe Right(Set(wall))
+        dsl.map.entityAt(position(4, 1)) shouldBe Right(Set(ghost, pacMan))
 
     it should "get an empty set" in:
         map.entityAt(Position2D(0, 0)) shouldBe Right(Set.empty[GameEntity])
@@ -52,3 +52,39 @@ class MapTest extends AnyFlatSpec with Matchers:
         val wall = Wall(Position2D(-1, -1))
         val result = map.place(Position2D(-1, -1), wall)
         result.isLeft shouldBe true
+
+    it should "return true calling canMove" in:
+        val dsl = MapDSL(map)
+        val wall = Wall(Position2D(2, 1))
+        val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
+
+        import dsl.*
+
+        place a wall at position (2, 1)
+        place a pacMan at position (3, 1)
+
+        dsl.map.canMove(pacMan, Direction.Right) shouldBe true
+
+    it should "return false calling canMove" in:
+        val dsl = MapDSL(map)
+        val wall = Wall(Position2D(2, 1))
+        val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
+
+        import dsl.*
+
+        place a wall at position (2, 1)
+        place a pacMan at position (3, 1)
+
+        dsl.map.canMove(pacMan, Direction.Left) shouldBe false
+
+    it should "return false calling canMove because pacman want to go out of map" in:
+        val dsl = MapDSL(map)
+        val wall = Wall(Position2D(2, 1))
+        val pacMan = SpacManBasic(Position2D(0, 0), Direction.Right, 0)
+
+        import dsl.*
+
+        place a wall at position (2, 1)
+        place a pacMan at position (0, 0)
+
+        dsl.map.canMove(pacMan, Direction.Left) shouldBe false

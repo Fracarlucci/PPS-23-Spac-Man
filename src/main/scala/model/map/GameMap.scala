@@ -2,12 +2,16 @@ package model.map
 
 import model.GameEntity
 import model.Position2D
+import model.MovableEntity
+import model.Direction
+import model.Wall
 
 trait GameMap:
   def width: Int
   def height: Int
   def entityAt(pos: Position2D): Either[String, Set[GameEntity]]
   def place(pos: Position2D, entity: GameEntity): Either[String, GameMap]
+  def canMove(entity: MovableEntity, dir: Direction): Boolean
 
 case class GameMapImpl(
   width: Int,
@@ -27,6 +31,16 @@ case class GameMapImpl(
       Right(copy(grid = grid.updated(pos, entities + entity)))
     case None =>
       Left("Invalid position" + pos)
+    
+  override def canMove(entity: MovableEntity, dir: Direction): Boolean = 
+    val nextPos = entity.position.calculatePos(dir)
+    entityAt(nextPos) match
+      case Right(set) if set.exists { case _: Wall => true } => false
+      case _ if isOutOfMap(nextPos) => false
+      case _ => true
+  
+  private def isOutOfMap(p: Position2D): Boolean = (p.x > width || p.x < 0) || (p.y > height || p.y < 0)
+  
 
 object GameMapFactory:
   def apply(width: Int, height: Int): GameMap = GameMapImpl(width, height, createEmptyMap(width, height))
