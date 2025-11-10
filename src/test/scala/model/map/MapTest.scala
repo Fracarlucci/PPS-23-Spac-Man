@@ -11,6 +11,7 @@ import model.Position2DTest
 import model.SpacManBasic
 import model.GhostBasic
 import model.Direction
+import model.GameEntity
 
 class MapTest extends AnyFlatSpec with Matchers:
 
@@ -34,7 +35,28 @@ class MapTest extends AnyFlatSpec with Matchers:
         place a pacMan at position (3, 1)
         place a ghost at position (4, 1)
 
-        dsl.map.entityAt(position(2, 1)) shouldBe Some(wall)
-        dsl.map.entityAt(position(0, 1)).isEmpty shouldBe true
-        dsl.map.entityAt(position(3, 1)) shouldBe Some(pacMan)
-        dsl.map.entityAt(position(4, 1)) shouldBe Some(ghost)
+    it should "get entity of a position" in:
+        val dsl = MapDSL(map)
+        val wall = Wall(Position2D(2, 1))
+        val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
+        val ghost = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
+
+        import dsl.*
+
+        place a wall at position (2, 1)
+        place a pacMan at position (4, 1)
+        place a ghost at position (4, 1)
+
+        dsl.map.entityAt(position(2, 1)) shouldBe Right(Set(Wall))
+        dsl.map.entityAt(position(4, 1)) shouldBe Right(Set(GhostBasic, SpacManBasic))
+
+    it should "get an empty set" in:
+        map.entityAt(Position2D(0, 0)) shouldBe Right(Set.empty[GameEntity])
+
+    it should "catch an invalid position" in:
+        map.entityAt(Position2D(11, 0)).isLeft shouldBe true
+    
+    it should "not place a game entity for invalid position" in:
+        val wall = Wall(Position2D(-1, -1))
+        val result = map.place(Position2D(-1, -1), wall)
+        result.isLeft shouldBe true
