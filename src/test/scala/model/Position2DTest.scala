@@ -13,11 +13,11 @@ class Position2DTest extends AnyFlatSpec:
 
     it should "go up" in:
         val newPos = startPosition.calculatePos(Direction.Up)
-        assert(newPos.equals(Position2D(0, 1)))
+        assert(newPos.equals(Position2D(0, -1)))
 
     it should "go down" in:
         val newPos = startPosition.calculatePos(Direction.Down)
-        assert(newPos.equals(Position2D(0, -1)))
+        assert(newPos.equals(Position2D(0, 1)))
 
     it should "go left" in:
         val newPos = startPosition.calculatePos(Direction.Left)
