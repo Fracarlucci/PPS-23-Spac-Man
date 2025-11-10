@@ -5,10 +5,15 @@ import model.Position2D
 import model.MovableEntity
 import model.Direction
 import model.Wall
+import model.GhostBasic
+import model.DotBasic
 
 trait GameMap:
   def width: Int
   def height: Int
+  def getWalls: Set[Wall]
+  def getGhosts: Set[GhostBasic]
+  def getDots: Set[DotBasic]
   def entityAt(pos: Position2D): Either[String, Set[GameEntity]]
   def place(pos: Position2D, entity: GameEntity): Either[String, GameMap]
   def canMove(entity: MovableEntity, dir: Direction): Boolean
@@ -19,12 +24,17 @@ case class GameMapImpl(
   grid: Map[Position2D, Set[GameEntity]]
 ) extends GameMap:
 
+  override def getWalls: Set[Wall] =  grid.values.flatten.collect { case w: Wall => w }.toSet
+
+  override def getGhosts: Set[GhostBasic] = grid.values.flatten.collect { case g: GhostBasic => g }.toSet
+
+  override def getDots: Set[DotBasic] = grid.values.flatten.collect { case d: DotBasic => d }.toSet
+  
   override def entityAt(pos: Position2D): Either[String, Set[GameEntity]] =
     grid.get(pos) match
       case Some(value) => Right(value)
       case None        => Left("Invalid position " + pos)  
     
-
   override def place(pos: Position2D, entity: GameEntity): Either[String, GameMap] =
     grid.get(pos) match
     case Some(entities) =>
