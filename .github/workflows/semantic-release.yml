@@ -23,9 +23,6 @@ jobs:
                 java-version: 21
                 distribution: "temurin"
 
-            - name: Build JAR
-              run: sbt assembly
-
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
