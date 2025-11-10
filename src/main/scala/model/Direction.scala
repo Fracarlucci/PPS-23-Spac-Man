@@ -7,6 +7,4 @@ object Direction:
     case object Left extends Direction
     case object Right extends Direction
 
-
-
-
+    val values: Set[Direction] = Set(Up, Down, Left, Right)
