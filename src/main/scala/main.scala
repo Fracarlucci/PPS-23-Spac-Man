@@ -25,22 +25,18 @@ import model.board
                 case 'w' => {
                         require(map.canMove(player, Direction.Up))
                         player = player.move(Direction.Up)
-                        println(player.position)
                         }
                 case 'a' => {
                         require(map.canMove(player, Direction.Left))
                         player = player.move(Direction.Left)
-                        println(player.position)
                         }
                 case 's' => {
                         require(map.canMove(player, Direction.Down))
                         player = player.move(Direction.Down)
-                        println(player.position)
                         }
                 case 'd' => {
                         require(map.canMove(player, Direction.Right))
                         player = player.move(Direction.Right)
-                        println(player.position)
                         }
                 case 'q' => running = false
                 case _ => ()
