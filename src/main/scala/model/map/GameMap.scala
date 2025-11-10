@@ -2,8 +2,6 @@ package model.map
 
 import model.GameEntity
 import model.Position2D
-import model.Wall
-import model.Ghost
 
 trait GameMap:
   def width: Int
