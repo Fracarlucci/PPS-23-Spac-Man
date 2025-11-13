@@ -10,11 +10,10 @@ trait WallEntityBuilderLike:
 object board:
   def apply(width: Int, height: Int): GameMap = GameMapFactory.apply(width, height)
 
-object walls:
-  def apply(): Wall = Wall.apply(Position2D(0, 0)) 
+object genericWall:
+  def apply(): Wall = Wall.apply(Position2D(0, 0))
 
 class MapDSL(var map: GameMap):
-
   object place:
     def a(e: GameEntity): GameEntityBuilder = GameEntityBuilder(e)
 
@@ -27,8 +26,8 @@ class MapDSL(var map: GameMap):
       map = map.place(pos, e).fold(_ => map, identity)
 
   class WallEntityBuilder(startPos: Position2D) extends WallEntityBuilderLike:
-    infix def to(endPos: Position2D): Unit = 
-        map = map.placeAll(WallBuilder.createWalls(startPos, endPos)).fold(_ => map, identity)
+    infix def to(endPos: Position2D): Unit =
+      map = map.placeAll(WallBuilder.createWalls(startPos, endPos)).fold(_ => map, identity)
 
   class NoWallFoundBuilder() extends WallEntityBuilderLike:
     infix def to(pos: Position2D): Unit = ()
