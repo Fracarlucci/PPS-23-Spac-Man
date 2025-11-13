@@ -13,6 +13,7 @@ import model.GhostBasic
 import model.Direction
 import model.GameEntity
 import model.DotBasic
+import model.WallBuilder
 
 class MapTest extends AnyFlatSpec with Matchers:
 
@@ -61,6 +62,23 @@ class MapTest extends AnyFlatSpec with Matchers:
         val wall = Wall(Position2D(-1, -1))
         val result = map.place(Position2D(-1, -1), wall)
         result.isLeft shouldBe true
+    
+    it should "place all the entities in the map" in:
+        val walls = WallBuilder.createWalls(Position2D(0, 0), Position2D(0, 3))
+        val result = map.placeAll(walls)
+
+        result match
+            case Right(map)      => map.getWalls shouldBe walls
+            case Left(errMsg)    => fail(errMsg)
+    
+    it should "fail while placing all the entities in the map" in:
+        val walls = WallBuilder.createWalls(Position2D(0, -2), Position2D(0, 3))
+        val result = map.placeAll(walls)
+
+        result match
+            case Right(map)      => fail("The map should fail")
+            case Left(errMsg)    => errMsg shouldBe "Invalid position" + Position2D(0, -2)
+        
 
     it should "return the set of walls" in:
         val dsl = MapDSL(map)
