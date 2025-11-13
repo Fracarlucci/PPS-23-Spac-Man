@@ -9,6 +9,7 @@ import model.board
 import model.GameEntity
 import model.DotBasic
 import model.WallBuilder
+import model.walls
 
 class MapTest extends AnyFlatSpec with Matchers:
 
@@ -31,6 +32,24 @@ class MapTest extends AnyFlatSpec with Matchers:
         place a wall at position (2, 1)
         place a pacMan at position (3, 1)
         place a ghost at position (4, 1)
+
+    it should "create and place a set of Wall" in:
+        val dsl = MapDSL(map)
+        
+        import dsl.* 
+
+        place a walls() from position (0, 0) to position (0, 5)
+
+        dsl.map.getWalls shouldBe (WallBuilder.createWalls(position(0, 0), position(0, 5)))
+
+    it should "create nothing because entities are not walls" in:
+        val dsl = MapDSL(map)
+        val dot = DotBasic(Position2D(0, 0))
+        import dsl.* 
+
+        place a dot from position (0, 0) to position (0, 5)
+
+        dsl.map.getDots shouldBe Set.empty
 
     "Map" should "get entity of a position" in:
         val dsl = MapDSL(map)
