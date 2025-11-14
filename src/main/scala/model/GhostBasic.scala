@@ -3,6 +3,7 @@ package model
 case class GhostBasic(
     val position: Position2D,
     val direction: Direction,
+    val movementLogic: MovementLogic,
     val speed: Double,
     val id: Int
 ) extends MovableEntity:
@@ -11,13 +12,14 @@ case class GhostBasic(
     this.copy(position = newPosition, direction = newDirection)
 
   def nextMove(): MovableEntity =
-    val randomDir = Direction.values.toSeq(scala.util.Random.nextInt(Direction.values.size))
+    val randomDir = movementLogic.decide()
     this.move(randomDir)
 
 object GhostBuilder:
-  var idCounter = 0
-  def apply(position: Position2D, direction: Direction, speed: Double): GhostBasic =
+  private var idCounter = 0
+  
+  def apply(position: Position2D, direction: Direction, movementLogic: MovementLogic, speed: Double): GhostBasic =
     idCounter = idCounter + 1
-    GhostBasic(position, direction, speed, idCounter)
+    GhostBasic(position, direction, movementLogic, speed, idCounter)
 
   def reset(): Unit = idCounter = 0
