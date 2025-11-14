@@ -16,6 +16,7 @@ trait GameMap:
   def getDots: Set[DotBasic]
   def entityAt(pos: Position2D): Either[String, Set[GameEntity]]
   def place(pos: Position2D, entity: GameEntity): Either[String, GameMap]
+  def placeAll[E <: GameEntity](entities: Set[E]): Either[String, GameMap]
   def canMove(entity: MovableEntity, dir: Direction): Boolean
 
 case class GameMapImpl(
@@ -41,6 +42,11 @@ case class GameMapImpl(
       Right(copy(grid = grid.updated(pos, entities + entity)))
     case None =>
       Left("Invalid position" + pos)
+    
+  override def placeAll[E <: GameEntity](entities: Set[E]): Either[String, GameMap] = 
+      entities.foldLeft[Either[String, GameMap]](Right(this)) { (result, entity) =>
+    result.flatMap(_.place(entity.position, entity))
+  }
     
   override def canMove(entity: MovableEntity, dir: Direction): Boolean = 
     val nextPos = entity.position.calculatePos(dir)
