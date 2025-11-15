@@ -1,51 +1,51 @@
 package model
 
 import model.map.GameMap
+import scala.annotation.tailrec
 
 trait GameManager:
-    def updateEntityPositions(entities: Set[GameEntity]): Unit
     def isWin(): Boolean
-    def getScore(): Int
-    def getGameMap(): GameMap
-    def movePlayer(newDirection: Direction): SpacManBasic
-    def moveGhosts(): Set[GhostBasic]
     def setGameOver(): Unit
-    def checkCollisions(spacMan: SpacManBasic): Option[SpacManBasic]
+    def moveSpacManAndCheck(newDirection: Direction): Option[SpacManBasic]
+    def moveGhosts(): Set[GhostBasic]
 
-class SimpleGameManager(
-    var spacMan: SpacManBasic,
-    var ghosts: Set[GhostBasic],
-    var dots: Set[DotBasic],
-    gameMap: GameMap,
-    score: Int,
-    var gameOver: Boolean = false
+case class SimpleGameManager(
+    private var _spacMan: SpacManBasic,
+    private var _gameMap: GameMap,
+    private var _gameOver: Boolean = false
 ) extends GameManager:
 
-    override def isWin(): Boolean = dots.isEmpty
+    def spacMan: SpacManBasic = _spacMan
 
-    override def getScore(): Int = score
+    def gameMap: GameMap = _gameMap
 
-    override def getGameMap(): GameMap = gameMap
+    def gameOver: Boolean = _gameOver
+
+    override def isWin(): Boolean = gameMap.getDots.isEmpty
     
-    override def movePlayer(newDirection: Direction): SpacManBasic = 
-        if gameMap.canMove(spacMan, newDirection) then
-            spacMan = spacMan.move(newDirection).asInstanceOf[SpacManBasic] 
-        spacMan
+    override def setGameOver(): Unit = _gameOver = true
 
     override def moveGhosts(): Set[GhostBasic] = 
-        def findValidMove(ghost: GhostBasic): GhostBasic =
-            val nextDirection = ghost.nextMove()
-            if gameMap.canMove(ghost, nextDirection) then
-                ghost.move(nextDirection).asInstanceOf[GhostBasic]
+        @tailrec
+        def findValidMove(ghost: GhostBasic, attempts: Int = 10): GhostBasic =
+            if attempts <= 0 then ghost
             else
-                findValidMove(ghost)
+                val nextDirection = ghost.nextMove()
+                println(gameMap.canMove(ghost, nextDirection))
+                if gameMap.canMove(ghost, nextDirection) then
+                    println(s"Moving ghost from ${ghost.position} to ${ghost.move(nextDirection).position}")
+                    ghost.move(nextDirection).asInstanceOf[GhostBasic]
+                else
+                    findValidMove(ghost, attempts - 1)
         
-        ghosts = ghosts.map(findValidMove)
-        ghosts
+        gameMap.getGhosts.map(findValidMove(_))
 
-    override def setGameOver(): Unit = gameOver = true
+    private def moveSpacMan(newDirection: Direction): SpacManBasic = 
+        if gameMap.canMove(_spacMan, newDirection) then
+            _spacMan = _spacMan.move(newDirection).asInstanceOf[SpacManBasic] 
+        _spacMan
 
-    override def checkCollisions(
+    private def checkCollisions(
         spacMan: SpacManBasic
     ): Option[SpacManBasic] =
         gameMap.entityAt(spacMan.position).toOption.flatMap: entities =>
@@ -54,8 +54,12 @@ class SimpleGameManager(
                 .orElse {
                     entities.collectFirst { case dot: DotBasic => dot }
                         .map { dot =>
-                            gameMap.remove(dot)
-                            Some(spacMan.addScore(dot.score))
+                            _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
+                            _spacMan = _spacMan.addScore(dot.score)
+                            Some(_spacMan)
                         }
                 }
-                .getOrElse(Some(spacMan))
+                .getOrElse(Some(_spacMan))
+
+    def moveSpacManAndCheck(dir: Direction): Option[SpacManBasic] =
+        checkCollisions(moveSpacMan(dir))
