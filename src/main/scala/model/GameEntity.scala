@@ -18,4 +18,4 @@ trait MovableEntity extends GameEntity:
         withPosAndDir(newPosition, newDirection)
 
 case class Wall(position: Position2D) extends GameEntity
-case class DotBasic(position: Position2D) extends GameEntity
+case class DotBasic(position: Position2D, score: Int = 10) extends GameEntity
