@@ -19,3 +19,5 @@ trait MovableEntity extends GameEntity:
 
 case class Wall(position: Position2D) extends GameEntity
 case class DotBasic(position: Position2D, score: Int = 10) extends GameEntity
+case class Tunnel(position: Position2D, toPos: Position2D, correctDirection: Direction) extends GameEntity:
+    def canTeleport(dir: Direction): Boolean = dir == correctDirection
