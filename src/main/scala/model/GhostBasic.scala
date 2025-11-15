@@ -5,6 +5,5 @@ case class GhostBasic(val position: Position2D, val direction: Direction, val sp
     override def withPosAndDir(newPosition: Position2D, newDirection: Direction): GhostBasic =
         this.copy(position = newPosition, direction = newDirection)
 
-    def nextMove(): MovableEntity =
-        val randomDir = Direction.values.toSeq(scala.util.Random.nextInt(Direction.values.size))
-        this.move(randomDir)
+    def nextMove(): Direction =
+        Direction.values.toSeq(scala.util.Random.nextInt(Direction.values.size))
