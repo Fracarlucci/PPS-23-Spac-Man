@@ -9,21 +9,24 @@ trait GameManager:
     def getGameMap(): GameMap
     def movePlayer(newDirection: Direction): SpacManBasic
     def moveGhosts(): Set[GhostBasic]
-    def removeDotAt(position: Position2D): Unit
+    def setGameOver(): Unit
+    def checkCollisions(spacMan: SpacManBasic): Option[SpacManBasic]
 
 class SimpleGameManager(
     var spacMan: SpacManBasic,
     var ghosts: Set[GhostBasic],
     var dots: Set[DotBasic],
     gameMap: GameMap,
-    score: Int
-    ) extends GameManager:
+    score: Int,
+    var gameOver: Boolean = false
+) extends GameManager:
 
-    override def updateEntityPositions(entities: Set[GameEntity]): Unit = 
-        gameMap.placeAll(entities)
     override def isWin(): Boolean = dots.isEmpty
+
     override def getScore(): Int = score
+
     override def getGameMap(): GameMap = gameMap
+    
     override def movePlayer(newDirection: Direction): SpacManBasic = 
         if gameMap.canMove(spacMan, newDirection) then
             spacMan = spacMan.move(newDirection).asInstanceOf[SpacManBasic] 
@@ -40,38 +43,19 @@ class SimpleGameManager(
         ghosts = ghosts.map(findValidMove)
         ghosts
 
-    override def removeDotAt(position: Position2D): Unit = 
-        dots = dots.filterNot(dot => dot.position == position)
-        updateEntityPositions()
-
-sealed trait CollisionsType
-object CollisionsType:
-    case object ghostCollision extends CollisionsType
-    case object dotCollision extends CollisionsType
-
-trait CollisionManager:
-    def checkCollisions(
-        spacMan: SpacManBasic,
-        ghosts: Set[GhostBasic],
-        dots: Set[DotBasic]
-    ): (Boolean)
-    def handleghostCollision(): Unit
-    def handledotCollision(): Unit
-
-class SimpleCollisionManager() extends CollisionManager:
+    override def setGameOver(): Unit = gameOver = true
 
     override def checkCollisions(
-        spacMan: SpacManBasic,
-        ghosts: Set[GhostBasic],
-        dots: Set[DotBasic]
-    ): Option[CollisionsType] =
-        ghosts.find(_.position == spacMan.position).map(_ => CollisionsType.ghostCollision)
-            .orElse(dots.find(_.position == spacMan.position).map(_ => CollisionsType.dotCollision))
-
-    override def handleghostCollision(): Unit = 
-        GameState.setGameOver(true)
-        
-    override def handledotCollision(position: Position2D, spacMan: SpacManBasic, dot: DotBasic): Unit =
-        spacMan.addScore(dot.score())
-        GameManager.removeDotAt(position)
-    
+        spacMan: SpacManBasic
+    ): Option[SpacManBasic] =
+        gameMap.entityAt(spacMan.position).toOption.flatMap: entities =>
+            entities.collectFirst { case ghost: GhostBasic => ghost }
+                .map(_ => { setGameOver(); None })
+                .orElse {
+                    entities.collectFirst { case dot: DotBasic => dot }
+                        .map { dot =>
+                            gameMap.remove(dot)
+                            Some(spacMan.addScore(dot.score))
+                        }
+                }
+                .getOrElse(Some(spacMan))
