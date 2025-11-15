@@ -6,6 +6,11 @@ import model.MapDSL
 import model.Wall
 import model.Position2D
 import model.board
+import org.scalactic.anyvals.PosInt
+import model.Position2DTest
+import model.SpacManBasic
+import model.GhostBasic
+import model.Direction
 import model.GameEntity
 import model.DotBasic
 import model.WallBuilder
@@ -21,17 +26,16 @@ class MapTest extends AnyFlatSpec with Matchers:
         map.width shouldBe 5
         map.height shouldBe 5
 
-  it should "create the entity" in:
-    val dsl    = MapDSL(board(5, 5))
-    val wall   = Wall(Position2D(2, 1))
-    val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
-    val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
+    it should "create the entity" in:
+        val dsl    = MapDSL(board(5, 5))
+        val wall   = Wall(Position2D(2, 1))
+        val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
+        val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
 
-    import dsl.*
-
-    place a wall at position(2, 1)
-    place a pacMan at position(3, 1)
-    place a ghost at position(4, 1)
+        import dsl.*
+        place a wall at position(2, 1)
+        place a pacMan at position(3, 1)
+        place a ghost at position(4, 1)
 
     it should "create and place a set of Wall" in:
         val dsl = MapDSL(map)
@@ -49,8 +53,7 @@ class MapTest extends AnyFlatSpec with Matchers:
 
         place a dot from position(0, 0) to position(0, 5)
 
-    "Map" should "get entity of a position" in:
-        val dsl = MapDSL(map)
+        dsl.map.getDots shouldBe Set.empty
 
     "Map" should "get entity of a position" in:
         val dsl    = MapDSL(map)
@@ -58,9 +61,7 @@ class MapTest extends AnyFlatSpec with Matchers:
         val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
         val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
 
-        place a Wall at position (2, 1)
-        place a PacMan at position (4, 1)
-        place a Ghost at position (4, 1)
+        import dsl.*
 
         place a wall at position(2, 1)
         place a pacMan at position(4, 1)
@@ -166,3 +167,63 @@ class MapTest extends AnyFlatSpec with Matchers:
         place a pacMan at position(3, 1)
 
         dsl.map.canMove(pacMan, Direction.Left) shouldBe false
+
+    it should "return false calling canMove because pacman want to go out of map" in:
+        val dsl    = MapDSL(map)
+        val wall   = Wall(Position2D(2, 1))
+        val pacMan = SpacManBasic(Position2D(0, 0), Direction.Right, 0)
+
+        import dsl.*
+
+        place a wall at position(2, 1)
+        place a pacMan at position(0, 0)
+
+        dsl.map.canMove(pacMan, Direction.Left) shouldBe false
+
+    it should "remove the entity from the map" in:
+        val dsl = MapDSL(map)
+
+        import dsl.*
+
+        place a genericWall() from position(0, 0) to position(5, 0)
+        dsl.map.remove(Wall(position(1, 0)))
+
+    it should "return an invalid position" in:
+        val dsl = MapDSL(map)
+
+        import dsl.*
+
+        place a genericWall() from position(0, 0) to position(5, 0)
+        dsl.map.remove(Wall(position(-1, 0))) shouldBe Left("Invalid position" + position(-1, 0))
+
+    it should "return a not found entity" in:
+        val dsl = MapDSL(map)
+
+        import dsl.*
+
+        place a genericWall() from position(0, 0) to position(5, 0)
+        dsl.map.remove(DotBasic(position(0, 0))) shouldBe Left("No entity found")
+
+    it should "return replace the pacman to the new position" in:
+        val dsl    = MapDSL(map)
+        val pacMan = SpacManBasic(Position2D(0, 0), Direction.Right, 0)
+
+        import dsl.*
+
+        place a pacMan at position(0, 0)
+        place a genericWall() from position(0, 0) to position(5, 0)
+
+        dsl.map.replaceEntityTo(pacMan, position(2, 1)).isRight shouldBe true
+
+    it should "return an invalid position while trying to replace an entity" in:
+        val dsl    = MapDSL(map)
+        val pacMan = SpacManBasic(Position2D(0, 0), Direction.Right, 0)
+
+        import dsl.*
+
+        place a pacMan at position(0, 0)
+        place a genericWall() from position(0, 0) to position(5, 0)
+
+        dsl.map.replaceEntityTo(pacMan, position(-1, 0)) shouldBe Left(
+          "Invalid position" + position(-1, 0)
+        )
