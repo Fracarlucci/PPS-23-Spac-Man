@@ -4,6 +4,7 @@ import model.map.GameMap
 import scala.annotation.tailrec
 
 trait GameManager:
+    def gameOver: Boolean
     def isWin(): Boolean
     def setGameOver(): Unit
     def moveSpacManAndCheck(newDirection: Direction): Option[SpacManBasic]
@@ -31,7 +32,7 @@ case class SimpleGameManager(
             if attempts <= 0 then ghost
             else
                 val nextDirection = ghost.nextMove()
-                println(gameMap.canMove(ghost, nextDirection))
+                // println(gameMap.canMove(ghost, nextDirection))
                 if gameMap.canMove(ghost, nextDirection) then
                     println(s"Moving ghost from ${ghost.position} to ${ghost.move(nextDirection).position}")
                     ghost.move(nextDirection).asInstanceOf[GhostBasic]
