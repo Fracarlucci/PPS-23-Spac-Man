@@ -39,7 +39,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         val spacMan = SpacManBasic(Position2D(1, 1), Direction.Right, 0)
         val map = board(10, 10)
         val gameManager = SimpleGameManager(spacMan, map)
-        assert(gameManager.spacMan == spacMan && gameManager.gameMap == map && gameManager.gameOver == false)
+        assert(gameManager.getSpacMan == spacMan && gameManager.getGameMap == map && gameManager.isGameOver() == false)
 
     it should "move SpacMan" in:
         val gameManager = createTestSetup()
@@ -47,6 +47,8 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(movedSpacManOpt.isDefined)
         val movedSpacMan = movedSpacManOpt.get
         assert(movedSpacMan.position == Position2D(2, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).exists(!_.isInstanceOf[SpacManBasic]))
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
 
     it should "not move SpacMan if blocked by a wall" in:
         val gameManager = createTestSetup()
@@ -54,6 +56,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(movedSpacManOpt.isDefined)
         val movedSpacMan = movedSpacManOpt.get
         assert(movedSpacMan.position == Position2D(1, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
 
     it should "not move SpacMan outside map boundaries" in:
         val gameManager = createTestSetup()
@@ -61,17 +64,21 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(movedSpacManOpt.isDefined)
         var movedSpacMan = movedSpacManOpt.get
         assert(movedSpacMan.position == Position2D(1, 0))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 0)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
 
         movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Up)
         assert(movedSpacManOpt.isDefined)
         movedSpacMan = movedSpacManOpt.get
         assert(movedSpacMan.position == Position2D(1, 0))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 0)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
     
     it should "move Ghosts" in:
         val gameManager = createTestSetup()
         val movedGhosts = gameManager.moveGhosts()
         assert(movedGhosts.head.position != Position2D(1, 2))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()).exists(!_.isInstanceOf[GhostBasic]))
         assert(movedGhosts.tail.head.position != Position2D(2, 2))
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 2)).getOrElse(Set()).exists(!_.isInstanceOf[GhostBasic]))
 
     it should "not move Ghosts if it is blocked" in:
         val spacMan = SpacManBasic(Position2D(1, 1), Direction.Right, 0)
@@ -96,6 +103,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
         val movedGhosts = gameManager.moveGhosts()
         assert(movedGhosts.exists(_.position == Position2D(2, 2)))
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 2)).getOrElse(Set()).exists(_.isInstanceOf[GhostBasic]))
 
     it should "eat dot and increase score" in:
         val gameManager = createTestSetup()
@@ -103,6 +111,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(movedSpacManOpt.isDefined)
         val movedSpacMan = movedSpacManOpt.get
         assert(movedSpacMan.position == Position2D(2, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
         assert(movedSpacMan.score == DOT_BASIC_SCORE)
 
     it should "detect win condition" in:
@@ -113,6 +122,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(movedSpacManOpt.isDefined)
         val movedSpacMan = movedSpacManOpt.get
         assert(movedSpacMan.position == Position2D(2, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
         assert(movedSpacMan.score == DOT_BASIC_SCORE)
         assert(!gameManager.isWin())
 
@@ -120,11 +130,15 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(movedSpacManOpt2.isDefined)
         val updatedSpacMan = movedSpacManOpt2.get
         assert(updatedSpacMan.position == Position2D(3, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(3, 1)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
         assert(updatedSpacMan.score == 2 * DOT_BASIC_SCORE)
         assert(gameManager.isWin())
 
     it should "set game over when colliding with a ghost" in:
         val gameManager = createTestSetup()
         val movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Down)
+        println(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).exists(!_.isInstanceOf[SpacManBasic]))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()).exists(!_.isInstanceOf[SpacManBasic]))
         assert(!movedSpacManOpt.isDefined)        
-        assert(gameManager.gameOver)
+        assert(gameManager.isGameOver())
