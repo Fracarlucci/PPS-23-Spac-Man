@@ -7,6 +7,7 @@ import model.Direction
 import model.Wall
 import model.GhostBasic
 import model.DotBasic
+import model.SpacManBasic
 
 trait GameMap:
     def width: Int
@@ -63,6 +64,7 @@ case class GameMapImpl(
             case None => Left("Invalid position" + entity.position)
 
     override def replaceEntityTo(entity: GameEntity, movedEntity: GameEntity): Either[String, GameMap] =
+        if entity.isInstanceOf[SpacManBasic] then println(s"Spacman is in ${movedEntity.position}")
         remove(entity) match
             case Right(map) => map.place(movedEntity.position, movedEntity)
             case Left(err)  => Left(err)
@@ -79,7 +81,7 @@ case class GameMapImpl(
             case _                        => true
 
     private def isOutOfMap(p: Position2D): Boolean =
-        (p.x > width || p.x < 0) || (p.y > height || p.y < 0)
+        p.x >= width || p.x < 0 || p.y >= height || p.y < 0
 
 object GameMapFactory:
     def apply(width: Int, height: Int): GameMap =
