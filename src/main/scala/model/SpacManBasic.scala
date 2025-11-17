@@ -8,3 +8,8 @@ case class SpacManBasic(val position: Position2D, val direction: Direction, val 
     def addScore(points: Int): SpacManBasic =
         if points < 0 then this
         else this.copy(score = this.score + points)
+
+    override def equals(obj: Any): Boolean = obj match
+        case that: SpacManBasic => 
+            this.position == that.position
+        case _ => false

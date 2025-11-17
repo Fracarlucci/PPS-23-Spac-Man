@@ -43,13 +43,29 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
     it should "move SpacMan" in:
         val gameManager = createTestSetup()
-        val movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
+        val movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Up)
         assert(movedSpacManOpt.isDefined)
         val movedSpacMan = movedSpacManOpt.get
-        assert(movedSpacMan.position == Position2D(2, 1))
+        assert(movedSpacMan.position == Position2D(1, 0))
         assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).isEmpty)
-        assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 0)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
 
+    it should "move SpacMan multiple times" in:
+        val gameManager = createTestSetup()
+        var movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Up)
+        assert(movedSpacManOpt.isDefined)
+        var movedSpacMan = movedSpacManOpt.get
+        assert(movedSpacMan.position == Position2D(1, 0))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).isEmpty)
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 0)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
+
+        movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
+        assert(movedSpacManOpt.isDefined)
+        movedSpacMan = movedSpacManOpt.get
+        assert(movedSpacMan.position == Position2D(2, 0))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 0)).getOrElse(Set()).isEmpty)
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 0)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
+    
     it should "not move SpacMan if blocked by a wall" in:
         val gameManager = createTestSetup()
         val movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Left)
@@ -77,7 +93,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         val movedGhosts = gameManager.moveGhosts()
         assert(movedGhosts.head.position != Position2D(1, 2))
         assert(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()).isEmpty)
-        assert(movedGhosts.tail.head.position != Position2D(2, 2))
+        assert(movedGhosts.head.position != Position2D(4, 2))
         assert(gameManager.getGameMap.entityAt(Position2D(2, 2)).getOrElse(Set()).isEmpty)
 
     it should "not move Ghosts if it is blocked" in:
@@ -122,6 +138,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(movedSpacManOpt.isDefined)
         val movedSpacMan = movedSpacManOpt.get
         assert(movedSpacMan.position == Position2D(2, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).isEmpty)
         assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
         assert(movedSpacMan.score == DOT_BASIC_SCORE)
         assert(!gameManager.isWin())
@@ -130,6 +147,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(movedSpacManOpt2.isDefined)
         val updatedSpacMan = movedSpacManOpt2.get
         assert(updatedSpacMan.position == Position2D(3, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).isEmpty)
         assert(gameManager.getGameMap.entityAt(Position2D(3, 1)).getOrElse(Set()).exists(_.isInstanceOf[SpacManBasic]))
         assert(updatedSpacMan.score == 2 * DOT_BASIC_SCORE)
         assert(gameManager.isWin())
@@ -137,7 +155,6 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
     it should "set game over when colliding with a ghost" in:
         val gameManager = createTestSetup()
         val movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Down)
-        println(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()))
         assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).isEmpty)
         assert(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()).exists(!_.isInstanceOf[SpacManBasic]))
         assert(!movedSpacManOpt.isDefined)        

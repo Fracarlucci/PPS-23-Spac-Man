@@ -30,7 +30,6 @@ case class SimpleGameManager(
             else
                 val nextDirection = ghost.nextMove()
                 if _gameMap.canMove(ghost, nextDirection) then
-                    // ghost.move(nextDirection).asInstanceOf[GhostBasic]
                     val movedGhost = ghost.move(nextDirection).asInstanceOf[GhostBasic]
                     _gameMap.replaceEntityTo(ghost, movedGhost) match
                     case Right(updatedMap) => 
