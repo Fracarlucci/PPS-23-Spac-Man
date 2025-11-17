@@ -211,23 +211,25 @@ class MapTest extends AnyFlatSpec with Matchers:
     it should "return replace the pacman to the new position" in:
         val dsl    = MapDSL(map)
         val pacMan = SpacManBasic(Position2D(0, 0), Direction.Right, 0)
+        val movedSpacMan = SpacManBasic(Position2D(2, 1), Direction.Right, 0)
 
         import dsl.*
 
         place a pacMan at position(0, 0)
         place a genericWall() from position(0, 0) to position(5, 0)
 
-        dsl.map.replaceEntityTo(pacMan, position(2, 1)).isRight shouldBe true
+        dsl.map.replaceEntityTo(pacMan, movedSpacMan).isRight shouldBe true
 
     it should "return an invalid position while trying to replace an entity" in:
         val dsl    = MapDSL(map)
         val pacMan = SpacManBasic(Position2D(0, 0), Direction.Right, 0)
+        val movedSpacMan = SpacManBasic(Position2D(-1, 0), Direction.Right, 0)
 
         import dsl.*
 
         place a pacMan at position(0, 0)
         place a genericWall() from position(0, 0) to position(5, 0)
 
-        dsl.map.replaceEntityTo(pacMan, position(-1, 0)) shouldBe Left(
+        dsl.map.replaceEntityTo(pacMan, movedSpacMan) shouldBe Left(
           "Invalid position" + position(-1, 0)
         )
