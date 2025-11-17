@@ -7,7 +7,7 @@ la logica di gioco completa o semi completa, senza interfaccia grafica.
 
 ## Deadline
 
-La scadenza dello sprint è il 16/11/2025.
+La scadenza dello sprint è il 17/11/2025.
 
 ## Backlog
 
@@ -133,7 +133,7 @@ La scadenza dello sprint è il 16/11/2025.
       <td>Gestione delle collisioni</td>
       <td>Francesco</td>
       <td>4</td>
-      <td>0</td>
+      <td>4</td>
       <td>0</td>
     </tr>
       <tr>
@@ -165,9 +165,27 @@ La scadenza dello sprint è il 16/11/2025.
     </tr>
     <tr>
       <td>Creazione di un game loop</td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>Marco</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td rowspan="2">7</td>
+      <td rowspan="2">Documentazione</td>
+      <td rowspan="2">Creare una documentazione chiara ed esaustiva </td>
+      <td>Documentazione</td>
+      <td>Francesco</td>
+      <td>4</td>
+      <td>4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Documentazione</td>
+      <td>Marco</td>
+      <td>4</td>
+      <td>4</td>
+      <td>3</td>
     </tr>
     </tbody>
 </table>
