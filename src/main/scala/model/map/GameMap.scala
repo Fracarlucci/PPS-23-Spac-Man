@@ -76,7 +76,7 @@ case class GameMapImpl(
                 case _ => false
             } => false
             case _ if isOutOfMap(nextPos) => false
-            case _ => true
+            case _                        => true
 
     private def isOutOfMap(p: Position2D): Boolean =
         (p.x > width || p.x < 0) || (p.y > height || p.y < 0)
