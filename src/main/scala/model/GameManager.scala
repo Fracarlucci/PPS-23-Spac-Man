@@ -68,9 +68,6 @@ case class SimpleGameManager(
                     entities.collectFirst { case dot: DotBasic => dot }
                         .map { dot =>
                             _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
-                            // TODO: le opzioni sono due, o si aggiorna la mappa prima di impostare lo score
-                            //       oppure si modifica la equals dello spacman
-                            //       in modo che non controlli che lo score sia identico 
                             _spacMan = _spacMan.addScore(dot.score)
                             Some(_spacMan)
                         }
