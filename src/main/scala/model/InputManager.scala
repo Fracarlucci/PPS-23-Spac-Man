@@ -1,26 +1,15 @@
 
 import java.util.concurrent.ConcurrentLinkedQueue
-import scala.io.StdIn
-import model.Direction
-import model.GameManager
 import java.util.concurrent.ConcurrentLinkedQueue
-import scala.io.StdIn
-import java.util.Timer
-import model.MapDSL
-import model.board
-import model.genericWall
-import model.DotBasic
-import model.Position2D
-import model.GhostBasic
+import org.jline.terminal.TerminalBuilder
 import model.Direction
 import model.map.GameMap
-import model.SimpleGameManager
-import model.SpacManBasic
-
-import org.jline.terminal.TerminalBuilder
+import model.GameManager
 
 trait InputManager:
+    def startInputThread(): Thread
     def processInput(): Option[Direction]
+    def stop(): Unit
 
 class SimpleInputManager(gameManager: GameManager) extends InputManager:
     @volatile private var pendingMove: Option[Direction] = None
@@ -38,7 +27,6 @@ class SimpleInputManager(gameManager: GameManager) extends InputManager:
     def processInput(): Option[Direction] =
         pendingMove match {
             case Some(dir) =>
-                println(s"Moving SpacMan in direction: $dir")
                 pendingMove = None
                 Some(dir)
             case None => Option.empty
@@ -52,7 +40,7 @@ class SimpleInputManager(gameManager: GameManager) extends InputManager:
             terminal.enterRawMode()
             
             val reader = terminal.reader()
-            while true do
+            while running do
                 try
                     if reader.peek(10) > 0 then
                         val key = reader.read()
@@ -66,3 +54,7 @@ class SimpleInputManager(gameManager: GameManager) extends InputManager:
         thread.start()
         thread
     
+    def stop(): Unit = 
+        running = false
+        if terminal != null then
+            terminal.close()
