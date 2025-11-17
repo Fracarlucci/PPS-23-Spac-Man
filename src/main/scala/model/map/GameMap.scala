@@ -70,10 +70,11 @@ case class GameMapImpl(
     override def canMove(entity: MovableEntity, dir: Direction): Boolean =
         val nextPos = entity.position.calculatePos(dir)
         entityAt(nextPos) match
+            case Right(set) if set.exists(_.isInstanceOf[Wall]) => false
             case Right(set) if set.exists {
-                    case _: Wall       => true
-                    case _: GhostBasic => true
-                } => false
+                case _: GhostBasic => entity.isInstanceOf[GhostBasic]
+                case _ => false
+            } => false
             case _ if isOutOfMap(nextPos) => false
             case _                        => true
 
