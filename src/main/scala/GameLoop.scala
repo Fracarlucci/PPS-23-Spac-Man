@@ -49,7 +49,7 @@ object GameLoop:
         if gameManager.isWin() then
             println("WIN!")
             return GameState.Win
-        if gameManager.gameOver then
+        if gameManager.isGameOver() then
             println("LOSE!")
             return GameState.GameOver
         GameState.Running
