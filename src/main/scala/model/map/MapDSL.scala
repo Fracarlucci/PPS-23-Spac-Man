@@ -19,7 +19,7 @@ class MapDSL(var map: GameMap):
 
   class GameEntityBuilder(e: GameEntity = null):
     infix def from(pos: Position2D): WallEntityBuilderLike = e match
-      case Wall(pos) => WallEntityBuilder(pos)
+      case Wall(_) => WallEntityBuilder(pos)
       case _         => NoWallFoundBuilder()
 
     infix def at(pos: Position2D): Unit =
