@@ -5,7 +5,6 @@ import model.Direction
 import model.GameManager
 import java.util.concurrent.ConcurrentLinkedQueue
 import scala.io.StdIn
-
 import java.util.Timer
 import model.MapDSL
 import model.board
@@ -20,7 +19,10 @@ import model.SpacManBasic
 
 import org.jline.terminal.TerminalBuilder
 
-class InputManager(gameManager: GameManager):
+trait InputManager:
+    def processInput(): Option[Direction]
+
+class SimpleInputManager(gameManager: GameManager) extends InputManager:
     @volatile private var pendingMove: Option[Direction] = None
     @volatile private var running = true
     private var terminal: org.jline.terminal.Terminal = _
@@ -31,21 +33,15 @@ class InputManager(gameManager: GameManager):
             case 'a' => pendingMove = Some(Direction.Left)
             case 's' => pendingMove = Some(Direction.Down)
             case 'd' => pendingMove = Some(Direction.Right)
-            case 'q' => running = false
             case _   => // ignore invalid keys
 
-    def isRunning: Boolean = running
-
-    def stop(): Unit = 
-        running = false
-        if terminal != null then
-            terminal.close()
-    
-    def moveSpacMan(): Unit =
-        pendingMove.foreach { dir =>
-            println(s"Moving SpacMan in direction: $dir")
-            gameManager.moveSpacManAndCheck(dir)
-            pendingMove = None 
+    def processInput(): Option[Direction] =
+        pendingMove match {
+            case Some(dir) =>
+                println(s"Moving SpacMan in direction: $dir")
+                pendingMove = None
+                Some(dir)
+            case None => Option.empty
         }
     
     def startInputThread(): Thread =
@@ -56,7 +52,7 @@ class InputManager(gameManager: GameManager):
             terminal.enterRawMode()
             
             val reader = terminal.reader()
-            while running do
+            while true do
                 try
                     if reader.peek(10) > 0 then
                         val key = reader.read()

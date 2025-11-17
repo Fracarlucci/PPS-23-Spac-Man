@@ -24,24 +24,27 @@ object GameLoop:
         gameManager: GameManager,
         state: GameState = GameState.Running,
         lastGhostMove: Long = System.currentTimeMillis(),
-        lastPacmanMove: Long = System.currentTimeMillis()
+        lastPacmanMove: Long = System.currentTimeMillis(),
+        inputManager: InputManager
     ): GameState =
         var leatestGhostMove   = lastGhostMove
         var leatestSpacManMove = lastPacmanMove
         val now                = System.currentTimeMillis()
         state match
             case GameState.Running =>
-                println("Start step ...")
+                // println("Start step ...")
                 if now - lastGhostMove >= ghost_delay then
                     gameManager.moveGhosts()
                     leatestGhostMove = now
-                // if now - lastPacmanMove >= spacman_delay then
-                // gameManager.moveSpacManAndCheck()
-                // leatestPacmanMove = now
-                // view.update(gameManager.gameMap)
+                if now - lastPacmanMove >= spacman_delay then
+                    inputManager.processInput() match
+                        case Some(dir)  => gameManager.moveSpacManAndCheck(dir)
+                        case None       => // do nothing
+                    leatestSpacManMove = now
+                    // view.update(gameManager.gameMap)
                 Thread.sleep(50)
                 val newState = checkGameState(gameManager)
-                loop(gameManager, newState, leatestGhostMove, leatestSpacManMove)
+                loop(gameManager, newState, leatestGhostMove, leatestSpacManMove, inputManager)
             case finalState => finalState
 
     private def checkGameState(gameManager: GameManager): GameState =
@@ -74,4 +77,8 @@ private def createMap(): GameMap =
     val map         = createMap()
     val spacman     = SpacManBasic(Position2D(9, 9), Direction.Down, 0)
     val gameManager = SimpleGameManager(spacman, map)
-    GameLoop.loop(gameManager)
+    val inputManager = new SimpleInputManager(gameManager)
+    
+    inputManager.startInputThread()
+
+    GameLoop.loop(gameManager, inputManager = inputManager)
