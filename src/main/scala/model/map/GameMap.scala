@@ -18,7 +18,7 @@ trait GameMap:
     def place(pos: Position2D, entity: GameEntity): Either[String, GameMap]
     def placeAll[E <: GameEntity](entities: Set[E]): Either[String, GameMap]
     def remove(entity: GameEntity): Either[String, GameMap]
-    def replaceEntityTo(entity: GameEntity, nextPos: Position2D): Either[String, GameMap]
+    def replaceEntityTo(entity: GameEntity, movedEntity: GameEntity): Either[String, GameMap]
     def canMove(entity: MovableEntity, dir: Direction): Boolean
 
 case class GameMapImpl(
@@ -62,9 +62,9 @@ case class GameMapImpl(
                     case false => Left("No entity found")
             case None => Left("Invalid position" + entity.position)
 
-    override def replaceEntityTo(entity: GameEntity, nextPos: Position2D): Either[String, GameMap] =
+    override def replaceEntityTo(entity: GameEntity, movedEntity: GameEntity): Either[String, GameMap] =
         remove(entity) match
-            case Right(map) => place(nextPos, entity)
+            case Right(map) => map.place(movedEntity.position, movedEntity)
             case Left(err)  => Left(err)
 
     override def canMove(entity: MovableEntity, dir: Direction): Boolean =
