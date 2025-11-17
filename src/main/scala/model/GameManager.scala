@@ -30,11 +30,12 @@ case class SimpleGameManager(
             else
                 val nextDirection = ghost.nextMove()
                 if _gameMap.canMove(ghost, nextDirection) then
-                    ghost.move(nextDirection).asInstanceOf[GhostBasic]
-                    _gameMap.replaceEntityTo(ghost, ghost.move(nextDirection).position) match
+                    // ghost.move(nextDirection).asInstanceOf[GhostBasic]
+                    val movedGhost = ghost.move(nextDirection).asInstanceOf[GhostBasic]
+                    _gameMap.replaceEntityTo(ghost, movedGhost) match
                     case Right(updatedMap) => 
                         _gameMap = updatedMap
-                        ghost.move(nextDirection).asInstanceOf[GhostBasic]
+                        movedGhost
                     case Left(error) => 
                         println(s"Error moving Ghost: $error")
                         ghost
@@ -46,7 +47,7 @@ case class SimpleGameManager(
     private def moveSpacMan(newDirection: Direction): SpacManBasic = 
         if _gameMap.canMove(_spacMan, newDirection) then
             val movedSpacMan = _spacMan.move(newDirection).asInstanceOf[SpacManBasic] 
-            _gameMap.replaceEntityTo(_spacMan, movedSpacMan.position) match
+            _gameMap.replaceEntityTo(_spacMan, movedSpacMan) match
             case Right(updatedMap) => 
                 _gameMap = updatedMap
                 _spacMan = movedSpacMan
@@ -68,6 +69,9 @@ case class SimpleGameManager(
                     entities.collectFirst { case dot: DotBasic => dot }
                         .map { dot =>
                             _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
+                            // TODO: le opzioni sono due, o si aggiorna la mappa prima di impostare lo score
+                            //       oppure si modifica la equals dello spacman
+                            //       in modo che non controlli che lo score sia identico 
                             _spacMan = _spacMan.addScore(dot.score)
                             Some(_spacMan)
                         }
