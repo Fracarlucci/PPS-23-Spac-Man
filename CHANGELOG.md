@@ -1,3 +1,34 @@
+# [1.1.0](https://github.com/Fracarlucci/PPS-23-Spac-Man/compare/v1.0.0...v1.1.0) (2025-11-18)
+
+
+### Bug Fixes
+
+* dsl massive wall placing bug ([3e65fd9](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/3e65fd9b458f5189283354e617efa210d3f76e2c))
+* fix canMove ([32e9151](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/32e91511ae3b143f0aa9289671b88b19b9514ddb))
+* fix canMove in GameMap to not allow multiple ghosts on the same cell ([b52f10c](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/b52f10ccc193fb7ca53a00061ccb140cab1e8a14))
+* fix replaceEntity ([2781fc4](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/2781fc4aa43955ff82e2cd97b3937e13f45abc54))
+* fix typo in .md file ([6b7d99a](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/6b7d99a660181d5c73b1a9cc9a271fb232f177d4))
+* rename GameOver method in GameManager ([1e64bb4](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/1e64bb41b0d47585c2fb923b1462de92d60bf42b))
+* update checkCollisions method ([79793eb](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/79793eb8a128dd16bfb5fb12485f671a13848fc0))
+* update GhostTest ([af66b18](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/af66b18d40157e595b8b05893c71d5c889cd9826))
+* update isOutOfmap() to match real map dimension ([e4599d7](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/e4599d7af1c49de7a2745cf2406185dae523fe16))
+* update map from GameManager when an entity moves ([c6b00a5](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/c6b00a5fbe20cfc8c131ff6c2e89c1d09a5f20bf))
+* update SpacMan equals logic and enhance GameManager tests ([e83dd86](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/e83dd86b11bcbeea2d250adc887012511e5a96b9))
+
+
+### Features
+
+* add CollisionManager ([8bbaf80](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/8bbaf805fc2565ae2927688fb02bbae2cccb802c))
+* add GameManager implementation ([61150aa](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/61150aa1440d0d7cbbbd0fd2491fb81811684bfc))
+* add initial Sprint 1 documentation ([3a1fbcd](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/3a1fbcdddb2f1c3eaf65587a1375e642d12d308a))
+* add InputManager in GameLoop ([c326c49](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/c326c49f62247bdbf88af9a1fba30e19af9a0191))
+* add score to DotBasic ([99c89f3](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/99c89f303f551eeabebae4a8009e92fa1bef4a93))
+* add stop() to inputmanager to stop its thread ([1389caa](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/1389caa48c597ad2a94d365c67a9dc8130692fe5))
+* add tunnels ([a223750](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/a223750dae2e51944ef8fd258550d17dd4f7d655))
+* create a wall builder ([e9e04aa](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/e9e04aa109b96fff3e86796b7a306cd1726c8f46))
+* create game loop ([b7182d6](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/b7182d6ab1229dad12af6743cac99d9e72ca4ac3))
+* implement InputManager for handling user input ([6da8a71](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/6da8a71f123e8b7f67da92fd9390d65ecb470ef3))
+
 # 1.0.0 (2025-11-12)
 
 
