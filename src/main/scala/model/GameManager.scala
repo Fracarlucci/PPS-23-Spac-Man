@@ -33,7 +33,6 @@ case class SimpleGameManager(
                     val movedGhost = ghost.move(nextDirection).asInstanceOf[GhostBasic]
                     _gameMap.replaceEntityTo(ghost, movedGhost) match
                     case Right(updatedMap) => 
-                        println("Ghost " + ghost.id + " move to " + ghost.position)
                         _gameMap = updatedMap
                         movedGhost
                     case Left(error) => 
