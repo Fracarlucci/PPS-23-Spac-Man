@@ -5,38 +5,35 @@ enum GameState:
     case Win
     case GameOver
 
-object GameLoop:
-    val ghost_delay   = 500
-    val spacman_delay = 500
+case class GameLoop(gameManager: GameManager, inputManager: InputManager):
+    val ghostDelay   = 2000
+    val spacmanDelay = 500
 
     def loop(
-        gameManager: GameManager,
         state: GameState = GameState.Running,
         lastGhostMove: Long = System.currentTimeMillis(),
-        lastPacmanMove: Long = System.currentTimeMillis(),
-        inputManager: InputManager
+        lastPacmanMove: Long = System.currentTimeMillis()
     ): GameState =
         var leatestGhostMove   = lastGhostMove
         var leatestSpacManMove = lastPacmanMove
         val now                = System.currentTimeMillis()
         state match
             case GameState.Running =>
-                if now - lastGhostMove >= ghost_delay then
+                if isTimeToMove(now, lastGhostMove, ghostDelay) then
                     gameManager.moveGhosts()
                     leatestGhostMove = now
-                if now - lastPacmanMove >= spacman_delay then
+                if isTimeToMove(now, lastPacmanMove, spacmanDelay) then
                     inputManager.processInput() match
-                        case Some(dir)  => gameManager.moveSpacManAndCheck(dir)
-                        case None       => // do nothing
+                        case Some(dir) => gameManager.moveSpacManAndCheck(dir)
+                        case None      => // do nothing
                     leatestSpacManMove = now
                     // view.update(gameManager.gameMap)
                 Thread.sleep(50)
                 val newState = checkGameState(gameManager)
-                loop(gameManager, newState, leatestGhostMove, leatestSpacManMove, inputManager)
+                loop(newState, leatestGhostMove, leatestSpacManMove)
             case finalState => finalState
 
     private def checkGameState(gameManager: GameManager): GameState =
-
         if gameManager.isWin() then
             println("WIN!")
             return GameState.Win
@@ -45,3 +42,9 @@ object GameLoop:
             return GameState.GameOver
         else
             GameState.Running
+
+    private def isTimeToMove(
+        currTime: Long,
+        lastMovableEntityMove: Long,
+        entityDelay: Long
+    ): Boolean = currTime - lastMovableEntityMove >= entityDelay

@@ -32,6 +32,6 @@ private def createMap(): (SpacManBasic, GameMap) =
     
     inputManager.startInputThread()
 
-    GameLoop.loop(gameManager, inputManager = inputManager)
+    GameLoop(gameManager, inputManager).loop()
 
     inputManager.stop()
