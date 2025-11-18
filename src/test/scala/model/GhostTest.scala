@@ -12,6 +12,6 @@ class GhostTest extends AnyFlatSpec:
     it should "create a ghost" in:
         assert(ghost.position == startposition && ghost.direction == startDirection && ghost.speed == speed && ghost.id == id)
 
-    it should "change position" in:
-        val newGhost = ghost.nextMove()
-        assert(newGhost.position != startposition)
+    it should "give next move direction" in:
+        val newDirection = ghost.nextMove()
+        assert(newDirection.isInstanceOf[Direction])

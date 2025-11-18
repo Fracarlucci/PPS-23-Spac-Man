@@ -1,48 +1,37 @@
-import org.jline.terminal.TerminalBuilder
-import org.jline.utils.NonBlockingReader
-
-import model.{Direction, MovableEntity, SpacManBasic, Position2D}
-import model.map.GameMap
+import model.MapDSL
 import model.board
+import model.genericWall
+import model.DotBasic
+import model.Position2D
+import model.GhostBasic
+import model.Direction
+import model.map.GameMap
+import model.SimpleGameManager
+import model.SpacManBasic
 
-@main def runJLine(): Unit =
-    val terminal = TerminalBuilder.builder().system(true).build()
-    val reader: NonBlockingReader = terminal.reader()
+private def createMap(): (SpacManBasic, GameMap) =
+    val dsl     = MapDSL(board(10, 10))
+    val dot     = DotBasic(Position2D(0, 0))
+    val ghost1  = GhostBasic(Position2D(1, 1), Direction.Down, 1.0, 1)
+    val ghost2  = GhostBasic(Position2D(2, 2), Direction.Up, 1.0, 2)
+    val spacman = SpacManBasic(Position2D(9, 9), Direction.Down, 0)
+    import dsl.*
 
-    val map: GameMap = board(10, 10)
+    place a genericWall() from position(4, 4) to position(6, 6)
+    place a ghost1 at position(1, 1)
+    place a ghost2 at position(2, 2)
+    place a dot at position(0, 0)
+    place a spacman at position(9, 9)
 
-    var player: MovableEntity = SpacManBasic(Position2D(0, 0), Direction.Right, 0)
-    var running = true
+    (spacman, dsl.map)
 
-    map.place(player.position, player)
+@main def main(): Unit =
+    val (spacman, map) = createMap()
+    val gameManager = SimpleGameManager(spacman, map)
+    val inputManager = SimpleInputManager(gameManager)
+    
+    inputManager.startInputThread()
 
-    println("Use W/A/S/D to move, Q to quit")
+    GameLoop(gameManager, inputManager).loop()
 
-    while running do
-        val ch = reader.read(100)
-        if ch != -1 then
-            ch.toChar.toLower match
-                case 'w' => {
-                        require(map.canMove(player, Direction.Up))
-                        player = player.move(Direction.Up)
-                        }
-                case 'a' => {
-                        require(map.canMove(player, Direction.Left))
-                        player = player.move(Direction.Left)
-                        }
-                case 's' => {
-                        require(map.canMove(player, Direction.Down))
-                        player = player.move(Direction.Down)
-                        }
-                case 'd' => {
-                        require(map.canMove(player, Direction.Right))
-                        player = player.move(Direction.Right)
-                        }
-                case 'q' => running = false
-                case _ => ()
-            print(s"\rDirection: ${player.direction}, Position: ${player.position}")
-            System.out.flush()
-
-    reader.close()
-    terminal.close()
-    println("\nExit")
+    inputManager.stop()
