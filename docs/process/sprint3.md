@@ -2,12 +2,12 @@
 
 ## Obiettivo
 
-L'obiettivo di questo secondo Sprint è quello di riuscire a presentare, al termine dello sprint, 
-la logica di gioco completa o semi completa, senza interfaccia grafica.
+L'obiettivo di questo terzo Sprint è quello di riuscire a presentare la versione completa del gioco, senza le feature opzionali che, in caso, saranno svilippate nel quarto sprint.
 
 ## Deadline
+Visti i numerosi impegni degli sviluppatori si è deciso di aumentare la durata di questo sprint a 2 settimane.
 
-La scadenza dello sprint è il 17/11/2025.
+La scadenza dello sprint è il 30/11/2025.
 
 ## Backlog
 
@@ -22,6 +22,7 @@ La scadenza dello sprint è il 17/11/2025.
       <th>Stima iniziale</th>
       <th>Stima Sprint 1</th>
       <th>Stima Sprint 2</th>
+      <th>Stima Sprint 3</th>
     </tr>
   </thead>
   <tbody>
@@ -34,11 +35,13 @@ La scadenza dello sprint è il 17/11/2025.
       <td>1</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Studio dell'architettura</td>
       <td>Marco e Francesco</td>
       <td>4</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -48,7 +51,7 @@ La scadenza dello sprint è il 17/11/2025.
       <td>2</td>
       <td>0</td>
       <td>0</td>
-      <td></td>
+      <td>0</td>
     </tr>
     <tr>
         <td>Setup documentazione</td>
@@ -56,12 +59,14 @@ La scadenza dello sprint è il 17/11/2025.
         <td>2</td>
         <td>0</td>
         <td>0</td>
+        <td>0</td>
     </tr>
     <tr>
         <td>Setup progetto Scala</td>
         <td>Marco</td>
         <td>1</td>
-      <td>0</td>
+        <td>0</td>
+        <td>0</td>
         <td>0</td>
     </tr>
     <tr>
@@ -73,11 +78,13 @@ La scadenza dello sprint è il 17/11/2025.
       <td>4</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Implementazione posizione e direzione</td>
       <td>Marco</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -87,11 +94,13 @@ La scadenza dello sprint è il 17/11/2025.
       <td>3</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Input utente</td>
       <td>Francesco</td>
       <td>3</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -100,6 +109,7 @@ La scadenza dello sprint è il 17/11/2025.
       <td>Marco</td>
       <td>8</td>
       <td>3</td>
+      <td>0</td>
       <td>0</td>
     </tr>
      <tr>
@@ -111,12 +121,14 @@ La scadenza dello sprint è il 17/11/2025.
       <td>1</td>
       <td>1</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
         <td>Creazione logica di movimento semplice</td>
         <td>Marco</td>
         <td>3</td>
         <td>3</td>
+        <td>0</td>
         <td>0</td>
     </tr>
      <tr>
@@ -128,12 +140,14 @@ La scadenza dello sprint è il 17/11/2025.
       <td>4</td>
       <td>4</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Gestione delle collisioni</td>
       <td>Francesco</td>
       <td>4</td>
       <td>4</td>
+      <td>1</td>
       <td>0</td>
     </tr>
       <tr>
@@ -141,6 +155,7 @@ La scadenza dello sprint è il 17/11/2025.
       <td>Marco</td>
       <td>3</td>
       <td>3</td>
+      <td>0</td>
       <td>0</td>
     </tr>
      <tr>
@@ -152,6 +167,7 @@ La scadenza dello sprint è il 17/11/2025.
       <td>1</td>
       <td>1</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td rowspan="2">6</td>
@@ -162,12 +178,14 @@ La scadenza dello sprint è il 17/11/2025.
       <td>10</td>
       <td>10</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Creazione di un game loop</td>
       <td>Marco</td>
       <td>3</td>
       <td>3</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -178,7 +196,8 @@ La scadenza dello sprint è il 17/11/2025.
       <td>Francesco</td>
       <td>4</td>
       <td>4</td>
-      <td>0</td>
+      <td>3</td>
+      <td>3</td>
     </tr>
     <tr>
       <td>Documentazione</td>
@@ -186,22 +205,71 @@ La scadenza dello sprint è il 17/11/2025.
       <td>4</td>
       <td>4</td>
       <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td rowspan="1">8</td>
+      <td rowspan="1">Controller</td>
+      <td rowspan="1">Implementare il concetto di stato di gioco per la visualizzazione della vincita, perdita ecc..</td>
+      <td>Implementazione stato di gioco</td>
+      <td>Francesco</td>
+      <td>5</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td rowspan="3">9</td>
+      <td rowspan="3">Grafica</td>
+      <td rowspan="3">Come utente, vorrei poter avere una visualizzazione grafica del gioco</td>
+      <td>Visualizzazione della mappa</td>
+      <td>Marco</td>
+      <td>8</td>
+      <td>8</td>
+      <td>8</td>
+      <td>0</td>
+    </tr>
+    <tr>
+        <td>Visualizzazione pagina iniziale</td>
+        <td>Marco</td>
+        <td>3</td>
+        <td>3</td>
+        <td>3</td>
+        <td>0</td>
+    </tr>
+        <tr>
+        <td>Schermata vincita/perdita</td>
+        <td>Marco</td>
+        <td>2</td>
+        <td>2</td>
+        <td>2</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td rowspan="2">10</td>
+        <td rowspan="2">Refactor</td>
+        <td rowspan="2">Come sviluppatore, vorrei avere un codice pulito e leggibile</td>
+        <td>Refactor codice</td>
+        <td>Francesco</td>
+        <td>0</td>
+        <td>0</td>
+        <td>5</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>Refactor codice</td>
+        <td>Marco</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
     </tr>
     </tbody>
 </table>
 
 ---
-
-## Sprint Review 
-Lo stakeholder e gli sviluppatori sono contenti di questa settimana poichè gli obbiettivi prefissati sono stati raggiunti. Inoltre, è stato possibile presentare una demo da terminale che presentava la versione completa del gioco.
-
-## Sprint Retrospective
-
-La suddivisione del lavoro è risultata bilanciata. C'è stata una notevole riduzione delle dipendenze che ha permesso uno sviluppo del progetto in maniera più indipendente tra le parti.
-Inoltre, è emersa la possibilità di una rifattorizzazione di alcune parti del codice per una maggiore leggibilità.
-
 0. [Introduzione](../../README.md)
 1. [Sprint 1](process/sprint1.md)
 2. [Sprint 2](process/sprint2.md)
-3. [**Sprint 3 (next)**](process/sprint3.md)
-4. [Sprint 4](process/sprint4.md)
+3. [Sprint 3](process/sprint3.md)
+4. [**Sprint 4 (next)**](process/sprint4.md)
