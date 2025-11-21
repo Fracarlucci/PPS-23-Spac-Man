@@ -13,6 +13,26 @@ I tre componenti principali del pattern svolgono i seguenti ruoli:
 
 Questa separazione facilita la manutenibilità e l'estensibilità del codice, consentendo di apportare modifiche a una parte del sistema senza influenzare le altre. Questa scelta architetturale favorisce il raggiungimento degli obiettivi di modularità, riusabilità e scalabilità prefissati nel progetto.
 
+## Struttura del progetto
+
+Come da pattern MVC, la struttura del progetto è divisa in 3 moduli principali:
+
+- Model: contiene le parti logiche del gioco.
+    - `GameMap`: rappresenta la mappa di gioco e si occupa di mantenerla aggiornata, fornendo anche metodi utili per posizionare/prendere/spostare gli elementi al suo interno.
+    - `GameManager`: si occupa di gestire i movimenti all'interno del gioco (sfruttando la `GameMap`) e l'eventuale vittoria/sconfitta.
+    - `GhostBasic`: rappresenta i fantasmi all'interno del gioco. // TODO Finire
+    - `SpacMan`: rappresenta il Pacman all'interno del gioco. 
+    - `Position2D` e `Direction`: rappresentano la posizione e la direzione di un'entità di gioco.
+
+- Controller: coordina la comunicazione tra Model e View.
+    - `GameLoop`: si occupa di far comunicare il `GameManager` e la `GameView`, permettendo una rappresentazione fluida del gioco.
+    - `InputManager`: si occupa di raccogliere l'input del giocatore e di trasformarlo in un movimento effettivo.
+
+- View: contiente i componenti per la rappresentazione grafica dell'applicazione:
+    - `GameView`: // TODO
+    - `SpriteLoader`: reperisce le immagini per gli sprites
+    - // TODO
+
 ---
 
 0. [Introduzione](../README.md)
