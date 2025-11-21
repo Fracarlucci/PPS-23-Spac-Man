@@ -8,9 +8,12 @@ import model.Direction
 import model.map.GameMap
 import model.SimpleGameManager
 import model.SpacManBasic
+import view.GameView
+import view.SimpleSwingApp
+import scala.swing.Frame
 
 private def createMap(): (SpacManBasic, GameMap) =
-    val dsl     = MapDSL(board(10, 10))
+    val dsl     = MapDSL(board(200, 200))
     val dot     = DotBasic(Position2D(0, 0))
     val ghost1  = GhostBasic(Position2D(1, 1), Direction.Down, 1.0, 1)
     val ghost2  = GhostBasic(Position2D(2, 2), Direction.Up, 1.0, 2)
@@ -22,6 +25,8 @@ private def createMap(): (SpacManBasic, GameMap) =
     place a ghost2 at position(2, 2)
     place a dot at position(0, 0)
     place a spacman at position(9, 9)
+    place a genericWall() from position(10, 0) to position(10, 9)
+    place a genericWall() from position(10, 10) to position(0, 10)
 
     (spacman, dsl.map)
 
@@ -32,6 +37,7 @@ private def createMap(): (SpacManBasic, GameMap) =
     
     inputManager.startInputThread()
 
-    GameLoop(gameManager, inputManager).loop()
+    val view: GameView = SimpleSwingApp.create(map)
+    GameLoop(gameManager, inputManager, view).loop()
 
     inputManager.stop()
