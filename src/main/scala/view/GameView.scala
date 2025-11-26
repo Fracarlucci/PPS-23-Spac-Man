@@ -30,6 +30,7 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import java.awt.Color
 import controller.GameController
+import model.Tunnel
 
 object SimpleSwingApp {
     def create(map: GameMap): GameView =
@@ -183,17 +184,23 @@ class GameMapPanel(private var gameMap: GameMap) extends Panel:
                             drawSprite(g, "wall", x, y)
                         case pacman: SpacManBasic =>
                             drawSprite(g, drawPacman(pacman.direction), x, y)
+                        case tunnel: Tunnel =>
+                            drawSprite(g, drawTunnel(tunnel.correctDirection), x, y)
                         case ghost: GhostBasic =>
                             drawSprite(g, "ghost_pinky", x, y)
                         case _ => ()
                     }
                 case Left(_) => ()
 
-    private def drawPacman(dir: Direction): String = dir match
-        case Direction.Right => "pacman_right"
-        case Direction.Left  => "pacman_left"
-        case Direction.Up    => "pacman_up"
-        case Direction.Down  => "pacman_down"
+    private def drawPacman(dir: Direction): String = drawDirectables(dir, "pacman")
+    
+    private def drawTunnel(dir: Direction): String = drawDirectables(dir, "arrow")
+    
+    private def drawDirectables(dir: Direction, subject: String): String = dir match
+        case Direction.Right => subject + "_right"
+        case Direction.Left  => subject + "_left"
+        case Direction.Up    => subject + "_up"
+        case Direction.Down  => subject + "_down"
 
     private def drawSprite(g: Graphics2D, name: String, x: Int, y: Int): Unit =
         SpriteLoader.load(name) match

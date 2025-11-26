@@ -20,6 +20,7 @@ import view.{GameView, SimpleSwingApp}
 import scala.swing.Swing
 import java.awt.event.{KeyAdapter, KeyEvent}
 import controller.GameLoop
+import model.Tunnel
 
 enum GameState:
     case Menu
@@ -53,6 +54,9 @@ object GameController:
         val ghost1  = GhostBasic(Position2D(1, 1), Direction.Down, 1.0, 1)
         val ghost2  = GhostBasic(Position2D(2, 2), Direction.Up, 1.0, 2)
         val spacman = SpacManBasic(Position2D(9, 9), Direction.Down, 0)
+        val tunnel1  = Tunnel(Position2D(10, 6), Position2D(5, 10), Direction.Right)
+        val tunnel2  = Tunnel(Position2D(5, 10), Position2D(10, 6), Direction.Down)
+
         import dsl.*
 
         place a genericWall() from position(4, 4) to position(6, 6)
@@ -60,9 +64,13 @@ object GameController:
         place a ghost2 at position(2, 2)
         place a dot at position(0, 0)
         place a spacman at position(9, 9)
-        place a genericWall() from position(10, 0) to position(10, 9)
-        place a genericWall() from position(10, 10) to position(0, 10)
-
+        place a tunnel1 at position(10, 6)
+        place a tunnel2 at position(5, 10)
+        place a genericWall() from position(10, 0) to position(10, 5)
+        place a genericWall() from position(10, 7) to position(10, 9)
+        place a genericWall() from position(0, 10) to position(4, 10)
+        place a genericWall() from position(10, 10) to position(6, 10)
+        
         (spacman, dsl.map)
 
     private def handleFinalState(
