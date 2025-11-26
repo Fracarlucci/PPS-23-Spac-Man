@@ -85,8 +85,65 @@ class GameView(gameMap: GameMap) extends MainFrame:
     def update(map: GameMap): Unit =
         gamePanel.updateMap(map)
 
-    def displayWin(score: Int): Unit      = ???
-    def displayGameOver(score: Int): Unit = ???
+    def displayWin(score: Int): Unit =
+        val titleLabel = new Label("Hai vinto!"):
+            horizontalAlignment = Alignment.Center
+            font = new Font("Arial", java.awt.Font.BOLD, 36)
+        val scoreLabel = new Label("Score: " + score):
+            horizontalAlignment = Alignment.Center
+            font = new Font("Arial", java.awt.Font.PLAIN, 25)
+        val homeButton = new Button("Torna alla home"):
+            preferredSize = new Dimension(300, 50)
+            font = new Font("Arial", java.awt.Font.BOLD, 20)
+
+        listenTo(homeButton)
+        reactions += {
+            case ButtonClicked(`homeButton`) =>
+                visible = false
+                dispose()
+                GameController.showHome()
+        }
+        
+        val winPanel = new BoxPanel(Orientation.Vertical):
+            contents += Swing.VStrut(100)
+            contents += new FlowPanel(titleLabel)
+            contents += new FlowPanel(scoreLabel)
+            contents += Swing.VStrut(40)
+            contents += new FlowPanel(homeButton)
+
+        contents = new BorderPanel {
+            layout(winPanel) = BorderPanel.Position.Center
+        }
+
+    def displayGameOver(score: Int): Unit = 
+        val titleLabel = new Label("Hai perso"):
+            horizontalAlignment = Alignment.Center
+            font = new Font("Arial", java.awt.Font.BOLD, 36)
+        val scoreLabel = new Label("Score: " + score):
+            horizontalAlignment = Alignment.Center
+            font = new Font("Arial", java.awt.Font.PLAIN, 25)
+        val homeButton = new Button("Torna alla home"):
+            preferredSize = new Dimension(300, 50)
+            font = new Font("Arial", java.awt.Font.BOLD, 20)
+
+        listenTo(homeButton)
+        reactions += {
+            case ButtonClicked(`homeButton`) =>
+                visible = false
+                dispose()
+                GameController.showHome()
+        }
+        
+        val winPanel = new BoxPanel(Orientation.Vertical):
+            contents += Swing.VStrut(100)
+            contents += new FlowPanel(titleLabel)
+            contents += new FlowPanel(scoreLabel)
+            contents += Swing.VStrut(40)
+            contents += new FlowPanel(homeButton)
+
+        contents = new BorderPanel {
+            layout(winPanel) = BorderPanel.Position.Center
+        }
 
 class GameMapPanel(private var gameMap: GameMap) extends Panel:
     private val CELL_SIZE = 32
