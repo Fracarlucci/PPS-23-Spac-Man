@@ -104,7 +104,7 @@ class GameView(gameMap: GameMap) extends MainFrame:
                 dispose()
                 GameController.showHome()
         }
-        
+
         val winPanel = new BoxPanel(Orientation.Vertical):
             contents += Swing.VStrut(100)
             contents += new FlowPanel(titleLabel)
@@ -116,7 +116,7 @@ class GameView(gameMap: GameMap) extends MainFrame:
             layout(winPanel) = BorderPanel.Position.Center
         }
 
-    def displayGameOver(score: Int): Unit = 
+    def displayGameOver(score: Int): Unit =
         val titleLabel = new Label("Hai perso"):
             horizontalAlignment = Alignment.Center
             font = new Font("Arial", java.awt.Font.BOLD, 36)
@@ -134,7 +134,7 @@ class GameView(gameMap: GameMap) extends MainFrame:
                 dispose()
                 GameController.showHome()
         }
-        
+
         val winPanel = new BoxPanel(Orientation.Vertical):
             contents += Swing.VStrut(100)
             contents += new FlowPanel(titleLabel)
@@ -193,9 +193,9 @@ class GameMapPanel(private var gameMap: GameMap) extends Panel:
                 case Left(_) => ()
 
     private def drawPacman(dir: Direction): String = drawDirectables(dir, "pacman")
-    
+
     private def drawTunnel(dir: Direction): String = drawDirectables(dir, "arrow")
-    
+
     private def drawDirectables(dir: Direction, subject: String): String = dir match
         case Direction.Right => subject + "_right"
         case Direction.Left  => subject + "_left"
