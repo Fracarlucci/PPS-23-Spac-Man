@@ -1,17 +1,14 @@
+package model
 
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.ConcurrentLinkedQueue
 import org.jline.terminal.TerminalBuilder
-import model.Direction
-import model.map.GameMap
-import model.GameManager
 
 trait InputManager:
     def startInputThread(): Thread
     def processInput(): Option[Direction]
     def stop(): Unit
 
-class SimpleInputManager(gameManager: GameManager) extends InputManager:
+class SimpleInputManager() extends InputManager:
     @volatile private var pendingMove: Option[Direction] = None
     @volatile private var running = true
     private var terminal: org.jline.terminal.Terminal = _

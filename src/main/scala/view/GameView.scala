@@ -29,6 +29,7 @@ import model.GhostBasic
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import java.awt.Color
+import controller.GameController
 
 object SimpleSwingApp {
     def create(map: GameMap): GameView =
@@ -43,34 +44,31 @@ class HomeView() extends MainFrame:
     title = "SpacMan"
     preferredSize = new Dimension(SIZE, 500)
 
+    peer.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE)
+
     private val titleLabel = new Label("SpacMan"):
         horizontalAlignment = Alignment.Center
         font = new Font("Arial", java.awt.Font.BOLD, 36)
     private val startButton = new Button("Start"):
         preferredSize = new Dimension(100, 50)
         font = new Font("Arial", java.awt.Font.BOLD, 20)
+
+    listenTo(startButton)
+    reactions += {
+        case ButtonClicked(`startButton`) =>
+            visible = false
+            dispose()
+            GameController.startGame()
+    }
+
     private val mainPanel = new BoxPanel(Orientation.Vertical):
-        contents += Swing.VStrut(100) 
+        contents += Swing.VStrut(100)
         contents += new FlowPanel(titleLabel)
-        contents += Swing.VStrut(40) 
+        contents += Swing.VStrut(40)
         contents += new FlowPanel(startButton)
 
     contents = new BorderPanel {
         layout(mainPanel) = BorderPanel.Position.Center
-    }
-
-    private def createControlPanel(startGameButton: Button): FlowPanel = {
-        new FlowPanel {
-            hGap = 5
-            vGap = 5
-            border = Swing.EmptyBorder(2, 0, 2, 0)
-
-            listenTo(startGameButton)
-            // startGameButton.reactions += {
-            //     case ButtonClicked(_) => controller.startGame()
-            // }
-            contents += startGameButton
-        }
     }
 
 class GameView(gameMap: GameMap) extends MainFrame:
