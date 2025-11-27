@@ -4,6 +4,8 @@ import model.map.GameMap
 import scala.annotation.tailrec
 
 trait GameManager:
+    def getGameMap: GameMap
+    def getSpacMan: SpacManBasic
     def isWin(): Boolean
     def isGameOver(): Boolean
     def moveSpacManAndCheck(newDirection: Direction): Option[SpacManBasic]

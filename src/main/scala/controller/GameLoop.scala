@@ -1,11 +1,12 @@
+package controller
+
 import model.GameManager
+import model.InputManager
+import view.GameView
+import scala.swing.Swing
+import controller.GameState
 
-enum GameState:
-    case Running
-    case Win
-    case GameOver
-
-case class GameLoop(gameManager: GameManager, inputManager: InputManager):
+case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: GameView):
     val ghostDelay   = 2000
     val spacmanDelay = 500
 
@@ -27,21 +28,17 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager):
                         case Some(dir) => gameManager.moveSpacManAndCheck(dir)
                         case None      => // do nothing
                     leatestSpacManMove = now
-                    // view.update(gameManager.gameMap)
+                    Swing.onEDT:
+                        view.update(gameManager.getGameMap)
                 Thread.sleep(50)
                 val newState = checkGameState(gameManager)
                 loop(newState, leatestGhostMove, leatestSpacManMove)
             case finalState => finalState
 
-    private def checkGameState(gameManager: GameManager): GameState =
-        if gameManager.isWin() then
-            println("WIN!")
-            return GameState.Win
-        else if gameManager.isGameOver() then
-            println("LOSE!")
-            return GameState.GameOver
-        else
-            GameState.Running
+    def checkGameState(gameManager: GameManager): GameState =
+        if gameManager.isWin() then GameState.Win
+        else if gameManager.isGameOver() then GameState.GameOver
+        else GameState.Running
 
     private def isTimeToMove(
         currTime: Long,
