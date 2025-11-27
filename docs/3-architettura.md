@@ -20,18 +20,18 @@ Come da pattern MVC, la struttura del progetto è divisa in 3 moduli principali:
 - Model: contiene le parti logiche del gioco.
     - `GameMap`: rappresenta la mappa di gioco e si occupa di mantenerla aggiornata, fornendo anche metodi utili per posizionare/prendere/spostare gli elementi al suo interno.
     - `GameManager`: si occupa di gestire i movimenti all'interno del gioco (sfruttando la `GameMap`) e l'eventuale vittoria/sconfitta.
-    - `GhostBasic`: rappresenta i fantasmi all'interno del gioco. // TODO Finire
+    - `GhostBasic`: rappresenta i fantasmi all'interno del gioco.
     - `SpacMan`: rappresenta il Pacman all'interno del gioco. 
     - `Position2D` e `Direction`: rappresentano la posizione e la direzione di un'entità di gioco.
 
 - Controller: coordina la comunicazione tra Model e View.
-    - `GameLoop`: si occupa di far comunicare il `GameManager` e la `GameView`, permettendo una rappresentazione fluida del gioco.
-    - `InputManager`: si occupa di raccogliere l'input del giocatore e di trasformarlo in un movimento effettivo.
+    - `GameController`: si occupa di gestire le varie schermate di gioco, comunicando con la view per la rappresentazione grafica.
+    - `GameLoop`: si occupa di far comunicare il `GameManager` e la `GameView`, viene chiamata dal `GameController` quando inizia una nuova partita, permettendo una rappresentazione fluida del gioco.
+    - `InputManager`: si occupa di raccogliere l'input del giocatore e trasformarlo in un movimento effettivo.
 
 - View: contiente i componenti per la rappresentazione grafica dell'applicazione:
-    - `GameView`: // TODO
+    - `GameView`: è il componente principale della view, contiene la rappresentazione grafica del gioco.
     - `SpriteLoader`: reperisce le immagini per gli sprites
-    - // TODO
 
 ---
 
