@@ -47,8 +47,8 @@ class HomeView() extends MainFrame:
 
     peer.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE)
 
-    private val titleLabel = LabelFactory.createTitleLabel("SpacMan")
-    private val startButton = ButtonFactory("Start", new Dimension(100, 50))         
+    private val titleLabel  = LabelFactory.createTitleLabel("SpacMan")
+    private val startButton = ButtonFactory("Start", ButtonFactory.dimension(ButtonSize.Normal))
 
     listenTo(startButton)
     reactions += {
@@ -70,7 +70,7 @@ class HomeView() extends MainFrame:
 
 class GameView(gameMap: GameMap) extends MainFrame:
     private val gamePanel = GameMapPanel(gameMap)
-    private val SIZE = 1000
+    private val SIZE      = 1000
 
     def initialize(): Unit =
         title = "SpacMan"
@@ -83,33 +83,15 @@ class GameView(gameMap: GameMap) extends MainFrame:
         gamePanel.updateMap(map)
 
     def displayWin(score: Int): Unit =
-        val titleLabel = LabelFactory.createTitleLabel("Hai vinto!")
-        val scoreLabel = LabelFactory.createScoreLabel(score)
-        val homeButton = ButtonFactory("Torna alla home", new Dimension(300, 50)) 
-
-        listenTo(homeButton)
-        reactions += {
-            case ButtonClicked(`homeButton`) =>
-                visible = false
-                dispose()
-                GameController.showHome()
-        }
-
-        val winPanel = new BoxPanel(Orientation.Vertical):
-            contents += Swing.VStrut(100)
-            contents += new FlowPanel(titleLabel)
-            contents += new FlowPanel(scoreLabel)
-            contents += Swing.VStrut(40)
-            contents += new FlowPanel(homeButton)
-
-        contents = new BorderPanel {
-            layout(winPanel) = BorderPanel.Position.Center
-        }
+        displayEndingScreen("Hai vinto!", score)
 
     def displayGameOver(score: Int): Unit =
-        val titleLabel = LabelFactory.createTitleLabel("Hai perso!")
+        displayEndingScreen("Hai perso!", score)
+
+    private def displayEndingScreen(titleText: String, score: Int): Unit =
+        val titleLabel = LabelFactory.createTitleLabel(titleText)
         val scoreLabel = LabelFactory.createScoreLabel(score)
-        val homeButton = ButtonFactory("Torna alla home", new Dimension(300, 50)) 
+        val homeButton = ButtonFactory("Torna alla home", ButtonFactory.dimension(ButtonSize.Big))
 
         listenTo(homeButton)
         reactions += {
@@ -119,7 +101,7 @@ class GameView(gameMap: GameMap) extends MainFrame:
                 GameController.showHome()
         }
 
-        val winPanel = new BoxPanel(Orientation.Vertical):
+        val endingPanel = new BoxPanel(Orientation.Vertical):
             contents += Swing.VStrut(100)
             contents += new FlowPanel(titleLabel)
             contents += new FlowPanel(scoreLabel)
@@ -127,7 +109,7 @@ class GameView(gameMap: GameMap) extends MainFrame:
             contents += new FlowPanel(homeButton)
 
         contents = new BorderPanel {
-            layout(winPanel) = BorderPanel.Position.Center
+            layout(endingPanel) = BorderPanel.Position.Center
         }
 
 class GameMapPanel(private var gameMap: GameMap) extends Panel:
