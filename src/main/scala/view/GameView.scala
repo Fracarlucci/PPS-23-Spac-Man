@@ -47,12 +47,8 @@ class HomeView() extends MainFrame:
 
     peer.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE)
 
-    private val titleLabel = new Label("SpacMan"):
-        horizontalAlignment = Alignment.Center
-        font = new Font("Arial", java.awt.Font.BOLD, 36)
-    private val startButton = new Button("Start"):
-        preferredSize = new Dimension(100, 50)
-        font = new Font("Arial", java.awt.Font.BOLD, 20)
+    private val titleLabel = LabelFactory.createTitleLabel("SpacMan")
+    private val startButton = ButtonFactory("Start", new Dimension(100, 50))         
 
     listenTo(startButton)
     reactions += {
@@ -74,9 +70,9 @@ class HomeView() extends MainFrame:
 
 class GameView(gameMap: GameMap) extends MainFrame:
     private val gamePanel = GameMapPanel(gameMap)
+    private val SIZE = 1000
 
     def initialize(): Unit =
-        val SIZE = 1000
         title = "SpacMan"
         preferredSize = new Dimension(SIZE, SIZE)
         contents = new BorderPanel {
@@ -87,15 +83,9 @@ class GameView(gameMap: GameMap) extends MainFrame:
         gamePanel.updateMap(map)
 
     def displayWin(score: Int): Unit =
-        val titleLabel = new Label("Hai vinto!"):
-            horizontalAlignment = Alignment.Center
-            font = new Font("Arial", java.awt.Font.BOLD, 36)
-        val scoreLabel = new Label("Score: " + score):
-            horizontalAlignment = Alignment.Center
-            font = new Font("Arial", java.awt.Font.PLAIN, 25)
-        val homeButton = new Button("Torna alla home"):
-            preferredSize = new Dimension(300, 50)
-            font = new Font("Arial", java.awt.Font.BOLD, 20)
+        val titleLabel = LabelFactory.createTitleLabel("Hai vinto!")
+        val scoreLabel = LabelFactory.createScoreLabel(score)
+        val homeButton = ButtonFactory("Torna alla home", new Dimension(300, 50)) 
 
         listenTo(homeButton)
         reactions += {
@@ -117,15 +107,9 @@ class GameView(gameMap: GameMap) extends MainFrame:
         }
 
     def displayGameOver(score: Int): Unit =
-        val titleLabel = new Label("Hai perso"):
-            horizontalAlignment = Alignment.Center
-            font = new Font("Arial", java.awt.Font.BOLD, 36)
-        val scoreLabel = new Label("Score: " + score):
-            horizontalAlignment = Alignment.Center
-            font = new Font("Arial", java.awt.Font.PLAIN, 25)
-        val homeButton = new Button("Torna alla home"):
-            preferredSize = new Dimension(300, 50)
-            font = new Font("Arial", java.awt.Font.BOLD, 20)
+        val titleLabel = LabelFactory.createTitleLabel("Hai perso!")
+        val scoreLabel = LabelFactory.createScoreLabel(score)
+        val homeButton = ButtonFactory("Torna alla home", new Dimension(300, 50)) 
 
         listenTo(homeButton)
         reactions += {
