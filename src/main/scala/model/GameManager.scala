@@ -56,41 +56,61 @@ case class SimpleGameManager(
                     println(s"Error moving SpacMan: $error")
         _spacMan
 
+    private enum CollisionResult:
+        case GhostCollision
+        case DotCollision(dot: DotBasic)
+        case TunnelCollision(tunnel: Tunnel)
+        case NoCollision
+
+    private def detectCollision(
+        entities: Set[GameEntity],
+        direction: Direction
+    ): CollisionResult =
+        import CollisionResult.*
+        entities.collectFirst { case ghost: GhostBasic => GhostCollision }
+            .orElse(entities.collectFirst { case dot: DotBasic => DotCollision(dot) })
+            .orElse(
+              entities.collectFirst { case tunnel: Tunnel => tunnel }
+                  .filter(_.canTeleport(direction))
+                  .map(TunnelCollision.apply)
+            )
+            .getOrElse(NoCollision)
+
+    private def applyCollisionEffect(
+        spacMan: SpacManBasic,
+        collision: CollisionResult
+    ): Option[SpacManBasic] =
+        import CollisionResult.*
+        collision match
+            case GhostCollision =>
+                _gameMap = _gameMap.remove(spacMan).getOrElse(_gameMap)
+                _gameOver = true
+                None
+            case DotCollision(dot) =>
+                _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
+                _spacMan = _spacMan.addScore(dot.score)
+                Some(_spacMan)
+            case TunnelCollision(tunnel) =>
+                val teleportedSpacMan = spacMan.teleport(tunnel.toPos)
+                _gameMap.replaceEntityTo(spacMan, teleportedSpacMan) match
+                    case Right(updatedMap) =>
+                        _gameMap = updatedMap
+                        _spacMan = teleportedSpacMan
+                        Some(_spacMan)
+                    case Left(err) =>
+                        println(s"Error teleporting SpacMan: $err")
+                        None
+            case NoCollision =>
+                Some(_spacMan)
+
     private def checkCollisions(
         spacMan: SpacManBasic,
         direction: Direction
     ): Option[SpacManBasic] =
-        _gameMap.entityAt(spacMan.position).toOption.flatMap: entities =>
-            entities.collectFirst { case ghost: GhostBasic => ghost }
-                .map(_ => {
-                    _gameMap = _gameMap.remove(spacMan).getOrElse(_gameMap)
-                    _gameOver = true
-                    None
-                })
-                .orElse {
-                    entities.collectFirst { case dot: DotBasic => dot }
-                        .map { dot =>
-                            _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
-                            _spacMan = _spacMan.addScore(dot.score)
-                            Some(_spacMan)
-                        }
-                }
-                .orElse {
-                    entities.collectFirst { case tunnel: Tunnel => tunnel }
-                        .filter(_.canTeleport(direction))
-                        .map { tunnel =>
-                            val teleportedSpacMan = spacMan.teleport(tunnel.toPos)
-                            _gameMap.replaceEntityTo(spacMan, teleportedSpacMan) match
-                                case Right(updatedMap) =>
-                                    _gameMap = updatedMap
-                                    _spacMan = teleportedSpacMan
-                                    Some(_spacMan)
-                                case Left(err) =>
-                                    println(s"Error teleporting SpacMan: $err")
-                                    None
-                        }
-                }
-                .getOrElse(Some(_spacMan))
+        _gameMap.entityAt(spacMan.position).toOption
+            .map(entities => detectCollision(entities, direction))
+            .map(collision => applyCollisionEffect(spacMan, collision))
+            .getOrElse(Some(_spacMan))
 
     def moveSpacManAndCheck(dir: Direction): Option[SpacManBasic] =
         checkCollisions(moveSpacMan(dir), dir)
