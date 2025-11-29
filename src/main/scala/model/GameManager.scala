@@ -36,6 +36,7 @@ case class SimpleGameManager(
                     _gameMap.replaceEntityTo(ghost, movedGhost) match
                         case Right(updatedMap) =>
                             _gameMap = updatedMap
+                            checkCollisionWithGhost(movedGhost)
                             movedGhost
                         case Left(error) =>
                             println(s"Error moving Ghost: $error")
@@ -102,6 +103,11 @@ case class SimpleGameManager(
                         None
             case NoCollision =>
                 Some(_spacMan)
+
+    private def checkCollisionWithGhost(ghost: GhostBasic): Unit =
+        if ghost.position == _spacMan.position then
+            _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
+            _gameOver = true
 
     private def checkCollisions(
         spacMan: SpacManBasic,
