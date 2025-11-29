@@ -79,10 +79,7 @@ case class SimpleGameManager(
                     entities.collectFirst { case tunnel: Tunnel => tunnel }
                         .filter(_.canTeleport(direction))
                         .map { tunnel =>
-                            val teleportedSpacMan = spacMan.withPosAndDir(
-                              tunnel.toPos,
-                              direction
-                            ).asInstanceOf[SpacManBasic]
+                            val teleportedSpacMan = spacMan.teleport(tunnel.toPos)
                             _gameMap.replaceEntityTo(spacMan, teleportedSpacMan) match
                                 case Right(updatedMap) =>
                                     _gameMap = updatedMap
