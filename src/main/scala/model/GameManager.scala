@@ -22,10 +22,10 @@ case class SimpleGameManager(
     def getGameMap: GameMap = _gameMap
 
     override def isWin(): Boolean = _gameMap.getDots.isEmpty
-    
+
     override def isGameOver(): Boolean = _gameOver
 
-    override def moveGhosts(): Set[GhostBasic] = 
+    override def moveGhosts(): Set[GhostBasic] =
         @tailrec
         def findValidMove(ghost: GhostBasic, attempts: Int = 10): GhostBasic =
             if attempts <= 0 then ghost
@@ -34,38 +34,39 @@ case class SimpleGameManager(
                 if _gameMap.canMove(ghost, nextDirection) then
                     val movedGhost = ghost.move(nextDirection).asInstanceOf[GhostBasic]
                     _gameMap.replaceEntityTo(ghost, movedGhost) match
-                    case Right(updatedMap) => 
-                        _gameMap = updatedMap
-                        movedGhost
-                    case Left(error) => 
-                        println(s"Error moving Ghost: $error")
-                        ghost
+                        case Right(updatedMap) =>
+                            _gameMap = updatedMap
+                            movedGhost
+                        case Left(error) =>
+                            println(s"Error moving Ghost: $error")
+                            ghost
                 else
                     findValidMove(ghost, attempts - 1)
-        
+
         _gameMap.getGhosts.map(findValidMove(_))
 
-    private def moveSpacMan(newDirection: Direction): SpacManBasic = 
+    private def moveSpacMan(newDirection: Direction): SpacManBasic =
         if _gameMap.canMove(_spacMan, newDirection) then
-            val movedSpacMan = _spacMan.move(newDirection).asInstanceOf[SpacManBasic] 
+            val movedSpacMan = _spacMan.move(newDirection).asInstanceOf[SpacManBasic]
             _gameMap.replaceEntityTo(_spacMan, movedSpacMan) match
-            case Right(updatedMap) => 
-                _gameMap = updatedMap
-                _spacMan = movedSpacMan
-            case Left(error) => 
-                println(s"Error moving SpacMan: $error")
+                case Right(updatedMap) =>
+                    _gameMap = updatedMap
+                    _spacMan = movedSpacMan
+                case Left(error) =>
+                    println(s"Error moving SpacMan: $error")
         _spacMan
 
     private def checkCollisions(
-        spacMan: SpacManBasic
+        spacMan: SpacManBasic,
+        direction: Direction
     ): Option[SpacManBasic] =
         _gameMap.entityAt(spacMan.position).toOption.flatMap: entities =>
             entities.collectFirst { case ghost: GhostBasic => ghost }
-                .map(_ => { 
+                .map(_ => {
                     _gameMap = _gameMap.remove(spacMan).getOrElse(_gameMap)
                     _gameOver = true
-                    None 
-                })                
+                    None
+                })
                 .orElse {
                     entities.collectFirst { case dot: DotBasic => dot }
                         .map { dot =>
@@ -74,7 +75,25 @@ case class SimpleGameManager(
                             Some(_spacMan)
                         }
                 }
+                .orElse {
+                    entities.collectFirst { case tunnel: Tunnel => tunnel }
+                        .filter(_.canTeleport(direction))
+                        .map { tunnel =>
+                            val teleportedSpacMan = spacMan.withPosAndDir(
+                              tunnel.toPos,
+                              direction
+                            ).asInstanceOf[SpacManBasic]
+                            _gameMap.replaceEntityTo(spacMan, teleportedSpacMan) match
+                                case Right(updatedMap) =>
+                                    _gameMap = updatedMap
+                                    _spacMan = teleportedSpacMan
+                                    Some(_spacMan)
+                                case Left(err) =>
+                                    println(s"Error teleporting SpacMan: $err")
+                                    None
+                        }
+                }
                 .getOrElse(Some(_spacMan))
 
     def moveSpacManAndCheck(dir: Direction): Option[SpacManBasic] =
-        checkCollisions(moveSpacMan(dir))
+        checkCollisions(moveSpacMan(dir), dir)
