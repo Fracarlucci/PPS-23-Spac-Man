@@ -84,8 +84,7 @@ case class SimpleGameManager(
         import CollisionResult.*
         collision match
             case GhostCollision =>
-                _gameMap = _gameMap.remove(spacMan).getOrElse(_gameMap)
-                _gameOver = true
+                handleGhostCollision()
                 None
             case DotCollision(dot) =>
                 _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
@@ -104,10 +103,13 @@ case class SimpleGameManager(
             case NoCollision =>
                 Some(_spacMan)
 
+    private def handleGhostCollision(): Unit =
+        _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
+        _gameOver = true
+
     private def checkCollisionWithGhost(ghost: GhostBasic): Unit =
         if ghost.position == _spacMan.position then
-            _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
-            _gameOver = true
+            handleGhostCollision()
 
     private def checkCollisions(
         spacMan: SpacManBasic,
