@@ -86,6 +86,8 @@ class GameView(gameMap: GameMap) extends MainFrame:
     def update(map: GameMap): Unit =
         gamePanel.updateMap(map)
 
+    def getGamePanel: javax.swing.JComponent = gamePanel.peer
+
     def displayWin(score: Int): Unit =
         val titleLabel = new Label("Hai vinto!"):
             horizontalAlignment = Alignment.Center
