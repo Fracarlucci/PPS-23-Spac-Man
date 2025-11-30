@@ -11,7 +11,7 @@ import model.map.GameMap
 import model.GameManager
 import model.SimpleGameManager
 import model.InputManager
-import model.SimpleInputManager
+import model.SwingInputManager
 import model.SpacManBasic
 import view.GameView
 import view.SimpleSwingApp
@@ -36,10 +36,10 @@ object GameController:
     def startGame(): Unit =
         val (spacman, map) = createMap()
         val gameManager    = SimpleGameManager(spacman, map)
-        val inputManager   = SimpleInputManager()
         val view           = SimpleSwingApp.create(gameManager.getGameMap)
+        val inputManager   = SwingInputManager(view.getGamePanel)
 
-        inputManager.startInputThread()
+        inputManager.start()
 
         val gameLoop = GameLoop(gameManager, inputManager, view)
 
@@ -49,29 +49,58 @@ object GameController:
         }).start()
 
     private def createMap(): (SpacManBasic, GameMap) =
-        val dsl     = MapDSL(board(200, 200))
-        val dot     = DotBasic(Position2D(0, 0))
-        val ghost1  = GhostBasic(Position2D(1, 1), Direction.Down, 1.0, 1)
+        val dsl     = MapDSL(board(11, 11))
+        val ghost1  = GhostBasic(Position2D(7, 7), Direction.Down, 1.0, 1)
         val ghost2  = GhostBasic(Position2D(2, 2), Direction.Up, 1.0, 2)
-        val spacman = SpacManBasic(Position2D(9, 9), Direction.Down, 0)
-        val tunnel1  = Tunnel(Position2D(10, 6), Position2D(5, 10), Direction.Right)
-        val tunnel2  = Tunnel(Position2D(5, 10), Position2D(10, 6), Direction.Down)
+        val spacman = SpacManBasic(Position2D(9, 9), Direction.Right, 0)
+        val tunnel1 = Tunnel(Position2D(10, 5), Position2D(0, 5), Direction.Right)
+        val tunnel2 = Tunnel(Position2D(0, 5), Position2D(10, 5), Direction.Left)
 
         import dsl.*
 
         place a genericWall() from position(4, 4) to position(6, 6)
-        place a ghost1 at position(1, 1)
+        place a genericWall() from position(0, 0) to position(10, 0)
+        place a genericWall() from position(0, 1) to position(0, 4)
+        place a genericWall() from position(0, 6) to position(0, 10)
+        place a genericWall() from position(10, 1) to position(10, 4)
+        place a genericWall() from position(10, 6) to position(10, 10)
+        place a genericWall() from position(0, 10) to position(9, 10)
+
+        val wallPositions = getWallPositions()
+
+        // Place dots in every cell that doesn't contain a wall
+        for
+            x <- 1 until 10
+            y <- 1 until 10
+            pos = Position2D(x, y)
+            if !wallPositions.contains(pos) && pos != spacman.position
+        do
+            place a DotBasic(pos) at position(x, y)
+
+        place a ghost1 at position(7, 7)
         place a ghost2 at position(2, 2)
-        place a dot at position(0, 0)
         place a spacman at position(9, 9)
-        place a tunnel1 at position(10, 6)
-        place a tunnel2 at position(5, 10)
-        place a genericWall() from position(10, 0) to position(10, 5)
-        place a genericWall() from position(10, 7) to position(10, 9)
-        place a genericWall() from position(0, 10) to position(4, 10)
-        place a genericWall() from position(10, 10) to position(6, 10)
-        
+        place a tunnel1 at position(10, 5)
+        place a tunnel2 at position(0, 5)
+
         (spacman, dsl.map)
+
+    private def getWallPositions(): Set[Position2D] =
+        val positions = Set.newBuilder[Position2D]
+
+        for x <- 0 to 10 do positions += Position2D(x, 0)
+        for y <- 1 to 4 do positions += Position2D(0, y)
+        for y <- 6 to 10 do positions += Position2D(0, y)
+        for y <- 1 to 4 do positions += Position2D(10, y)
+        for y <- 6 to 10 do positions += Position2D(10, y)
+        for x <- 0 to 9 do positions += Position2D(x, 10)
+
+        for
+            x <- 4 to 6
+            y <- 4 to 6
+        do positions += Position2D(x, y)
+
+        positions.result()
 
     private def handleFinalState(
         state: GameState,
