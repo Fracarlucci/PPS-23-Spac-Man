@@ -1,7 +1,8 @@
 package model
 
-case class SpacManBasic(val position: Position2D, val direction: Direction, val score: Int) extends MovableEntity:
-    
+case class SpacManBasic(val position: Position2D, val direction: Direction, val score: Int)
+    extends MovableEntity:
+
     override def withPosAndDir(newPosition: Position2D, newDirection: Direction): SpacManBasic =
         this.copy(position = newPosition, direction = newDirection)
 
@@ -9,7 +10,10 @@ case class SpacManBasic(val position: Position2D, val direction: Direction, val 
         if points < 0 then this
         else this.copy(score = this.score + points)
 
+    def teleport(destination: Position2D): SpacManBasic =
+        this.copy(position = destination)
+
     override def equals(obj: Any): Boolean = obj match
-        case that: SpacManBasic => 
+        case that: SpacManBasic =>
             this.position == that.position
         case _ => false

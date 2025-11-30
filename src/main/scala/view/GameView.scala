@@ -47,12 +47,8 @@ class HomeView() extends MainFrame:
 
     peer.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE)
 
-    private val titleLabel = new Label("SpacMan"):
-        horizontalAlignment = Alignment.Center
-        font = new Font("Arial", java.awt.Font.BOLD, 36)
-    private val startButton = new Button("Start"):
-        preferredSize = new Dimension(100, 50)
-        font = new Font("Arial", java.awt.Font.BOLD, 20)
+    private val titleLabel  = LabelFactory.createTitleLabel("SpacMan")
+    private val startButton = ButtonFactory("Start", ButtonFactory.dimension(ButtonSize.Normal))
 
     listenTo(startButton)
     reactions += {
@@ -74,9 +70,9 @@ class HomeView() extends MainFrame:
 
 class GameView(gameMap: GameMap) extends MainFrame:
     private val gamePanel = GameMapPanel(gameMap)
+    private val SIZE      = 1000
 
     def initialize(): Unit =
-        val SIZE = 1000
         title = "SpacMan"
         preferredSize = new Dimension(SIZE, SIZE)
         contents = new BorderPanel {
@@ -89,45 +85,15 @@ class GameView(gameMap: GameMap) extends MainFrame:
     def getGamePanel: javax.swing.JComponent = gamePanel.peer
 
     def displayWin(score: Int): Unit =
-        val titleLabel = new Label("Hai vinto!"):
-            horizontalAlignment = Alignment.Center
-            font = new Font("Arial", java.awt.Font.BOLD, 36)
-        val scoreLabel = new Label("Score: " + score):
-            horizontalAlignment = Alignment.Center
-            font = new Font("Arial", java.awt.Font.PLAIN, 25)
-        val homeButton = new Button("Torna alla home"):
-            preferredSize = new Dimension(300, 50)
-            font = new Font("Arial", java.awt.Font.BOLD, 20)
-
-        listenTo(homeButton)
-        reactions += {
-            case ButtonClicked(`homeButton`) =>
-                visible = false
-                dispose()
-                GameController.showHome()
-        }
-
-        val winPanel = new BoxPanel(Orientation.Vertical):
-            contents += Swing.VStrut(100)
-            contents += new FlowPanel(titleLabel)
-            contents += new FlowPanel(scoreLabel)
-            contents += Swing.VStrut(40)
-            contents += new FlowPanel(homeButton)
-
-        contents = new BorderPanel {
-            layout(winPanel) = BorderPanel.Position.Center
-        }
+        displayEndingScreen("Hai vinto!", score)
 
     def displayGameOver(score: Int): Unit =
-        val titleLabel = new Label("Hai perso"):
-            horizontalAlignment = Alignment.Center
-            font = new Font("Arial", java.awt.Font.BOLD, 36)
-        val scoreLabel = new Label("Score: " + score):
-            horizontalAlignment = Alignment.Center
-            font = new Font("Arial", java.awt.Font.PLAIN, 25)
-        val homeButton = new Button("Torna alla home"):
-            preferredSize = new Dimension(300, 50)
-            font = new Font("Arial", java.awt.Font.BOLD, 20)
+        displayEndingScreen("Hai perso!", score)
+
+    private def displayEndingScreen(titleText: String, score: Int): Unit =
+        val titleLabel = LabelFactory.createTitleLabel(titleText)
+        val scoreLabel = LabelFactory.createScoreLabel(score)
+        val homeButton = ButtonFactory("Torna alla home", ButtonFactory.dimension(ButtonSize.Big))
 
         listenTo(homeButton)
         reactions += {
@@ -137,7 +103,7 @@ class GameView(gameMap: GameMap) extends MainFrame:
                 GameController.showHome()
         }
 
-        val winPanel = new BoxPanel(Orientation.Vertical):
+        val endingPanel = new BoxPanel(Orientation.Vertical):
             contents += Swing.VStrut(100)
             contents += new FlowPanel(titleLabel)
             contents += new FlowPanel(scoreLabel)
@@ -145,7 +111,7 @@ class GameView(gameMap: GameMap) extends MainFrame:
             contents += new FlowPanel(homeButton)
 
         contents = new BorderPanel {
-            layout(winPanel) = BorderPanel.Position.Center
+            layout(endingPanel) = BorderPanel.Position.Center
         }
 
 class GameMapPanel(private var gameMap: GameMap) extends Panel:
