@@ -64,7 +64,6 @@ case class GameMapImpl(
             case None => Left("Invalid position" + entity.position)
 
     override def replaceEntityTo(entity: GameEntity, movedEntity: GameEntity): Either[String, GameMap] =
-        if entity.isInstanceOf[SpacManBasic] then println(s"Spacman is in ${movedEntity.position}")
         remove(entity) match
             case Right(map) => map.place(movedEntity.position, movedEntity)
             case Left(err)  => Left(err)
