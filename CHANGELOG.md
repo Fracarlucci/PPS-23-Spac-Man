@@ -1,3 +1,23 @@
+# [1.2.0](https://github.com/Fracarlucci/PPS-23-Spac-Man/compare/v1.1.0...v1.2.0) (2025-12-01)
+
+
+### Bug Fixes
+
+* add getSpacMan method in GameManager ([bc2acdf](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/bc2acdffa0c70f5b95f5cd7a9334a9c7bec3b93e))
+* fix startButton in GUI ([e0679cb](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/e0679cb5875824f6f4dd6d3ad5a000d0cb21a8d6))
+* fix typo in .md file ([6570ddc](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/6570ddc2f70ac84f74482fcc5f582891d4737830))
+* when ghosts move their collision with SpacMan is checked ([50bb379](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/50bb3792b08a9c16df6d8401c3d2c053495e2c61))
+
+
+### Features
+
+* add a prototype of gameMapView ([25d2564](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/25d2564eab6eae18189858bd036c1d9840b19703))
+* add GameController ([f45fdd7](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/f45fdd7476b4412691da2725651bc12f858f358a))
+* add initial Sprint 1 documentation ([4dc44ca](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/4dc44ca95207a1771f82bfffe13159a698df1fc6))
+* add SwingInputManager ([bdb317e](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/bdb317e607d387d705d009621f6c4024c1e118ab))
+* add tunnels handler in checkCollisions method ([9f4702a](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/9f4702a03953a3021ab1ade57f689147e7c19b66))
+* add win and gameover panels ([fbc80ba](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/fbc80ba59cb0f27c49eb6ebfd26b4a5a84a157bd))
+
 # [1.1.0](https://github.com/Fracarlucci/PPS-23-Spac-Man/compare/v1.0.0...v1.1.0) (2025-11-18)
 
 
