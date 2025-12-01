@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/Fracarlucci/PPS-23-Spac-Man/compare/v1.2.0...v1.2.1) (2025-12-01)
+
+### Bug Fixes
+
+* semantic release versions ([da1c36f](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/da1c36fd28fd0d5f5ce719b84ffcce4611e5b8f0))
+
 # [1.2.0](https://github.com/Fracarlucci/PPS-23-Spac-Man/compare/v1.1.0...v1.2.0) (2025-12-01)
 
 
