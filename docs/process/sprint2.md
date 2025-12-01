@@ -201,7 +201,7 @@ La suddivisione del lavoro è risultata bilanciata. C'è stata una notevole ridu
 Inoltre, è emersa la possibilità di una rifattorizzazione di alcune parti del codice per una maggiore leggibilità.
 
 0. [Introduzione](../../README.md)
-1. [Sprint 1](process/sprint1.md)
-2. [Sprint 2](process/sprint2.md)
-3. [**Sprint 3 (next)**](process/sprint3.md)
-4. [Sprint 4](process/sprint4.md)
+1. [Sprint 1](./sprint1.md)
+2. [Sprint 2](./sprint2.md)
+3. [**Sprint 3 (next)**](./sprint3.md)
+4. [Sprint 4](./sprint4.md)
