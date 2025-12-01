@@ -160,7 +160,7 @@ La suddivisione del lavoro è risultata bilanciata. Ci sono stati dei piccoli pr
 Un aspetto su cui il team si focalizzerà nel prossimo sprint è la riduzione delle dipendenze tra gli sviluppatori, così che ciascuno possa lavorare in modo più autonomo.
 
 0. [Introduzione](../../README.md)
-1. [Sprint 1](process/sprint1.md)
-2. [**Sprint 2 (next)**](process/sprint2.md)
-3. [Sprint 3](process/sprint3.md)
-4. [Sprint 4](process/sprint4.md)
+1. [Sprint 1](./sprint1.md)
+2. [**Sprint 2 (next)**](./sprint2.md)
+3. [Sprint 3](./sprint3.md)
+4. [Sprint 4](./sprint4.md)
