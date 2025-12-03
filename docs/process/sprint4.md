@@ -6,7 +6,7 @@ L'obiettivo di questo quarto Sprint è di perfezionare il codice per renderlo il
 
 ## Deadline
 
-La scadenza dello sprint è il 30/11/2025.
+La scadenza dello sprint è il 10/12/2025.
 
 ## Backlog
 
@@ -287,15 +287,15 @@ La scadenza dello sprint è il 30/11/2025.
         <td>0</td>
         <td>0</td>
         <td>0</td>
-        <td>5</td>
+        <td>3</td>
         <td>0</td>
     </tr>
     <tr>
-        <td rowspan="3">11</td>
-        <td rowspan="3">Opzionali</td>
-        <td rowspan="3">Come utente, vorrei avere una versione più avanzata del gioco</td>
+        <td rowspan="4">11</td>
+        <td rowspan="4">Opzionali</td>
+        <td rowspan="4">Come utente, vorrei avere una versione più avanzata del gioco</td>
         <td>Vite Spacman</td>
-        <td></td>
+        <td>Marco</td>
         <td>4</td>
         <td>4</td>
         <td>4</td>
@@ -304,7 +304,7 @@ La scadenza dello sprint è il 30/11/2025.
     </tr>
     <tr>
         <td>Pallino mangia fantasmi</td>
-        <td></td>
+        <td>Francesco</td>
         <td>5</td>
         <td>5</td>
         <td>5</td>
@@ -313,7 +313,16 @@ La scadenza dello sprint è il 30/11/2025.
     </tr>
     <tr>
         <td>Fantasmi: logiche di movimento avanzate</td>
-        <td></td>
+        <td>Francesco</td>
+        <td>5</td>
+        <td>5</td>
+        <td>5</td>
+        <td>5</td>
+        <td>0</td>
+    </tr>
+        <tr>
+        <td>Sistema a livelli con più mappe</td>
+        <td>Marco</td>
         <td>5</td>
         <td>5</td>
         <td>5</td>
