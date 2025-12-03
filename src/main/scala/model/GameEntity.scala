@@ -12,11 +12,7 @@ trait MovableEntity extends GameEntity:
     def withPosAndDir(newPosition: Position2D, newDirection: Direction): MovableEntity
 
     def move(newDirection: Direction): MovableEntity =
-        val newPosition = newDirection match
-            case Direction.Up    => Position2D(position.x, position.y - 1)
-            case Direction.Down  => Position2D(position.x, position.y + 1)
-            case Direction.Left  => Position2D(position.x - 1, position.y)
-            case Direction.Right => Position2D(position.x + 1, position.y)
+        val newPosition = position.calculatePos(newDirection)
         withPosAndDir(newPosition, newDirection)
 
 case class Wall(position: Position2D) extends GameEntity

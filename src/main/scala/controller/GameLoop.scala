@@ -6,9 +6,13 @@ import view.GameView
 import scala.swing.Swing
 import controller.GameState
 
+private final val DEFAULT_GHOST_DELAY_MS = 2000
+private final val DEFAULT_SPACMAN_DELAY_MS = 500
+
+
 case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: GameView):
-    val ghostDelay   = 2000
-    val spacmanDelay = 500
+    val ghostDelay   = DEFAULT_GHOST_DELAY_MS
+    val spacmanDelay = DEFAULT_SPACMAN_DELAY_MS
 
     def loop(
         state: GameState = GameState.Running,
@@ -33,12 +37,12 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
                 Thread.sleep(50)
                 val newState = checkGameState(gameManager)
                 loop(newState, leatestGhostMove, leatestSpacManMove)
-            case finalState => finalState
+            case finalState: GameState => finalState
 
-    def checkGameState(gameManager: GameManager): GameState =
-        if gameManager.isWin() then GameState.Win
-        else if gameManager.isGameOver() then GameState.GameOver
-        else GameState.Running
+    def checkGameState(gameManager: GameManager): GameState = gameManager match
+        case gm if gm.isWin()       => GameState.Win
+        case gm if gm.isGameOver()  => GameState.GameOver
+        case _                      => GameState.Running
 
     private def isTimeToMove(
         currTime: Long,
