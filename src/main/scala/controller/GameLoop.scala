@@ -29,7 +29,7 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
                         case None      => // do nothing
                     leatestSpacManMove = now
                     Swing.onEDT:
-                        view.update(gameManager.getGameMap)
+                        view.update(gameManager.getGameMap, gameManager.getSpacMan.lives, gameManager.getSpacMan.score)
                 Thread.sleep(50)
                 val newState = checkGameState(gameManager)
                 loop(newState, leatestGhostMove, leatestSpacManMove)

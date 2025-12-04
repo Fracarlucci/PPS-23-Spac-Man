@@ -49,7 +49,7 @@ object GameController:
         }).start()
 
     private def createMap(): (SpacManWithLife, GameMap) =
-        val dsl     = MapDSL(board(11, 11))
+        val dsl     = MapDSL(board(11, 11, Position2D(1, 1)))
         val ghost1  = GhostBasic(Position2D(7, 7), Direction.Down, 1.0, 1)
         val ghost2  = GhostBasic(Position2D(2, 2), Direction.Up, 1.0, 2)
         val spacman = SpacManWithLife(Position2D(9, 9), Direction.Right, 0)
