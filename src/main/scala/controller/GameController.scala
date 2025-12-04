@@ -12,7 +12,7 @@ import model.GameManager
 import model.SimpleGameManager
 import model.InputManager
 import model.SwingInputManager
-import model.SpacManBasic
+import model.SpacManWithLife
 import view.GameView
 import view.SimpleSwingApp
 import scala.swing.Frame
@@ -48,11 +48,11 @@ object GameController:
             handleFinalState(finalState, gameManager, inputManager, view)
         }).start()
 
-    private def createMap(): (SpacManBasic, GameMap) =
+    private def createMap(): (SpacManWithLife, GameMap) =
         val dsl     = MapDSL(board(11, 11))
         val ghost1  = GhostBasic(Position2D(7, 7), Direction.Down, 1.0, 1)
         val ghost2  = GhostBasic(Position2D(2, 2), Direction.Up, 1.0, 2)
-        val spacman = SpacManBasic(Position2D(9, 9), Direction.Right, 0)
+        val spacman = SpacManWithLife(Position2D(9, 9), Direction.Right, 0)
         val tunnel1 = Tunnel(Position2D(10, 5), Position2D(0, 5), Direction.Right)
         val tunnel2 = Tunnel(Position2D(0, 5), Position2D(10, 5), Direction.Left)
 

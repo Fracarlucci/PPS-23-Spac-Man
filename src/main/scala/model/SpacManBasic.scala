@@ -14,6 +14,13 @@ trait Life[E <: Life[E]]:
         updateLife(newLives)
     protected def updateLife(newLives: Int): E
 
+trait Score[E <: Score[E]]:
+    val score: Int
+    def addScore(points: Int): E =
+        if points >= 0 then updateScore(score + points)
+        else updateScore(score)
+    protected def updateScore(points: Int): E
+
 case class SpacManBasic(val position: Position2D, val direction: Direction, val score: Int)
     extends MovableEntity:
 
@@ -24,23 +31,26 @@ case class SpacManBasic(val position: Position2D, val direction: Direction, val 
         if points < 0 then this
         else this.copy(score = this.score + points)
 
-    def teleport(destination: Position2D): SpacManBasic =
-        this.copy(position = destination)
-
     override def equals(obj: Any): Boolean = obj match
         case that: SpacManBasic =>
             this.position == that.position
         case _ => false
 
-case class SpacManWithLife(position: Position2D, direction: Direction, score: Int, val lives: Int = DEFAULT_LIVES)
-    extends MovableEntity with Life[SpacManWithLife]:
+case class SpacManWithLife(
+    position: Position2D,
+    direction: Direction,
+    score: Int,
+    val lives: Int = DEFAULT_LIVES
+) extends MovableEntity with Life[SpacManWithLife] with Score[SpacManWithLife]:
 
-    override def withPosAndDir(newPosition: Position2D, newDirection: Direction): MovableEntity =
+    override def withPosAndDir(newPosition: Position2D, newDirection: Direction): SpacManWithLife =
         this.copy(position = newPosition, direction = newDirection)
 
     protected def updateLife(newLives: Int): SpacManWithLife = this.copy(lives = newLives)
+    
+    protected def updateScore(points: Int): SpacManWithLife  = this.copy(score = points)
 
     override def equals(obj: Any): Boolean = obj match
-        case that: SpacManBasic =>
+        case that: SpacManWithLife =>
             this.position == that.position
         case _ => false

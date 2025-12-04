@@ -7,7 +7,6 @@ import model.Direction
 import model.Wall
 import model.GhostBasic
 import model.DotBasic
-import model.SpacManBasic
 
 trait GameMap:
     val width: Int
