@@ -81,7 +81,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
     def createEdgeTestSetup3(): SimpleGameManager =
         val spacMan = SpacManWithLife(Position2D(2, 1), Direction.Right, 0, 3)
-        val ghost1  = GhostForTest(Position2D(2, 2), Direction.Right, 1.0, 1)
+        val ghost1  = GhostBasic(Position2D(2, 2), Direction.Right, 1.0, 1)
         val wall1   = Wall(Position2D(1, 2))
         val wall2   = Wall(Position2D(2, 1))
         val wall3   = Wall(Position2D(3, 2))
@@ -90,7 +90,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
         import dsl.*
 
-        place a spacMan at position(2, 3)
+        place a spacMan at position(2, 1)
         place a ghost1 at position(2, 2)
         place a wall1 at position(1, 2)
         place a wall2 at position(2, 1)
