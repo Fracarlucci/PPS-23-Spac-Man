@@ -10,21 +10,23 @@ import model.DotBasic
 import model.SpacManBasic
 
 trait GameMap:
-    def width: Int
-    def height: Int
+    val width: Int
+    val height: Int
+    val spawnPoint: Position2D
     def getWalls: Set[Wall]
     def getGhosts: Set[GhostBasic]
     def getDots: Set[DotBasic]
     def entityAt(pos: Position2D): Either[String, Set[GameEntity]]
     def place(pos: Position2D, entity: GameEntity): Either[String, GameMap]
     def placeAll[E <: GameEntity](entities: Set[E]): Either[String, GameMap]
-    def remove(entity: GameEntity): Either[String, GameMap]
     def replaceEntityTo(entity: GameEntity, movedEntity: GameEntity): Either[String, GameMap]
+    def remove(entity: GameEntity): Either[String, GameMap]
     def canMove(entity: MovableEntity, dir: Direction): Boolean
 
 case class GameMapImpl(
     width: Int,
     height: Int,
+    spawnPoint: Position2D,
     grid: Map[Position2D, Set[GameEntity]]
 ) extends GameMap:
 
@@ -83,11 +85,15 @@ case class GameMapImpl(
         p.x >= width || p.x < 0 || p.y >= height || p.y < 0
 
 object GameMapFactory:
-    def apply(width: Int, height: Int): GameMap =
-        GameMapImpl(width, height, createEmptyMap(width, height))
+    def apply(width: Int, height: Int, spawnPoint: Position2D): GameMap =
+        require(isSpawnPointInsideMap(width, height, spawnPoint))
+        GameMapImpl(width, height, spawnPoint, createEmptyMap(width, height))
 
     private def createEmptyMap(w: Int, h: Int): Map[Position2D, Set[GameEntity]] =
         (for
             x <- 0 until w
             y <- 0 until h
         yield Position2D(x, y) -> Set.empty[GameEntity]).toMap
+
+    private def isSpawnPointInsideMap(width: Int, height: Int, spawnPoint: Position2D): Boolean =
+        (spawnPoint.x >= 0 && spawnPoint.x <= width) && (spawnPoint.y >= 0 && spawnPoint.y <= height)
