@@ -5,19 +5,19 @@ import scala.annotation.tailrec
 
 trait GameManager:
     def getGameMap: GameMap
-    def getSpacMan: SpacManBasic
+    def getSpacMan: SpacManWithLife
     def isWin(): Boolean
     def isGameOver(): Boolean
-    def moveSpacManAndCheck(newDirection: Direction): Option[SpacManBasic]
+    def moveSpacManAndCheck(newDirection: Direction): Option[SpacManWithLife]
     def moveGhosts(): Set[GhostBasic]
 
 case class SimpleGameManager(
-    private var _spacMan: SpacManBasic,
+    private var _spacMan: SpacManWithLife,
     private var _gameMap: GameMap,
     private var _gameOver: Boolean = false
 ) extends GameManager:
 
-    def getSpacMan: SpacManBasic = _spacMan
+    def getSpacMan: SpacManWithLife = _spacMan
 
     def getGameMap: GameMap = _gameMap
 
@@ -46,9 +46,9 @@ case class SimpleGameManager(
 
         _gameMap.getGhosts.map(findValidMove(_))
 
-    private def moveSpacMan(newDirection: Direction): SpacManBasic =
+    private def moveSpacMan(newDirection: Direction): SpacManWithLife =
         if _gameMap.canMove(_spacMan, newDirection) then
-            val movedSpacMan = _spacMan.move(newDirection).asInstanceOf[SpacManBasic]
+            val movedSpacMan = _spacMan.move(newDirection).asInstanceOf[SpacManWithLife]
             _gameMap.replaceEntityTo(_spacMan, movedSpacMan) match
                 case Right(updatedMap) =>
                     _gameMap = updatedMap
@@ -78,9 +78,9 @@ case class SimpleGameManager(
             .getOrElse(NoCollision)
 
     private def applyCollisionEffect(
-        spacMan: SpacManBasic,
+        spacMan: SpacManWithLife,
         collision: CollisionResult
-    ): Option[SpacManBasic] =
+    ): Option[SpacManWithLife] =
         import CollisionResult.*
         collision match
             case GhostCollision =>
@@ -91,7 +91,7 @@ case class SimpleGameManager(
                 _spacMan = _spacMan.addScore(dot.score)
                 Some(_spacMan)
             case TunnelCollision(tunnel) =>
-                val teleportedSpacMan = spacMan.teleport(tunnel.toPos)
+                val teleportedSpacMan = spacMan.teleport(tunnel.toPos).asInstanceOf[SpacManWithLife]
                 _gameMap.replaceEntityTo(spacMan, teleportedSpacMan) match
                     case Right(updatedMap) =>
                         _gameMap = updatedMap
@@ -104,21 +104,34 @@ case class SimpleGameManager(
                 Some(_spacMan)
 
     private def handleGhostCollision(): Unit =
-        _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
-        _gameOver = true
+        println("Entro qui")
+        _spacMan = _spacMan.removeLife()
+        _gameOver = isSpacManDead()
+        _gameOver match
+            case false =>
+                val teleportedSpacMan = handleRemoveSpacManLife()
+                _gameMap = _gameMap.replaceEntityTo(_spacMan, teleportedSpacMan).getOrElse(_gameMap)
+                _spacMan = teleportedSpacMan
+            case true =>
+                _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
+
+    private def isSpacManDead(): Boolean = _spacMan.lives == 0
+
+    private def handleRemoveSpacManLife(): SpacManWithLife =
+        _spacMan.teleport(_gameMap.spawnPoint).asInstanceOf[SpacManWithLife]
 
     private def checkCollisionWithGhost(ghost: GhostBasic): Unit =
         if ghost.position == _spacMan.position then
             handleGhostCollision()
 
     private def checkCollisions(
-        spacMan: SpacManBasic,
+        spacMan: SpacManWithLife,
         direction: Direction
-    ): Option[SpacManBasic] =
+    ): Option[SpacManWithLife] =
         _gameMap.entityAt(spacMan.position).toOption
             .map(entities => detectCollision(entities, direction))
             .map(collision => applyCollisionEffect(spacMan, collision))
             .getOrElse(Some(_spacMan))
 
-    def moveSpacManAndCheck(dir: Direction): Option[SpacManBasic] =
+    def moveSpacManAndCheck(dir: Direction): Option[SpacManWithLife] =
         checkCollisions(moveSpacMan(dir), dir)

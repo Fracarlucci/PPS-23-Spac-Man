@@ -233,3 +233,14 @@ class MapTest extends AnyFlatSpec with Matchers:
         dsl.map.replaceEntityTo(pacMan, movedSpacMan) shouldBe Left(
           "Invalid position" + position(-1, 0)
         )
+    
+    it should "has a default spawnPoint" in:
+        map.spawnPoint shouldBe Position2D(0, 0)
+
+    it should "be possible to create a map with a spawnPoint" in:
+        val newMap = board(10, 10, Position2D(2, 2))
+        newMap.spawnPoint shouldBe Position2D(2, 2)
+
+    it should "throw and IllegalArgumentException because spawnPoint out of map" in:
+        intercept[IllegalArgumentException]:
+            val newMap = board(10, 10, Position2D(11, 11))

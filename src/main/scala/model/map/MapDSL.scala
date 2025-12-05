@@ -8,7 +8,7 @@ trait WallEntityBuilderLike:
   infix def to(endPos: Position2D): Unit
 
 object board:
-  def apply(width: Int, height: Int): GameMap = GameMapFactory.apply(width, height)
+  def apply(width: Int, height: Int, spawnPoint: Position2D = Position2D(0, 0)): GameMap = GameMapFactory.apply(width, height, spawnPoint)
 
 object genericWall:
   def apply(): Wall = Wall.apply(Position2D(0, 0))
