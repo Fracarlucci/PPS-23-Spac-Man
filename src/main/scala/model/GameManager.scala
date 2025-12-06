@@ -60,6 +60,7 @@ case class SimpleGameManager(
     private enum CollisionResult:
         case GhostCollision
         case DotCollision(dot: DotBasic)
+        case DotFruitCollision(fruit: DotFruit)
         case TunnelCollision(tunnel: Tunnel)
         case NoCollision
 
@@ -70,6 +71,7 @@ case class SimpleGameManager(
         import CollisionResult.*
         entities.collectFirst { case ghost: GhostBasic => GhostCollision }
             .orElse(entities.collectFirst { case dot: DotBasic => DotCollision(dot) })
+            .orElse(entities.collectFirst { case fruit: DotFruit => DotFruitCollision(fruit) })
             .orElse(
               entities.collectFirst { case tunnel: Tunnel => tunnel }
                   .filter(_.canTeleport(direction))
@@ -89,6 +91,10 @@ case class SimpleGameManager(
             case DotCollision(dot) =>
                 _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
                 _spacMan = _spacMan.addScore(dot.score)
+                Some(_spacMan)
+            case DotFruitCollision(fruit) =>
+                _gameMap = _gameMap.remove(fruit).getOrElse(_gameMap)
+                _spacMan = _spacMan.addScore(fruit.score).addLife()
                 Some(_spacMan)
             case TunnelCollision(tunnel) =>
                 val teleportedSpacMan = spacMan.teleport(tunnel.toPos).asInstanceOf[SpacManWithLife]

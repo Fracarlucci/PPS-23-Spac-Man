@@ -21,6 +21,7 @@ import scala.swing.Swing
 import java.awt.event.{KeyAdapter, KeyEvent}
 import controller.GameLoop
 import model.Tunnel
+import model.DotFruit
 
 enum GameState:
     case Menu
@@ -55,6 +56,7 @@ object GameController:
         val spacman = SpacManWithLife(Position2D(9, 9), Direction.Right, 0)
         val tunnel1 = Tunnel(Position2D(10, 5), Position2D(0, 5), Direction.Right)
         val tunnel2 = Tunnel(Position2D(0, 5), Position2D(10, 5), Direction.Left)
+        val fruit   = DotFruit(Position2D(1, 1))
 
         import dsl.*
 
@@ -70,13 +72,14 @@ object GameController:
 
         // Place dots in every cell that doesn't contain a wall
         for
-            x <- 1 until 10
-            y <- 1 until 10
+            x <- 2 until 10
+            y <- 2 until 10
             pos = Position2D(x, y)
             if !wallPositions.contains(pos) && pos != spacman.position
         do
             place a DotBasic(pos) at position(x, y)
 
+        place a fruit at position(1, 1)
         place a ghost1 at position(7, 7)
         place a ghost2 at position(2, 2)
         place a spacman at position(9, 9)
