@@ -339,39 +339,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(gameManager.getSpacMan.position == Position2D(9, 9))
         assert(!gameManager.isGameOver())
 
-    it should "eat dotPower and eat ghost" in:
-        val gameManager = createBasicTestSetup()
-        assert(!gameManager.isChaseMode)
-        assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).exists(
-          _.isInstanceOf[SpacManWithLife]
-        ))
-
-        gameManager.moveSpacManAndCheck(Direction.Right)
-        assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(
-          _.isInstanceOf[SpacManWithLife]
-        ))
-
-        gameManager.moveSpacManAndCheck(Direction.Down)
-        assert(gameManager.getGameMap.entityAt(Position2D(2, 2)).getOrElse(Set()).exists(
-          _.isInstanceOf[SpacManWithLife]
-        ))
-
-        assert(gameManager.isChaseMode)
-
-        gameManager.moveSpacManAndCheck(Direction.Left)
-        assert(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()).exists(
-          _.isInstanceOf[SpacManWithLife]
-        ))
-
-        assert(gameManager.getGameMap.ghostSpawnPoints.exists(spawnPos =>
-            gameManager.getGameMap.entityAt(spawnPos).getOrElse(Set()).exists(
-              _.isInstanceOf[GhostBasic]
-            )
-        ))
-
-        assert(!gameManager.isGameOver())
-
-    it should "update chase time" in:
+    it should "eat dotPower, eat ghost and finish chase mode" in:
         val gameManager = createBasicTestSetup()
         val chaseTimeDuration = 10000
 
@@ -391,10 +359,23 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
           _.isInstanceOf[SpacManWithLife]
         ))
 
+        gameManager.moveSpacManAndCheck(Direction.Left)
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+
+        assert(gameManager.getGameMap.ghostSpawnPoints.exists(spawnPos =>
+            gameManager.getGameMap.entityAt(spawnPos).getOrElse(Set()).exists(
+              _.isInstanceOf[GhostBasic]
+            )
+        ))
+
         assert(gameManager.isChaseMode)
 
         // Finish chase mode
         gameManager.updateChaseTime(chaseTimeDuration)
 
         assert(!gameManager.isChaseMode)
+
+        assert(!gameManager.isGameOver())
         
