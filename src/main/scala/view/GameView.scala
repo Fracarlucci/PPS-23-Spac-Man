@@ -33,6 +33,7 @@ import java.awt.Font
 import controller.GameController
 import model.Tunnel
 import model.SpacManWithLife
+import model.DotPower
 
 object SimpleSwingApp {
     def create(map: GameMap): GameView =
@@ -193,6 +194,8 @@ class GameMapPanel(private var gameMap: GameMap) extends Panel:
                     entities.foreach {
                         case dot: DotBasic =>
                             drawSprite(g, "dot", x, y)
+                        case dotPower: DotPower =>
+                            drawSprite(g, "dot_power", x, y)
                         case wall: Wall =>
                             drawSprite(g, "wall", x, y)
                         case pacman: SpacManWithLife =>
