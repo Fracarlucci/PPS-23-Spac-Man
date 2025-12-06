@@ -7,6 +7,7 @@ import model.Direction
 import model.Wall
 import model.GhostBasic
 import model.DotBasic
+import model.Dot
 
 trait GameMap:
     val width: Int
@@ -14,7 +15,7 @@ trait GameMap:
     val spawnPoint: Position2D
     def getWalls: Set[Wall]
     def getGhosts: Set[GhostBasic]
-    def getDots: Set[DotBasic]
+    def getDots: Set[Dot]
     def entityAt(pos: Position2D): Either[String, Set[GameEntity]]
     def place(pos: Position2D, entity: GameEntity): Either[String, GameMap]
     def placeAll[E <: GameEntity](entities: Set[E]): Either[String, GameMap]
@@ -35,7 +36,7 @@ case class GameMapImpl(
         g
     }.toSet
 
-    override def getDots: Set[DotBasic] = grid.values.flatten.collect { case d: DotBasic =>
+    override def getDots: Set[Dot] = grid.values.flatten.collect { case d: Dot =>
         d
     }.toSet
 
@@ -64,7 +65,10 @@ case class GameMapImpl(
                     case false => Left("No entity found")
             case None => Left("Invalid position" + entity.position)
 
-    override def replaceEntityTo(entity: GameEntity, movedEntity: GameEntity): Either[String, GameMap] =
+    override def replaceEntityTo(
+        entity: GameEntity,
+        movedEntity: GameEntity
+    ): Either[String, GameMap] =
         remove(entity) match
             case Right(map) => map.place(movedEntity.position, movedEntity)
             case Left(err)  => Left(err)
@@ -74,9 +78,9 @@ case class GameMapImpl(
         entityAt(nextPos) match
             case Right(set) if set.exists(_.isInstanceOf[Wall]) => false
             case Right(set) if set.exists {
-                case _: GhostBasic => entity.isInstanceOf[GhostBasic]
-                case _ => false
-            } => false
+                    case _: GhostBasic => entity.isInstanceOf[GhostBasic]
+                    case _             => false
+                } => false
             case _ if isOutOfMap(nextPos) => false
             case _                        => true
 

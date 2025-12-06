@@ -41,6 +41,7 @@ object SpriteLoader:
           "wall",
           "dot",
           "apple",
-          "strawberry"
+          "strawberry",
+          "fruit"
         )
         sprites.foreach(load)
