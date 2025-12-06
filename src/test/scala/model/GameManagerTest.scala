@@ -9,29 +9,34 @@ import model.GhostBasic
 import model.Direction
 import model.GameEntity
 import model.DotBasic
+import model.DotPower
 import model.board
 import model.Wall
 import model.Tunnel
 
 class GameManagerTest extends AnyFlatSpec with Matchers:
     def createBasicTestSetup(): SimpleGameManager =
-        val spacMan = SpacManWithLife(Position2D(1, 1), Direction.Right, 0, 1)
-        val ghost1  = GhostBasic(Position2D(1, 2), Direction.Right, 1.0, 1)
-        val ghost2  = GhostBasic(Position2D(4, 2), Direction.Left, 1.0, 2)
-        val dot1    = DotBasic(Position2D(2, 1))
+        val spacMan   = SpacManWithLife(Position2D(1, 1), Direction.Right, 0, 1)
+        val ghost1    = GhostBasic(Position2D(1, 2), Direction.Right, 1.0, 1)
+        val ghost2    = GhostBasic(Position2D(4, 2), Direction.Left, 1.0, 2)
+        val dotBasic1 = DotBasic(Position2D(2, 1))
+        val dotBasic2 = DotBasic(Position2D(3, 2))
+        val dotPower1 = DotPower(Position2D(2, 2))
         val fruit    = DotFruit(Position2D(3, 1))
-        val tunnel1 = Tunnel(Position2D(2, 0), Position2D(1, 9), Direction.Up)
-        val tunnel2 = Tunnel(Position2D(1, 9), Position2D(2, 0), Direction.Down)
-        val wall    = Wall(Position2D(0, 1))
-        val map     = board(10, 10)
-        val dsl     = MapDSL(map)
+        val tunnel1   = Tunnel(Position2D(2, 0), Position2D(1, 9), Direction.Up)
+        val tunnel2   = Tunnel(Position2D(1, 9), Position2D(2, 0), Direction.Down)
+        val wall      = Wall(Position2D(0, 1))
+        val map       = board(10, 10)
+        val dsl       = MapDSL(map)
 
         import dsl.*
 
         place a spacMan at position(1, 1)
         place a ghost1 at position(1, 2)
         place a ghost2 at position(4, 2)
-        place a dot1 at position(2, 1)
+        place a dotBasic1 at position(2, 1)
+        place a dotBasic2 at position(3, 2)
+        place a dotPower1 at position(2, 2)
         place a fruit at position(3, 1)
         place a tunnel1 at position(2, 0)
         place a tunnel2 at position(1, 9)
@@ -184,7 +189,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
           _.isInstanceOf[GhostBasic]
         ))
 
-    it should "eat dot and increase score" in:
+    it should "eat basicDot and increase score" in:
         val gameManager     = createBasicTestSetup()
         val movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
         assert(movedSpacManOpt.isDefined)
@@ -195,7 +200,30 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         ))
         assert(movedSpacMan.score == DOT_BASIC_SCORE)
 
-    it should "eat dot + fruit, increase score + add life" in:
+    it should "eat powerDot and increase score" in:
+        val gameManager = createBasicTestSetup()
+
+        val movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
+        assert(movedSpacManOpt.isDefined)
+        val movedSpacMan1 = movedSpacManOpt.get
+        assert(movedSpacMan1.position == Position2D(2, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).isEmpty)
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+        assert(movedSpacMan1.score == DOT_BASIC_SCORE)
+
+        val movedSpacManOpt2 = gameManager.moveSpacManAndCheck(Direction.Down)
+        assert(movedSpacManOpt2.isDefined)
+        val movedSpacMan2 = movedSpacManOpt2.get
+        assert(movedSpacMan2.position == Position2D(2, 2))
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).isEmpty)
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 2)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+        assert(movedSpacMan2.score == DOT_BASIC_SCORE + DOT_POWER_SCORE)
+
+    it should "eat dots, fruit, increase score and add life" in:
         val gameManager     = createBasicTestSetup()
         var movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
         assert(movedSpacManOpt.isDefined)
@@ -214,24 +242,43 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
         val movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
         assert(movedSpacManOpt.isDefined)
-        val movedSpacMan = movedSpacManOpt.get
-        assert(movedSpacMan.position == Position2D(2, 1))
+        val movedSpacMan1 = movedSpacManOpt.get
+        assert(movedSpacMan1.position == Position2D(2, 1))
         assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).isEmpty)
         assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(
           _.isInstanceOf[SpacManWithLife]
         ))
-        assert(movedSpacMan.score == DOT_BASIC_SCORE)
         assert(!gameManager.isWin())
 
-        val movedSpacManOpt2 = gameManager.moveSpacManAndCheck(Direction.Right)
+        val movedSpacManOpt2 = gameManager.moveSpacManAndCheck(Direction.Down)
         assert(movedSpacManOpt2.isDefined)
-        val updatedSpacMan = movedSpacManOpt2.get
-        assert(updatedSpacMan.position == Position2D(3, 1))
+        val movedSpacMan2 = movedSpacManOpt2.get
+        assert(movedSpacMan2.position == Position2D(2, 2))
         assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).isEmpty)
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 2)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+
+        assert(!gameManager.isWin())
+
+        val movedSpacManOpt3 = gameManager.moveSpacManAndCheck(Direction.Right)
+        assert(movedSpacManOpt3.isDefined)
+        val movedSpacMan3 = movedSpacManOpt3.get
+        assert(movedSpacMan3.position == Position2D(3, 2))
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 2)).getOrElse(Set()).isEmpty)
+        assert(gameManager.getGameMap.entityAt(Position2D(3, 2)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+
+        val updatedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Up)
+        assert(updatedSpacManOpt.isDefined)
+        val updatedSpacMan = updatedSpacManOpt.get
+        assert(updatedSpacMan.position == Position2D(3, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(3, 2)).getOrElse(Set()).isEmpty)
         assert(gameManager.getGameMap.entityAt(Position2D(3, 1)).getOrElse(Set()).exists(
           _.isInstanceOf[SpacManWithLife]
         ))
-        assert(updatedSpacMan.score == DOT_BASIC_SCORE + DOT_FRUIT_SCORE)
+        assert(updatedSpacMan.score == 2 * DOT_BASIC_SCORE + DOT_POWER_SCORE + DOT_FRUIT_SCORE)
         assert(gameManager.isWin())
 
     it should "set game over when colliding with a ghost" in:
@@ -291,3 +338,44 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(gameManager.getSpacMan.lives == 2)
         assert(gameManager.getSpacMan.position == Position2D(9, 9))
         assert(!gameManager.isGameOver())
+
+    it should "eat dotPower, eat ghost and finish chase mode" in:
+        val gameManager = createBasicTestSetup()
+        val chaseTimeDuration = 10000
+
+        assert(!gameManager.isChaseMode)
+
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 1)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+
+        gameManager.moveSpacManAndCheck(Direction.Right)
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+
+        gameManager.moveSpacManAndCheck(Direction.Down)
+        assert(gameManager.getGameMap.entityAt(Position2D(2, 2)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+
+        gameManager.moveSpacManAndCheck(Direction.Left)
+        assert(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+
+        assert(gameManager.getGameMap.ghostSpawnPoints.exists(spawnPos =>
+            gameManager.getGameMap.entityAt(spawnPos).getOrElse(Set()).exists(
+              _.isInstanceOf[GhostBasic]
+            )
+        ))
+
+        assert(gameManager.isChaseMode)
+
+        // Finish chase mode
+        gameManager.updateChaseTime(chaseTimeDuration)
+
+        assert(!gameManager.isChaseMode)
+
+        assert(!gameManager.isGameOver())
+        

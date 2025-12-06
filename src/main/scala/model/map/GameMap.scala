@@ -6,13 +6,13 @@ import model.MovableEntity
 import model.Direction
 import model.Wall
 import model.GhostBasic
-import model.DotBasic
 import model.Dot
 
 trait GameMap:
     val width: Int
     val height: Int
     val spawnPoint: Position2D
+    val ghostSpawnPoints: Set[Position2D]
     def getWalls: Set[Wall]
     def getGhosts: Set[GhostBasic]
     def getDots: Set[Dot]
@@ -27,8 +27,17 @@ case class GameMapImpl(
     width: Int,
     height: Int,
     spawnPoint: Position2D,
+    private val ghostSpawnPointStartingCell: Position2D,
     grid: Map[Position2D, Set[GameEntity]]
 ) extends GameMap:
+
+    // Calculate the 4 cells of the 2x2 spawn area
+    val ghostSpawnPoints: Set[Position2D] = Set(
+      ghostSpawnPointStartingCell,
+      Position2D(ghostSpawnPointStartingCell.x + 1, ghostSpawnPointStartingCell.y),
+      Position2D(ghostSpawnPointStartingCell.x, ghostSpawnPointStartingCell.y + 1),
+      Position2D(ghostSpawnPointStartingCell.x + 1, ghostSpawnPointStartingCell.y + 1)
+    )
 
     override def getWalls: Set[Wall] = grid.values.flatten.collect { case w: Wall => w }.toSet
 
@@ -88,9 +97,15 @@ case class GameMapImpl(
         p.x >= width || p.x < 0 || p.y >= height || p.y < 0
 
 object GameMapFactory:
-    def apply(width: Int, height: Int, spawnPoint: Position2D): GameMap =
+    def apply(
+        width: Int,
+        height: Int,
+        spawnPoint: Position2D,
+        ghostSpawnPoint: Position2D = Position2D(1, 1)
+    ): GameMap =
         require(isSpawnPointInsideMap(width, height, spawnPoint))
-        GameMapImpl(width, height, spawnPoint, createEmptyMap(width, height))
+        require(isSpawnPointInsideMap(width, height, ghostSpawnPoint))
+        GameMapImpl(width, height, spawnPoint, ghostSpawnPoint, createEmptyMap(width, height))
 
     private def createEmptyMap(w: Int, h: Int): Map[Position2D, Set[GameEntity]] =
         (for
