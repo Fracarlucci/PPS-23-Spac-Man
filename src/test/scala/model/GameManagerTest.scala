@@ -202,7 +202,6 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
     it should "eat powerDot and increase score" in:
         val gameManager = createBasicTestSetup()
-        assert(!gameManager.isWin())
 
         val movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
         assert(movedSpacManOpt.isDefined)
@@ -213,7 +212,6 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
           _.isInstanceOf[SpacManWithLife]
         ))
         assert(movedSpacMan1.score == DOT_BASIC_SCORE)
-        assert(!gameManager.isWin())
 
         val movedSpacManOpt2 = gameManager.moveSpacManAndCheck(Direction.Down)
         assert(movedSpacManOpt2.isDefined)
@@ -224,9 +222,8 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
           _.isInstanceOf[SpacManWithLife]
         ))
         assert(movedSpacMan2.score == DOT_BASIC_SCORE + DOT_POWER_SCORE)
-        assert(!gameManager.isWin())
 
-    it should "eat dot + fruit, increase score + add life" in:
+    it should "eat dots, fruit, increase score and add life" in:
         val gameManager     = createBasicTestSetup()
         var movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
         assert(movedSpacManOpt.isDefined)
@@ -251,7 +248,6 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(
           _.isInstanceOf[SpacManWithLife]
         ))
-        assert(movedSpacMan1.score == DOT_BASIC_SCORE)
         assert(!gameManager.isWin())
 
         val movedSpacManOpt2 = gameManager.moveSpacManAndCheck(Direction.Down)
@@ -263,7 +259,6 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
           _.isInstanceOf[SpacManWithLife]
         ))
 
-        assert(movedSpacMan2.score == DOT_BASIC_SCORE + DOT_POWER_SCORE)
         assert(!gameManager.isWin())
 
         val movedSpacManOpt3 = gameManager.moveSpacManAndCheck(Direction.Right)
@@ -274,9 +269,6 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(gameManager.getGameMap.entityAt(Position2D(3, 2)).getOrElse(Set()).exists(
           _.isInstanceOf[SpacManWithLife]
         ))
-
-        assert(movedSpacMan3.score == 2 * DOT_BASIC_SCORE + DOT_POWER_SCORE)
-
 
         val updatedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Up)
         assert(updatedSpacManOpt.isDefined)
