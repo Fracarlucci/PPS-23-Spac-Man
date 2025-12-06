@@ -10,11 +10,14 @@ trait GameManager:
     def isGameOver(): Boolean
     def moveSpacManAndCheck(newDirection: Direction): Option[SpacManWithLife]
     def moveGhosts(): Set[GhostBasic]
+    def isChaseMode: Boolean
+    def updateChaseTime(deltaTime: Long): Unit
 
 case class SimpleGameManager(
     private var _spacMan: SpacManWithLife,
     private var _gameMap: GameMap,
-    private var _gameOver: Boolean = false
+    private var _gameOver: Boolean = false,
+    private var _chaseTimeRemaining: Long = 0
 ) extends GameManager:
 
     def getSpacMan: SpacManWithLife = _spacMan
@@ -24,6 +27,12 @@ case class SimpleGameManager(
     override def isWin(): Boolean = _gameMap.getDots.isEmpty
 
     override def isGameOver(): Boolean = _gameOver
+
+    override def isChaseMode: Boolean = _chaseTimeRemaining > 0
+
+    override def updateChaseTime(deltaTime: Long): Unit =
+        if _chaseTimeRemaining > 0 then
+            _chaseTimeRemaining = Math.max(0, _chaseTimeRemaining - deltaTime)
 
     override def moveGhosts(): Set[GhostBasic] =
         @tailrec
@@ -36,7 +45,6 @@ case class SimpleGameManager(
                     _gameMap.replaceEntityTo(ghost, movedGhost) match
                         case Right(updatedMap) =>
                             _gameMap = updatedMap
-                            checkCollisionWithGhost(movedGhost)
                             movedGhost
                         case Left(error) =>
                             println(s"Error moving Ghost: $error")
@@ -44,7 +52,9 @@ case class SimpleGameManager(
                 else
                     findValidMove(ghost, attempts - 1)
 
-        _gameMap.getGhosts.map(findValidMove(_))
+        val movedGhosts = _gameMap.getGhosts.map(findValidMove(_))
+        movedGhosts.foreach(checkCollisionWithGhost)
+        movedGhosts
 
     private def moveSpacMan(newDirection: Direction): SpacManWithLife =
         if _gameMap.canMove(_spacMan, newDirection) then
@@ -58,8 +68,9 @@ case class SimpleGameManager(
         _spacMan
 
     private enum CollisionResult:
-        case GhostCollision
-        case DotCollision(dot: DotBasic)
+        case GhostCollision(ghost: GhostBasic)
+        case DotBasicCollision(dot: DotBasic)
+        case DotPowerCollision(dot: DotPower)
         case TunnelCollision(tunnel: Tunnel)
         case NoCollision
 
@@ -68,14 +79,23 @@ case class SimpleGameManager(
         direction: Direction
     ): CollisionResult =
         import CollisionResult.*
-        entities.collectFirst { case ghost: GhostBasic => GhostCollision }
-            .orElse(entities.collectFirst { case dot: DotBasic => DotCollision(dot) })
-            .orElse(
-              entities.collectFirst { case tunnel: Tunnel => tunnel }
-                  .filter(_.canTeleport(direction))
-                  .map(TunnelCollision.apply)
-            )
-            .getOrElse(NoCollision)
+
+        entities.collectFirst { case ghost: GhostBasic =>
+            GhostCollision(ghost)
+        }.orElse(
+          entities.collectFirst { case dot: DotPower =>
+              DotPowerCollision(dot)
+          }
+        ).orElse(
+          entities.collectFirst { case dot: DotBasic =>
+              DotBasicCollision(dot)
+          }
+        ).orElse(
+          entities.collectFirst {
+              case tunnel: Tunnel if tunnel.canTeleport(direction) =>
+                  TunnelCollision(tunnel)
+          }
+        ).getOrElse(NoCollision)
 
     private def applyCollisionEffect(
         spacMan: SpacManWithLife,
@@ -83,12 +103,17 @@ case class SimpleGameManager(
     ): Option[SpacManWithLife] =
         import CollisionResult.*
         collision match
-            case GhostCollision =>
-                handleGhostCollision()
-                None
-            case DotCollision(dot) =>
+            case GhostCollision(ghost) =>
+                handleGhostCollision(ghost)
+                if isChaseMode then Some(_spacMan) else None
+            case DotBasicCollision(dot) =>
                 _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
                 _spacMan = _spacMan.addScore(dot.score)
+                Some(_spacMan)
+            case DotPowerCollision(dot) =>
+                _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
+                _spacMan = _spacMan.addScore(dot.score)
+                _chaseTimeRemaining = 10000
                 Some(_spacMan)
             case TunnelCollision(tunnel) =>
                 val teleportedSpacMan = spacMan.teleport(tunnel.toPos).asInstanceOf[SpacManWithLife]
@@ -103,17 +128,39 @@ case class SimpleGameManager(
             case NoCollision =>
                 Some(_spacMan)
 
-    private def handleGhostCollision(): Unit =
-        println("Entro qui")
-        _spacMan = _spacMan.removeLife()
-        _gameOver = isSpacManDead()
-        _gameOver match
-            case false =>
-                val teleportedSpacMan = handleRemoveSpacManLife()
-                _gameMap = _gameMap.replaceEntityTo(_spacMan, teleportedSpacMan).getOrElse(_gameMap)
-                _spacMan = teleportedSpacMan
-            case true =>
-                _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
+    private def getRandomSpawnPosition(): Position2D =
+        val spawnPoints = _gameMap.ghostSpawnPoints.toSeq
+        val freeSpawnPoints = spawnPoints.filter { pos =>
+            _gameMap.entityAt(pos).toOption
+                .map(entities => !entities.exists(_.isInstanceOf[GhostBasic]))
+                .getOrElse(true)
+        }
+        val availablePoints = if freeSpawnPoints.nonEmpty then freeSpawnPoints else spawnPoints
+        availablePoints(scala.util.Random.nextInt(availablePoints.size))
+
+    private def handleGhostCollision(ghost: GhostBasic): Unit =
+        if isChaseMode then
+            val randomSpawnPos  = getRandomSpawnPosition()
+            val teleportedGhost = ghost.teleport(randomSpawnPos).asInstanceOf[GhostBasic]
+            _gameMap.replaceEntityTo(ghost, teleportedGhost) match
+                case Right(updatedMap) =>
+                    _gameMap = updatedMap
+                case Left(error) =>
+                    println(s"Error teleporting ghost: $error")
+        else if _spacMan.lives > 0 then
+            _spacMan = _spacMan.removeLife()
+            _gameOver = isSpacManDead()
+            _gameOver match
+                case false =>
+                    val teleportedSpacMan = handleRemoveSpacManLife()
+                    _gameMap =
+                        _gameMap.replaceEntityTo(_spacMan, teleportedSpacMan).getOrElse(_gameMap)
+                    _spacMan = teleportedSpacMan
+                case true =>
+                    _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
+        else
+            _gameOver = true
+            _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
 
     private def isSpacManDead(): Boolean = _spacMan.lives == 0
 
@@ -122,7 +169,7 @@ case class SimpleGameManager(
 
     private def checkCollisionWithGhost(ghost: GhostBasic): Unit =
         if ghost.position == _spacMan.position then
-            handleGhostCollision()
+            handleGhostCollision(ghost)
 
     private def checkCollisions(
         spacMan: SpacManWithLife,
