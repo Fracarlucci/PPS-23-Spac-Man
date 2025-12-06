@@ -71,6 +71,7 @@ case class SimpleGameManager(
         case GhostCollision(ghost: GhostBasic)
         case DotBasicCollision(dot: DotBasic)
         case DotPowerCollision(dot: DotPower)
+        case DotFruitCollision(fruit: DotFruit)
         case TunnelCollision(tunnel: Tunnel)
         case NoCollision
 
@@ -79,20 +80,23 @@ case class SimpleGameManager(
         direction: Direction
     ): CollisionResult =
         import CollisionResult.*
-
         entities.collectFirst { case ghost: GhostBasic =>
             GhostCollision(ghost)
         }.orElse(
-          entities.collectFirst { case dot: DotPower =>
-              DotPowerCollision(dot)
-          }
+            entities.collectFirst { case fruit: DotFruit =>
+                DotFruitCollision(fruit)
+            }
         ).orElse(
-          entities.collectFirst { case dot: DotBasic =>
-              DotBasicCollision(dot)
-          }
+            entities.collectFirst { case dot: DotPower =>
+                DotPowerCollision(dot)
+            }
         ).orElse(
-          entities.collectFirst {
-              case tunnel: Tunnel if tunnel.canTeleport(direction) =>
+            entities.collectFirst { case dot: DotBasic =>
+                DotBasicCollision(dot)
+            }
+        ).orElse(
+            entities.collectFirst {
+                case tunnel: Tunnel if tunnel.canTeleport(direction) =>
                   TunnelCollision(tunnel)
           }
         ).getOrElse(NoCollision)
@@ -114,6 +118,10 @@ case class SimpleGameManager(
                 _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
                 _spacMan = _spacMan.addScore(dot.score)
                 _chaseTimeRemaining = 10000
+                Some(_spacMan)
+            case DotFruitCollision(fruit) =>
+                _gameMap = _gameMap.remove(fruit).getOrElse(_gameMap)
+                _spacMan = _spacMan.addScore(fruit.score).addLife()
                 Some(_spacMan)
             case TunnelCollision(tunnel) =>
                 val teleportedSpacMan = spacMan.teleport(tunnel.toPos).asInstanceOf[SpacManWithLife]

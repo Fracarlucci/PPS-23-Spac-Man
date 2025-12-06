@@ -34,6 +34,7 @@ import controller.GameController
 import model.Tunnel
 import model.SpacManWithLife
 import model.DotPower
+import model.DotFruit
 
 object SimpleSwingApp {
     def create(map: GameMap): GameView =
@@ -196,6 +197,8 @@ class GameMapPanel(private var gameMap: GameMap) extends Panel:
                             drawSprite(g, "dot", x, y)
                         case dotPower: DotPower =>
                             drawSprite(g, "dot_power", x, y)
+                        case fruit: DotFruit =>
+                            drawSprite(g, "apple", x, y)
                         case wall: Wall =>
                             drawSprite(g, "wall", x, y)
                         case pacman: SpacManWithLife =>

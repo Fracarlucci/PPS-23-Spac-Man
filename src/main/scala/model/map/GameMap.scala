@@ -74,7 +74,10 @@ case class GameMapImpl(
                     case false => Left("No entity found")
             case None => Left("Invalid position" + entity.position)
 
-    override def replaceEntityTo(entity: GameEntity, movedEntity: GameEntity): Either[String, GameMap] =
+    override def replaceEntityTo(
+        entity: GameEntity,
+        movedEntity: GameEntity
+    ): Either[String, GameMap] =
         remove(entity) match
             case Right(map) => map.place(movedEntity.position, movedEntity)
             case Left(err)  => Left(err)
@@ -84,9 +87,9 @@ case class GameMapImpl(
         entityAt(nextPos) match
             case Right(set) if set.exists(_.isInstanceOf[Wall]) => false
             case Right(set) if set.exists {
-                case _: GhostBasic => entity.isInstanceOf[GhostBasic]
-                case _             => false
-            } => false
+                    case _: GhostBasic => entity.isInstanceOf[GhostBasic]
+                    case _             => false
+                } => false
             case _ if isOutOfMap(nextPos) => false
             case _                        => true
 

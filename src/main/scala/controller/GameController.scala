@@ -22,6 +22,7 @@ import java.awt.event.{KeyAdapter, KeyEvent}
 import controller.GameLoop
 import model.Tunnel
 import model.DotPower
+import model.DotFruit
 
 enum GameState:
     case Menu
@@ -60,6 +61,7 @@ object GameController:
         val tunnel2         = Tunnel(Position2D(0, 5), Position2D(10, 5), Direction.Left)
         val dotPower1       = DotPower(Position2D(9, 8))
         val dotPower2       = DotPower(Position2D(8, 9))
+        val fruit           = DotFruit(Position2D(9, 1))
 
         import dsl.*
 
@@ -74,12 +76,13 @@ object GameController:
         val wallPositions = getWallPositions()
 
         for
-            x <- 1 until 10
-            y <- 1 until 10
+            x <- 2 until 10
+            y <- 2 until 10
             pos = Position2D(x, y)
             if !wallPositions.contains(pos) && pos != spacman.position
                 && pos != dotPower1.position && pos != dotPower2.position
                 && !dsl.map.ghostSpawnPoints.contains(pos)
+                && pos != fruit.position
         do
             place a DotBasic(pos) at position(x, y)
 
@@ -90,6 +93,7 @@ object GameController:
         place a tunnel2 at position(0, 5)
         place a dotPower1 at position(9, 8)
         place a dotPower2 at position(8, 9)
+        place a fruit at position(9, 1)
 
         (spacman, dsl.map)
 

@@ -22,6 +22,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         val dotBasic1 = DotBasic(Position2D(2, 1))
         val dotBasic2 = DotBasic(Position2D(3, 2))
         val dotPower1 = DotPower(Position2D(2, 2))
+        val fruit    = DotFruit(Position2D(3, 1))
         val tunnel1   = Tunnel(Position2D(2, 0), Position2D(1, 9), Direction.Up)
         val tunnel2   = Tunnel(Position2D(1, 9), Position2D(2, 0), Direction.Down)
         val wall      = Wall(Position2D(0, 1))
@@ -36,6 +37,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         place a dotBasic1 at position(2, 1)
         place a dotBasic2 at position(3, 2)
         place a dotPower1 at position(2, 2)
+        place a fruit at position(3, 1)
         place a tunnel1 at position(2, 0)
         place a tunnel2 at position(1, 9)
         place a wall at position(0, 1)
@@ -224,6 +226,19 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(movedSpacMan2.score == DOT_BASIC_SCORE + DOT_POWER_SCORE)
         assert(!gameManager.isWin())
 
+    it should "eat dot + fruit, increase score + add life" in:
+        val gameManager     = createBasicTestSetup()
+        var movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
+        assert(movedSpacManOpt.isDefined)
+        var movedSpacMan = movedSpacManOpt.get
+        assert(movedSpacMan.position == Position2D(2, 1))
+        assert(movedSpacMan.score == DOT_BASIC_SCORE)
+        movedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Right)
+        movedSpacMan = movedSpacManOpt.get
+        assert(movedSpacMan.position == Position2D(3, 1))
+        assert(movedSpacMan.lives == 2) // Because for this test Spacman has 1 life on default
+        assert(movedSpacMan.score == DOT_BASIC_SCORE + DOT_FRUIT_SCORE)
+
     it should "detect win condition" in:
         val gameManager = createBasicTestSetup()
         assert(!gameManager.isWin())
@@ -259,7 +274,19 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(gameManager.getGameMap.entityAt(Position2D(3, 2)).getOrElse(Set()).exists(
           _.isInstanceOf[SpacManWithLife]
         ))
+
         assert(movedSpacMan3.score == 2 * DOT_BASIC_SCORE + DOT_POWER_SCORE)
+
+
+        val updatedSpacManOpt = gameManager.moveSpacManAndCheck(Direction.Up)
+        assert(updatedSpacManOpt.isDefined)
+        val updatedSpacMan = updatedSpacManOpt.get
+        assert(updatedSpacMan.position == Position2D(3, 1))
+        assert(gameManager.getGameMap.entityAt(Position2D(3, 2)).getOrElse(Set()).isEmpty)
+        assert(gameManager.getGameMap.entityAt(Position2D(3, 1)).getOrElse(Set()).exists(
+          _.isInstanceOf[SpacManWithLife]
+        ))
+        assert(updatedSpacMan.score == 2 * DOT_BASIC_SCORE + DOT_POWER_SCORE + DOT_FRUIT_SCORE)
         assert(gameManager.isWin())
 
     it should "set game over when colliding with a ghost" in:
