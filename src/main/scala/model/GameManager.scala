@@ -39,7 +39,9 @@ case class SimpleGameManager(
         def findValidMove(ghost: GhostBasic, attempts: Int = 10): GhostBasic =
             if attempts <= 0 then ghost
             else
-                val nextDirection = ghost.nextMove()
+                val canContinueCurrentDir = _gameMap.canMove(ghost, ghost.direction)
+                val nextDirection         = ghost.nextMove(canContinueCurrentDir)
+
                 if _gameMap.canMove(ghost, nextDirection) then
                     val movedGhost = ghost.move(nextDirection).asInstanceOf[GhostBasic]
                     _gameMap.replaceEntityTo(ghost, movedGhost) match
