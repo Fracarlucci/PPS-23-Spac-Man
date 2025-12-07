@@ -6,9 +6,9 @@ import view.GameView
 import scala.swing.Swing
 import controller.GameState
 
-private final val DEFAULT_GHOST_DELAY_MS       = 300
+private final val DEFAULT_GHOST_DELAY_MS       = 350
 private final val DEFAULT_GHOST_DELAY_CHASE_MS = 500
-private final val DEFAULT_SPACMAN_DELAY_MS     = 300
+private final val DEFAULT_SPACMAN_DELAY_MS     = 250
 
 case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: GameView):
     val ghostDelayNormal = DEFAULT_GHOST_DELAY_MS
