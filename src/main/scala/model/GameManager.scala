@@ -35,39 +35,51 @@ case class SimpleGameManager(
             _chaseTimeRemaining = Math.max(0, _chaseTimeRemaining - deltaTime)
 
     override def moveGhosts(): Set[GhostBasic] =
-        @tailrec
-        def findValidMove(ghost: GhostBasic, attempts: Int = 10): GhostBasic =
-            if attempts <= 0 then ghost
-            else
-                val canContinueCurrentDir = _gameMap.canMove(ghost, ghost.direction)
-                val nextDirection         = ghost.nextMove(canContinueCurrentDir)
 
-                if _gameMap.canMove(ghost, nextDirection) then
-                    val movedGhost = ghost.move(nextDirection).asInstanceOf[GhostBasic]
-                    _gameMap.replaceEntityTo(ghost, movedGhost) match
-                        case Right(updatedMap) =>
-                            _gameMap = updatedMap
-                            movedGhost
-                        case Left(error) =>
-                            println(s"Error moving Ghost: $error")
-                            ghost
-                else
-                    findValidMove(ghost, attempts - 1)
-
-        val movedGhosts = _gameMap.getGhosts.map(findValidMove(_))
+        def attemptMove(ghost: GhostBasic): Option[GhostBasic] =
+            val nextDirection = ghost.nextMove(
+                _spacMan.position,
+                _spacMan.direction,
+                _gameMap
+            )
+            
+            Option.when(_gameMap.canMove(ghost, nextDirection)) {
+                ghost.move(nextDirection).asInstanceOf[GhostBasic]
+            }
+        
+        def applyMove(ghost: GhostBasic, movedGhost: GhostBasic): GhostBasic =
+            _gameMap.replaceEntityTo(ghost, movedGhost) match
+            case Right(updatedMap) =>
+                _gameMap = updatedMap
+                movedGhost
+            case Left(error) =>
+                println(s"Warning: Could not move ghost ${ghost.id} - $error")
+                ghost
+        
+        val movedGhosts = _gameMap.getGhosts.map { ghost =>
+            attemptMove(ghost)
+                .map(applyMove(ghost, _))
+                .getOrElse(ghost)
+        }
+        
         movedGhosts.foreach(checkCollisionWithGhost)
         movedGhosts
 
     private def moveSpacMan(newDirection: Direction): SpacManWithLife =
-        if _gameMap.canMove(_spacMan, newDirection) then
+        if !_gameMap.canMove(_spacMan, newDirection) then
+            _spacMan
+        
+        else
             val movedSpacMan = _spacMan.move(newDirection).asInstanceOf[SpacManWithLife]
+            
             _gameMap.replaceEntityTo(_spacMan, movedSpacMan) match
                 case Right(updatedMap) =>
                     _gameMap = updatedMap
                     _spacMan = movedSpacMan
+                    movedSpacMan
                 case Left(error) =>
-                    println(s"Error moving SpacMan: $error")
-        _spacMan
+                    println(s"Warning: Could not move SpacMan - $error")
+                    _spacMan
 
     private enum CollisionResult:
         case GhostCollision(ghost: GhostBasic)
@@ -99,8 +111,8 @@ case class SimpleGameManager(
         ).orElse(
             entities.collectFirst {
                 case tunnel: Tunnel if tunnel.canTeleport(direction) =>
-                  TunnelCollision(tunnel)
-          }
+                    TunnelCollision(tunnel)
+            }
         ).getOrElse(NoCollision)
 
     private def applyCollisionEffect(
