@@ -56,6 +56,8 @@ object GameController:
         val dsl             = MapDSL(board(11, 11, Position2D(1, 1), ghostSpawnPoint))
         val ghost1          = GhostBasic(Position2D(7, 7), Direction.Down, 1.0, 1)
         val ghost2          = GhostBasic(Position2D(2, 2), Direction.Up, 1.0, 2)
+        val ghost3          = GhostBasic(Position2D(7, 2), Direction.Left, 1.0, 3)
+        val ghost4          = GhostBasic(Position2D(2, 7), Direction.Right, 1.0, 4)
         val spacman         = SpacManWithLife(Position2D(9, 9), Direction.Right, 0)
         val tunnel1         = Tunnel(Position2D(10, 5), Position2D(0, 5), Direction.Right)
         val tunnel2         = Tunnel(Position2D(0, 5), Position2D(10, 5), Direction.Left)
@@ -83,11 +85,15 @@ object GameController:
                 && pos != dotPower1.position && pos != dotPower2.position
                 && !dsl.map.ghostSpawnPoints.contains(pos)
                 && pos != fruit.position
+                && pos != ghost1.position && pos != ghost2.position
+                && pos != ghost3.position && pos != ghost4.position
         do
             place a DotBasic(pos) at position(x, y)
 
         place a ghost1 at position(7, 7)
         place a ghost2 at position(2, 2)
+        place a ghost3 at position(7, 2)
+        place a ghost4 at position(2, 7)
         place a spacman at position(9, 9)
         place a tunnel1 at position(10, 5)
         place a tunnel2 at position(0, 5)
