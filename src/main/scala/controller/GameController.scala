@@ -21,11 +21,13 @@ import scala.swing.Swing
 import java.awt.event.{KeyAdapter, KeyEvent}
 import controller.GameLoop
 import model.Tunnel
+import model.DotPower
 import model.DotFruit
 
 enum GameState:
     case Menu
     case Running
+    case Chase
     case Win
     case GameOver
 
@@ -50,13 +52,16 @@ object GameController:
         }).start()
 
     private def createMap(): (SpacManWithLife, GameMap) =
-        val dsl     = MapDSL(board(11, 11, Position2D(1, 1)))
-        val ghost1  = GhostBasic(Position2D(7, 7), Direction.Down, 1.0, 1)
-        val ghost2  = GhostBasic(Position2D(2, 2), Direction.Up, 1.0, 2)
-        val spacman = SpacManWithLife(Position2D(9, 9), Direction.Right, 0)
-        val tunnel1 = Tunnel(Position2D(10, 5), Position2D(0, 5), Direction.Right)
-        val tunnel2 = Tunnel(Position2D(0, 5), Position2D(10, 5), Direction.Left)
-        val fruit   = DotFruit(Position2D(1, 1))
+        val ghostSpawnPoint = Position2D(1, 1)
+        val dsl             = MapDSL(board(11, 11, Position2D(1, 1), ghostSpawnPoint))
+        val ghost1          = GhostBasic(Position2D(7, 7), Direction.Down, 1.0, 1)
+        val ghost2          = GhostBasic(Position2D(2, 2), Direction.Up, 1.0, 2)
+        val spacman         = SpacManWithLife(Position2D(9, 9), Direction.Right, 0)
+        val tunnel1         = Tunnel(Position2D(10, 5), Position2D(0, 5), Direction.Right)
+        val tunnel2         = Tunnel(Position2D(0, 5), Position2D(10, 5), Direction.Left)
+        val dotPower1       = DotPower(Position2D(9, 8))
+        val dotPower2       = DotPower(Position2D(8, 9))
+        val fruit           = DotFruit(Position2D(9, 1))
 
         import dsl.*
 
@@ -70,21 +75,25 @@ object GameController:
 
         val wallPositions = getWallPositions()
 
-        // Place dots in every cell that doesn't contain a wall
         for
             x <- 2 until 10
             y <- 2 until 10
             pos = Position2D(x, y)
             if !wallPositions.contains(pos) && pos != spacman.position
+                && pos != dotPower1.position && pos != dotPower2.position
+                && !dsl.map.ghostSpawnPoints.contains(pos)
+                && pos != fruit.position
         do
             place a DotBasic(pos) at position(x, y)
 
-        place a fruit at position(1, 1)
         place a ghost1 at position(7, 7)
         place a ghost2 at position(2, 2)
         place a spacman at position(9, 9)
         place a tunnel1 at position(10, 5)
         place a tunnel2 at position(0, 5)
+        place a dotPower1 at position(9, 8)
+        place a dotPower2 at position(8, 9)
+        place a fruit at position(9, 1)
 
         (spacman, dsl.map)
 
@@ -103,6 +112,14 @@ object GameController:
             y <- 4 to 6
         do positions += Position2D(x, y)
 
+        positions.result()
+
+    private def getGhostSpawnPositions(spawnPoint: Position2D): Set[Position2D] =
+        val positions = Set.newBuilder[Position2D]
+        for
+            x <- spawnPoint.x to (spawnPoint.x + 1)
+            y <- spawnPoint.y to (spawnPoint.y + 1)
+        do positions += Position2D(x, y)
         positions.result()
 
     private def handleFinalState(

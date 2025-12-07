@@ -234,13 +234,24 @@ class MapTest extends AnyFlatSpec with Matchers:
           "Invalid position" + position(-1, 0)
         )
     
-    it should "has a default spawnPoint" in:
+    it should "have a default SpacMan spawnPoint" in:
         map.spawnPoint shouldBe Position2D(0, 0)
 
-    it should "be possible to create a map with a spawnPoint" in:
+    it should "be possible to create a map with a SpacMan spawnPoint" in:
         val newMap = board(10, 10, Position2D(2, 2))
         newMap.spawnPoint shouldBe Position2D(2, 2)
 
-    it should "throw and IllegalArgumentException because spawnPoint out of map" in:
+    it should "throw and IllegalArgumentException because of SpacMan spawnPoint out of map" in:
         intercept[IllegalArgumentException]:
             val newMap = board(10, 10, Position2D(11, 11))
+
+    it should "have a default Ghost spawnPoint" in:
+        map.ghostSpawnPoints shouldBe Set(Position2D(1, 1), Position2D(2, 1), Position2D(1, 2), Position2D(2, 2))
+
+    it should "be possible to create a map with a Ghost spawnPoint" in:
+        val newMap = board(10, 10, Position2D(2, 2), Position2D(3, 3))
+        newMap.ghostSpawnPoints shouldBe Set(Position2D(3, 3), Position2D(4, 3), Position2D(3, 4), Position2D(4, 4))
+
+    it should "throw and IllegalArgumentException because of Ghost spawnPoint out of map" in:
+        intercept[IllegalArgumentException]:
+            val newMap = board(10, 10, Position2D(11, 11), Position2D(12, 12))
