@@ -6,10 +6,9 @@ import view.GameView
 import scala.swing.Swing
 import controller.GameState
 
-private final val DEFAULT_GHOST_DELAY_MS = 500
-private final val DEFAULT_GHOST_DELAY_CHASE_MS = 800
-private final val DEFAULT_SPACMAN_DELAY_MS = 250
-
+private final val DEFAULT_GHOST_DELAY_MS       = 300
+private final val DEFAULT_GHOST_DELAY_CHASE_MS = 500
+private final val DEFAULT_SPACMAN_DELAY_MS     = 300
 
 case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: GameView):
     val ghostDelayNormal = DEFAULT_GHOST_DELAY_MS
@@ -38,9 +37,10 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
                     gameManager.moveGhosts()
                     leatestGhostMove = now
                 if isTimeToMove(now, lastPacmanMove, spacmanDelay) then
-                    inputManager.processInput() match
-                        case Some(dir) => gameManager.moveSpacManAndCheck(dir)
-                        case None      => // do nothing
+                    val directionToMove = inputManager.processInput() match
+                        case Some(dir) => dir
+                        case None      => gameManager.getSpacMan.direction
+                    gameManager.moveSpacManAndCheck(directionToMove)
                     leatestSpacManMove = now
                     Swing.onEDT:
                         view.update(
@@ -54,10 +54,10 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
             case finalState: GameState => finalState
 
     def checkGameState(gameManager: GameManager): GameState = gameManager match
-        case gm if gm.isWin()       => GameState.Win
-        case gm if gm.isGameOver()  => GameState.GameOver
-        case gm if gm.isChaseMode   => GameState.Chase
-        case _                      => GameState.Running
+        case gm if gm.isWin()      => GameState.Win
+        case gm if gm.isGameOver() => GameState.GameOver
+        case gm if gm.isChaseMode  => GameState.Chase
+        case _                     => GameState.Running
 
     private def isTimeToMove(
         currTime: Long,
