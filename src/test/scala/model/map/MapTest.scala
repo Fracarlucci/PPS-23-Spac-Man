@@ -29,7 +29,7 @@ class MapTest extends AnyFlatSpec with Matchers:
         val dsl    = MapDSL(board(5, 5))
         val wall   = Wall(Position2D(2, 1))
         val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
-        val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
+        val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1)
 
         import dsl.*
 
@@ -59,7 +59,7 @@ class MapTest extends AnyFlatSpec with Matchers:
         val dsl    = MapDSL(map)
         val wall   = Wall(Position2D(2, 1))
         val pacMan = SpacManBasic(Position2D(4, 1), Direction.Right, 0)
-        val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
+        val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1)
 
         import dsl.*
 
@@ -112,9 +112,9 @@ class MapTest extends AnyFlatSpec with Matchers:
 
     it should "return the set of ghosts" in:
         val dsl    = MapDSL(map)
-        val ghost1 = GhostBasic(Position2D(5, 1), Direction.Right, 1.0, 1)
-        val ghost2 = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
-        val ghost3 = GhostBasic(Position2D(3, 1), Direction.Right, 1.0, 1)
+        val ghost1 = GhostBasic(Position2D(5, 1), Direction.Right, 1)
+        val ghost2 = GhostBasic(Position2D(4, 1), Direction.Right, 2)
+        val ghost3 = GhostBasic(Position2D(3, 1), Direction.Right, 3)
         val ghosts = Set(ghost1, ghost2, ghost3)
 
         import dsl.*

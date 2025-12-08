@@ -22,10 +22,10 @@ object MapLevel1 {
 
         val dsl = MapDSL(board(30, 20, spacmanSpawn, ghostSpawnPoint))
 
-        val ghost1 = GhostBasic(Position2D(3, 3), Direction.Down, 1.0, 1)
-        val ghost2 = GhostBasic(Position2D(25, 3), Direction.Up, 1.0, 2)
-        val ghost3 = GhostBasic(Position2D(3, 17), Direction.Left, 1.0, 3)
-        val ghost4 = GhostBasic(Position2D(25, 13), Direction.Right, 1.0, 4)
+        val ghost1 = GhostBasic(Position2D(3, 3), Direction.Down, 1)
+        val ghost2 = GhostBasic(Position2D(25, 3), Direction.Up, 2)
+        val ghost3 = GhostBasic(Position2D(3, 17), Direction.Left, 3)
+        val ghost4 = GhostBasic(Position2D(25, 13), Direction.Right, 4)
 
         val spacman = SpacManWithLife(spacmanSpawn, Direction.Left, 0)
 
