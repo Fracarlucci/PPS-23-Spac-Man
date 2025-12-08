@@ -40,8 +40,10 @@ object MapLevel1 {
         // MURI ESTERNI
         place a genericWall from position(0, 0) to position(29, 0)
         place a genericWall from position(0, 19) to position(29, 19)
-        place a genericWall from position(0, 0) to position(0, 19)
-        place a genericWall from position(29, 0) to position(29, 19)
+        place a genericWall from position(0, 0) to position(0, 11)
+        place a genericWall from position(0, 13) to position(0, 19)
+        place a genericWall from position(29, 0) to position(29, 11)
+        place a genericWall from position(29, 13) to position(29, 19)
 
         // MURI INTERNI
         // blocco centrale
