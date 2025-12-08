@@ -8,9 +8,9 @@ case class GhostContext(
     spacManDir: Direction,
     gameMap: GameMap
 ):
-    def canMove(direction: Direction): Boolean = 
+    def canMove(direction: Direction): Boolean =
         gameMap.canMove(ghost, direction)
-    
+
     def validDirections: Seq[Direction] =
         Direction.values.filter(canMove).toSeq
 
