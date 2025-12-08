@@ -2,11 +2,13 @@ package model
 
 import model.map.GameMap
 
+val GHOST_BASIC_SCORE = 100
+
 case class GhostBasic(
     position: Position2D,
     direction: Direction,
-    speed: Double,
-    id: Int
+    id: Int,
+    score: Int = GHOST_BASIC_SCORE
 ) extends MovableEntity:
   
   override def withPosAndDir(newPosition: Position2D, newDirection: Direction): GhostBasic =
