@@ -40,6 +40,7 @@ object SpriteLoader:
           "arrow_up",
           "wall",
           "dot",
+          "dot_power",
           "apple",
           "strawberry",
           "fruit"
