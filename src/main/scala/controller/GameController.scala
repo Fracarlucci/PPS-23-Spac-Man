@@ -2,7 +2,6 @@ package controller
 
 import model.MapDSL
 import model.board
-import model.genericWall
 import model.DotBasic
 import model.Position2D
 import model.GhostBasic

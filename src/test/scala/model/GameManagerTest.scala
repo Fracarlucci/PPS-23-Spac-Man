@@ -31,16 +31,16 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
         import dsl.*
 
-        place a spacMan at position(1, 1)
-        place a ghost1 at position(1, 2)
-        place a ghost2 at position(4, 2)
-        place a dotBasic1 at position(2, 1)
-        place a dotBasic2 at position(3, 2)
-        place a dotPower1 at position(2, 2)
-        place a fruit at position(3, 1)
-        place a tunnel1 at position(2, 0)
-        place a tunnel2 at position(1, 9)
-        place a wall at position(0, 1)
+        place the spacMan
+        place the ghost1
+        place the ghost2
+        place the dotBasic1
+        place the dotBasic2
+        place the dotPower1
+        place the fruit
+        place the tunnel1
+        place the tunnel2
+        place the wall
 
         SimpleGameManager(spacMan, dsl.map)
 
@@ -56,12 +56,12 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
         import dsl.*
 
-        place a spacMan at position(1, 1)
-        place a ghost1 at position(2, 2)
-        place a wall1 at position(1, 2)
-        place a wall2 at position(2, 1)
-        place a wall3 at position(3, 2)
-        place a wall4 at position(2, 3)
+        place the spacMan
+        place the ghost1
+        place the wall1
+        place the wall2
+        place the wall3
+        place the wall4
 
         SimpleGameManager(spacMan, dsl.map)
 
@@ -76,11 +76,11 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
         import dsl.*
 
-        place a spacMan at position(2, 3)
-        place a ghost1 at position(2, 2)
-        place a wall1 at position(1, 2)
-        place a wall2 at position(2, 1)
-        place a wall3 at position(3, 2)
+        place the spacMan
+        place the ghost1
+        place the wall1
+        place the wall2
+        place the wall3
 
         SimpleGameManager(spacMan, dsl.map)
 
@@ -95,11 +95,11 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
         import dsl.*
 
-        place a spacMan at position(2, 1)
-        place a ghost1 at position(2, 2)
-        place a wall1 at position(1, 2)
-        place a wall2 at position(2, 1)
-        place a wall3 at position(3, 2)
+        place the spacMan
+        place the ghost1
+        place the wall1
+        place the wall2
+        place the wall3
 
         SimpleGameManager(spacMan, dsl.map)
 
