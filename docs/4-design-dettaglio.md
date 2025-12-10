@@ -23,7 +23,9 @@ L'unica di queste entità per cui è stato utilizzato l'approccio dei **Factory 
 
 ## Controller
 
-### Game Loop
+### Flusso di gioco
+- `GameController`: Tiene traccia dello stato in cui si trova il gioco e chiama i metodi della `GameView` per cambiare la schermata. Quando inizia la partita crea un'istanza di `GameLoop` e anche di `InputManager` per l'interpretazione dei comandi dati dall'utente.
+- `GameLoop`: Il suo scopo principale è quello di gestire il ciclo di vita di una partita implementando un'ordine temporale agli eventi che accadono. In particolare utilizza `GameManager` per controllare lo stato della partita(vittoria/sconfitta) e gestire i movimenti dei fantasmi e dello SpacMan che vengono eseguiti ogni x secondi, dove x è una costante. Alla fine di ogni ciclo viene chiamata l'`update()` per aggiornare in modo continuo e costante l'interfaccia grafica.
 
 ### Input Manager
 
@@ -36,8 +38,15 @@ GridMapper: Utilizzato per convertire le coordinate fisiche (pixel) in coordinat
 
 ## View
 
-### 
+### Schermate di gioco
 
+- `GameView`: è il componente principale della view. Si occupa di mostrare l'interfaccia grafica del gioco e presenta metodi che vengono utilizzati dal controller come `update`, utilizzato per aggiornare ciclicamente l'interfaccia, `displayWin` e `displayGameOver`, utilizzati per mostrare la schermata di fine gioco.
+- `InfoPanel`, `GameMapPanel`: sono i pannelli utilizzati dalla `GameView`, ciascun pannello ha un ruolo grafico ben preciso, in questo modo si mantiene la separazione delle responsabilità tra le diverse componenti dell’interfaccia.
+- `SpriteLoader`: si occupa di cercare e caricare tutti gli sprite che verranno poi visualizzati nell'interfaccia grafica. Questo oggetto non solo si occupa del caricamento, ma anche di **caching** per evitare rallentamenti grafici e rendere il gioco scalabile.
+
+### Creazione componenti UI
+- `ButtonFactory`: crea bottoni con stili predefiniti, è possibile specificare una dimensione al bottone che è sempre predefinita, ma possono essere aggiunte altre dimensioni. In questo momento sono presenti le dimensioni **Big** e **Normal**.
+- `LabelFactory`: crea label con stili predefiniti. In questo caso non è possibile specificare una dimensione, ma sono stati creati più metodi per la creazione di label con diverso utilizzo. Questa decisione è stata presa per l'esigenza che le label di uno specifico tipo (ad es. `titleLabel` o `scoreLabel`) avessero tutte la stessa dimensione e lo stesso stile.
 
 0. [Introduzione](../README.md)
 1. [Processo di sviluppo](1-processo.md)
