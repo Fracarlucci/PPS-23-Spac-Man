@@ -17,8 +17,8 @@ import model.Tunnel
 class GameManagerTest extends AnyFlatSpec with Matchers:
     def createBasicTestSetup(): SimpleGameManager =
         val spacMan   = SpacManWithLife(Position2D(1, 1), Direction.Right, 0, 1)
-        val ghost1    = GhostBasic(Position2D(1, 2), Direction.Right, 1.0, 1)
-        val ghost2    = GhostBasic(Position2D(4, 2), Direction.Left, 1.0, 2)
+        val ghost1    = GhostBasic(Position2D(1, 2), Direction.Right, 1)
+        val ghost2    = GhostBasic(Position2D(4, 2), Direction.Left, 2)
         val dotBasic1 = DotBasic(Position2D(2, 1))
         val dotBasic2 = DotBasic(Position2D(3, 2))
         val dotPower1 = DotPower(Position2D(2, 2))
@@ -46,7 +46,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
     def createEdgeTestSetup(): SimpleGameManager =
         val spacMan = SpacManWithLife(Position2D(1, 1), Direction.Right, 0, 1)
-        val ghost1  = GhostBasic(Position2D(2, 2), Direction.Right, 1.0, 1)
+        val ghost1  = GhostBasic(Position2D(2, 2), Direction.Right, 1)
         val wall1   = Wall(Position2D(1, 2))
         val wall2   = Wall(Position2D(2, 1))
         val wall3   = Wall(Position2D(3, 2))
@@ -67,7 +67,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
     def createEdgeTestSetup2(): SimpleGameManager =
         val spacMan = SpacManWithLife(Position2D(2, 3), Direction.Right, 0, 1)
-        val ghost1  = GhostBasic(Position2D(2, 2), Direction.Right, 1.0, 1)
+        val ghost1  = GhostBasic(Position2D(2, 2), Direction.Right, 1)
         val wall1   = Wall(Position2D(1, 2))
         val wall2   = Wall(Position2D(2, 1))
         val wall3   = Wall(Position2D(3, 2))
@@ -86,7 +86,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
     def createEdgeTestSetup3(): SimpleGameManager =
         val spacMan = SpacManWithLife(Position2D(2, 1), Direction.Right, 0, 3)
-        val ghost1  = GhostBasic(Position2D(2, 2), Direction.Right, 1.0, 1)
+        val ghost1  = GhostBasic(Position2D(2, 2), Direction.Right, 1)
         val wall1   = Wall(Position2D(1, 2))
         val wall2   = Wall(Position2D(2, 1))
         val wall3   = Wall(Position2D(3, 2))
@@ -353,16 +353,19 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
         assert(gameManager.getGameMap.entityAt(Position2D(2, 1)).getOrElse(Set()).exists(
           _.isInstanceOf[SpacManWithLife]
         ))
+        assert(gameManager.getSpacMan.score == DOT_BASIC_SCORE)
 
         gameManager.moveSpacManAndCheck(Direction.Down)
         assert(gameManager.getGameMap.entityAt(Position2D(2, 2)).getOrElse(Set()).exists(
           _.isInstanceOf[SpacManWithLife]
         ))
+        assert(gameManager.getSpacMan.score == DOT_BASIC_SCORE + DOT_POWER_SCORE)
 
         gameManager.moveSpacManAndCheck(Direction.Left)
         assert(gameManager.getGameMap.entityAt(Position2D(1, 2)).getOrElse(Set()).exists(
           _.isInstanceOf[SpacManWithLife]
         ))
+        assert(gameManager.getSpacMan.score == DOT_BASIC_SCORE + DOT_POWER_SCORE + GHOST_BASIC_SCORE)
 
         assert(gameManager.getGameMap.ghostSpawnPoints.exists(spawnPos =>
             gameManager.getGameMap.entityAt(spawnPos).getOrElse(Set()).exists(

@@ -162,6 +162,7 @@ case class SimpleGameManager(
 
     private def handleGhostCollision(ghost: GhostBasic): Unit =
         if isChaseMode then
+            _spacMan = _spacMan.addScore(ghost.score)
             val randomSpawnPos  = getRandomSpawnPosition()
             val teleportedGhost = ghost.teleport(randomSpawnPos).asInstanceOf[GhostBasic]
             _gameMap.replaceEntityTo(ghost, teleportedGhost) match
