@@ -337,4 +337,4 @@ La scadenza dello sprint è il 10/12/2025.
 1. [Sprint 1](./sprint1.md)
 2. [Sprint 2](./sprint2.md)
 3. [Sprint 3](./sprint3.md)
-4. [**Sprint 4**](./sprint4.md)
+4. [Sprint 4](./sprint4.md)
