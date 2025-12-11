@@ -9,8 +9,33 @@ Il mio contributo nel progetto si è focalizzato nelle seguenti aree:
 - **Sviluppo interfaccia utente**: implementazione della parte grafica del gioco.
 - **Testing**: Scrittura dei test per i sistemi implementati, come `GameMapTest`, `TunnelTest`, `WallBuilderTest` e anche alcuni test presenti in altre classi.
 ## Mappa di gioco
-
 ### GameMap
+La classe GameMap definisce le dimensioni dell’area di gioco, le posizioni di spawn e la disposizione degli oggetti presenti sulla griglia.
+
+L'interfaccia espone un insieme di operazioni fondamentali:
+- **Manipolazione dello stato della mappa**: inserimento, sostituzione e rimozione di entità.
+- **Accesso alla mappa**: recupero delle entità presenti in una determinata cella o il recupero di determinati tipi di entità (`Ghost`, `Wall`, `Dot`)
+- **Verifica del movimento**: verifica se un’entità può muoversi in una direzione specifica.
+
+L’implementazione concreta GameMapImpl utilizza una struttura immutabile `Map[Position2D, Set[GameEntity]]` per rappresentare la griglia. Questo approccio è coerente con lo stile funzionale di Scala: ogni modifica restituisce una nuova versione della mappa, questa scelta permette di tracciare facilmente gli stati e semplifica test e debugging.
+
+Tra gli aspetti rilevanti:
+- **Largo uso di pattern matching**: quasi ogni metodo fa uso di pattern matching
+
+- **Uso di Either per la gestione degli errori**: l'utilizzo degli `Either` viene dall'esigenza di gestire gli errori che potrebbero esserci durante l'utilizzo dei metodi della mappa, se non gestiti, questi errori possono portare ad eccezioni. Usando gli `Either` viene forzata la gestione degli errori evitando malfunzionamenti dell'applicazione.
+- **GameMapFactory**: per la creazione di mappe vuote creando già la griglia. 
+
+```scala
+// Esempio di uso di pattern matching con Either
+override def remove(entity: GameEntity): Either[String, GameMap] =
+    grid.get(entity.position) match
+        case Some(entities) => entities.contains(entity) match
+                case true =>
+                    Right(copy(grid = grid.updated(entity.position, entities - entity)))
+                case false => Left("No entity found")
+        case None => Left("Invalid position" + entity.position)
+```
+
 ### DSL
 
 ## Contributi nelle entità di gioco
