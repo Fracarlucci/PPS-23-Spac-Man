@@ -17,7 +17,7 @@ L'interfaccia espone un insieme di operazioni fondamentali:
 - **Accesso alla mappa**: recupero delle entità presenti in una determinata cella o il recupero di determinati tipi di entità (`Ghost`, `Wall`, `Dot`)
 - **Verifica del movimento**: verifica se un’entità può muoversi in una direzione specifica.
 
-L’implementazione concreta GameMapImpl utilizza una struttura immutabile `Map[Position2D, Set[GameEntity]]` per rappresentare la griglia. Questo approccio è coerente con lo stile funzionale di Scala: ogni modifica restituisce una nuova versione della mappa, questa scelta permette di tracciare facilmente gli stati e semplifica test e debugging.
+L’implementazione concreta GameMapImpl utilizza una struttura immutabile `Map[Position2D, Set[GameEntity]]` per rappresentare la griglia. Questo approccio è coerente con lo stile funzionale in cui ogni modifica restituisce una nuova versione della mappa. Questa scelta permette di tracciare facilmente gli stati e semplifica test e debugging.
 
 Tra gli aspetti rilevanti:
 - **Largo uso di pattern matching**: quasi ogni metodo fa uso di pattern matching
@@ -37,6 +37,85 @@ override def remove(entity: GameEntity): Either[String, GameMap] =
 ```
 
 ### DSL
+Il **DSL** proposto ha come obbiettivo quello di rendere il codice per la creazione della mappa molto più leggibile e al tempo stesso che facilitasse la creazione di entità da inserire nella mappa.
+
+Si è voluto dare particolare enfasi nel creare un DSL che a prima vista non sembrasse codice e nel renderlo simile ad un linguaggio naturale.
+Le azioni possibili sono tre:
+
+- `place the`: permette di piazzare nella mappa oggetti già creati in precedenza, alcuni oggetti come ad esempio lo SpacMan molto spesso sono già creati in precedenza per via delle variabili che si possono settare al suo interno ed anche perché si vuole mantenere un riferimento ad esso. In questo caso non conviene creare semplicemente piazzare l'entità prendendo il riferimento all'oggetto.
+```scala
+// esempio di 'place the'
+val dsl    = MapDSL(board(5, 5))
+val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
+import dsl.*
+place the pacMan
+```
+- `place multiple`: la funzione è simile alla precedente, ma questa volta è permesso il piazzamento di più entità contemporaneamente. Anche in questo caso si tratta di piazzare oggetti già creati in precedenza, può tornare utile, ad esempio, per piazzare dei fantasmi.
+```scala
+// esempio di 'place multiple'
+val dsl    = MapDSL(map)
+val ghost1 = GhostBasic(Position2D(5, 1), Direction.Right, 1.0, 1)
+val ghost2 = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
+val ghost3 = GhostBasic(Position2D(3, 1), Direction.Right, 1.0, 1)
+val ghosts = Set(ghost1, ghost2, ghost3)
+
+import dsl.*
+
+place multiple ghosts
+// oppure anche 
+place multiple Set(ghost1, ghost2, ghost3)
+```
+- `place a genericEntity at position x`: questo metodo è stato pensato per tutte le entità in cui non c'è bisogno di una creazione precedente dell'oggetto e in cui il riferimento nella mappa è sufficiente. In questo modo attraverso questo metodo è possibile creare l'entità e piazzarla nello stesso momento. Per fare ciò è stato creato un enum che memorizza il tipo dell'entità, che poi verrà utilizzato dal DSL per la creazione dell'entità e il successivo piazzamento nella mappa. Per rendere il codice ancora più 'human-like', i casi dell'enum sono stati memorizzati in variabili.
+```scala
+val dsl    = MapDSL(map)
+import dsl.*
+// crea un DotBasic alla posizione (1, 1) e lo piazza nella mappa
+place a genericDot at position(1, 1)
+```
+C'è un'ultima casistica disponibile in questo momento solo per i muri che serve a facilitare la creazione di più muri contemporaneamente ed è la seguente `place a genericWall from position x to position y`:
+```scala
+val dsl    = MapDSL(map)
+import dsl.*
+// crea e piazza i muri: Wall(0, 0), Wall(0, 1), ..., Wall(0, 5)
+place a genericWall from position(0, 0) to position(0, 5)
+```
+### Creazione mappa senza DSL
+```scala
+val map    = GameMapImpl(30, 30)
+val ghost1 = GhostBasic(Position2D(3, 3), Direction.Down, 1.0, 1)
+val ghost2 = GhostBasic(Position2D(25, 3), Direction.Up, 1.0, 2)
+val ghost3 = GhostBasic(Position2D(3, 17), Direction.Left, 1.0, 3)
+val ghost4 = GhostBasic(Position2D(25, 13), Direction.Right, 1.0, 4)
+val spacman = SpacManWithLife(Position2D(1, 1), Direction.Left, 0)
+val dot     = DotBasic(Position2D(25, 18))
+val dp      = DotPower(Position2D(2, 2))
+val fruit   = DotFruit(Position2D(15, 12))
+val walls   = WallBuilder.createWalls(Position2D(0, 0), Position2D(0, 10))
+
+map = map.placeAll(Set(ghost1, ghost2, ghost3, ghost4))
+map = map.place(spacman.position, spacman)
+map = map.place(dot.position, dot)
+map = map.place(dp.position, dp)
+map = map.place(fruit.position, fruit)
+map = map.placeAll(walls)
+```
+### Creazione mappa con DSL 
+```scala
+val dsl = MapDSL(board(30, 30))
+val ghost1 = GhostBasic(Position2D(3, 3), Direction.Down, 1.0, 1)
+val ghost2 = GhostBasic(Position2D(25, 3), Direction.Up, 1.0, 2)
+val ghost3 = GhostBasic(Position2D(3, 17), Direction.Left, 1.0, 3)
+val ghost4 = GhostBasic(Position2D(25, 13), Direction.Right, 1.0, 4)
+val spacman = SpacManWithLife(Position2D(1, 1), Direction.Left, 0)
+import dsl.*
+
+place multiple Set(ghost1, ghost2, ghost3, ghost4)
+place the spacman
+place a genericDot at position(25, 18)
+place a genericDotPower at position(2, 2)
+place a genericDotFruit at position(15, 12)
+place a genericWall from position(0, 0) to position(0, 10)
+```
 
 ## Contributi nelle entità di gioco
 ### SpacMan
@@ -76,7 +155,6 @@ state match
         loop(newState, leatestGhostMove, leatestSpacManMove, now)
     case finalState: GameState => finalState
 ```
-
 
 ## Interfaccia utente
 
