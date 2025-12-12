@@ -92,6 +92,7 @@ val dp      = DotPower(Position2D(2, 2))
 val fruit   = DotFruit(Position2D(15, 12))
 val walls   = WallBuilder.createWalls(Position2D(0, 0), Position2D(0, 10))
 
+// meno leggibile, più lungo da scrivere
 map = map.placeAll(Set(ghost1, ghost2, ghost3, ghost4))
 map = map.place(spacman.position, spacman)
 map = map.place(dot.position, dot)
@@ -109,6 +110,7 @@ val ghost4 = GhostBasic(Position2D(25, 13), Direction.Right, 1.0, 4)
 val spacman = SpacManWithLife(Position2D(1, 1), Direction.Left, 0)
 import dsl.*
 
+// più facile da scrivere e leggibile 
 place multiple Set(ghost1, ghost2, ghost3, ghost4)
 place the spacman
 place a genericDot at position(25, 18)
@@ -157,5 +159,9 @@ state match
 ```
 
 ## Interfaccia utente
+Per quanto riguarda l'interfaccia utente, ho lavorato su tutte le classi presenti che appartengono alla view. La libreria utilizzata per la rappresentazione grafica è **Scala Swing**, il noto framework di Java adattato a Scala, in modo da scrivere codice meno verboso e più funzionale. 
 
+Come già specificato nel [design di dettaglio](4-design-dettaglio.md), `GameView` è il componente principale della GUI. Esso utilizza le classi `GameMapPanel` e `InfoPanel` per rappresentare l'interfaccia di gioco durante una partita e `ButtonFactory` e `LabelFactory` per costruire le schermate di vittoria/sconfitta.
+
+Viene anche utilizzato lo `SpriteLoader` per tenere in cache le immagini delle entità di gioco o caricarle in caso non siano ancora in cache. 
 ## Testing
