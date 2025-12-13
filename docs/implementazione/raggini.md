@@ -212,3 +212,8 @@ Come già specificato nel [design di dettaglio](4-design-dettaglio.md), `GameVie
 
 Viene anche utilizzato lo `SpriteLoader` per tenere in cache le immagini delle entità di gioco o caricarle in caso non siano ancora in cache. 
 ## Testing
+Come già accennato nella sezione precedente, i test sono stati fondamentali per garantire la qualità del codice e per facilitare il processo di sviluppo, specialmente durante la rifattorizzazione, e sono stati scritti con particolare attenzione alla leggibilità. 
+
+È stato posto un impegno significativo nel raggiungere una percentuale di **code coverage** di almeno il **90%** per le classi appartenenti al model. Questo approccio ha permesso di individuare la maggior parte degli errori nelle prime fasi dell’implementazione e di garantire una maggiore stabilità del sistema anche in presenza di piccoli cambiamenti al codice.
+
+Il **DSL** è stato ampiamente utilizzato per il testing della mappa e, sebbene non riduca in modo significativo il numero di righe di codice, ha consentito una maggiore velocità di scrittura dei test e una migliore leggibilità degli stessi.
