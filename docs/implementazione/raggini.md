@@ -94,10 +94,10 @@ val walls   = WallBuilder.createWalls(Position2D(0, 0), Position2D(0, 10))
 
 // meno leggibile, più lungo da scrivere
 map = map.placeAll(Set(ghost1, ghost2, ghost3, ghost4))
-map = map.place(spacman.position, spacman)
-map = map.place(dot.position, dot)
-map = map.place(dp.position, dp)
-map = map.place(fruit.position, fruit)
+map = map.place(spacman)
+map = map.place(dot)
+map = map.place(dp)
+map = map.place(fruit)
 map = map.placeAll(walls)
 ```
 ### Creazione mappa con DSL 
@@ -120,7 +120,54 @@ place a genericWall from position(0, 0) to position(0, 10)
 ```
 
 ## Contributi nelle entità di gioco
+I principali contributi riguardano le classi: `SpacMan`, `Tunnel`, `Position2D`, `Direction`, `DotFruit` e il `WallBuilder`. Non ci sono particolari note da fare, tranne per `SpacMan`, di cui parlerò nel sotto capitolo seguente e il `WallBuilder`. Questa factory permette la creazione di più muri partendo da una posizione iniziale ed una finale. Essa è in grado di riconoscere in autonomia quali muri devono essere creati e in che direzione. In particolare, le possibilità possono essere quattro: **Verticale**, **Orizzontale**, **Singolo** in caso di posizione iniziale e finale uguali, ed infine **Complesso**, che riguarda la creazione di quadrati o rettangoli quando la posizione iniziale differisce completamente con la posizione finale (es. posizione iniziale (0, 0) e posizione finale (5, 5)).
+
+```scala
+object WallBuilder:
+
+  def createWalls(startPos: Position2D, endPos: Position2D): Set[Wall] =
+    BuildDirection.understandBuildDirection(startPos, endPos) match
+      case BuildDirection.Horizontal => createHorizontalWall(startPos, endPos)
+      case BuildDirection.Vertical   => createVerticalWall(startPos, endPos)
+      case BuildDirection.Complex    => createComplexWall(startPos, endPos)
+      case BuildDirection.Single     => Set(Wall(startPos))
+```
 ### SpacMan
+Per l'implementazione dello SpacMan ho deciso di utilizzare un approccio basato su mixin, al fine di comporre l’entità di gioco combinando diversi comportamenti. Questa scelta consente di:
+- separare le responsabilità (in questo caso movimento, vite e punteggio)
+- favorisce il riuso di codice in quanto le interfacce sono già implementate
+- classi e trait facilmente manutenibili ed estendibili
+
+In questo caso i trait implementati sono `Life` e `Score`, progettati in modo da rendere la classe che li utilizza **immutabile**, restituendo una nuova istanza dell’oggetto a ogni modifica di stato.
+```scala
+trait Life[E <: Life[E]]:
+    val lives: Int
+    def addLife(): E =
+        val newLives = lives + 1
+        updateLife(newLives)
+    def removeLife(): E =
+        require(lives > 0)
+        val newLives = lives - 1
+        updateLife(newLives)
+    protected def updateLife(newLives: Int): E
+
+trait Score[E <: Score[E]]:
+    val score: Int
+    def addScore(points: Int): E =
+        if points >= 0 then updateScore(score + points)
+        else updateScore(score)
+    protected def updateScore(points: Int): E
+
+case class SpacManWithLife(
+    position: Position2D,
+    direction: Direction,
+    score: Int,
+    val lives: Int = DEFAULT_LIVES
+) extends MovableEntity with Life[SpacManWithLife] with Score[SpacManWithLife]:
+```
+La scelta di utilizzare l’**F-bounded polymorphism** è stata adottata per garantire la type safety.
+In assenza di questo vincolo, un tipo generico `E` non avrebbe garantito che i metodi restituissero il tipo concreto dell’oggetto, rendendo necessari cast espliciti e introducendo il rischio di errori a runtime.
+Il vincolo `E <: Life[E]` (e analogamente per Score) assicura invece che le operazioni restituiscano sempre un’istanza del tipo corretto.
 
 ## GameLoop
 Nel progetto è stato implementato un game loop, ovvero il ciclo principale che gestisce l’intera esecuzione del gioco. Il suo scopo è mantenere un flusso continuo e controllato di aggiornamento dello stato di gioco e di rendering, permettendo così un comportamento fluido e costante.
