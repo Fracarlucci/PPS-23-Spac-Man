@@ -40,17 +40,17 @@ Al termine di ogni sprint, vengono inoltre redatti una **Sprint Review** e una *
 
 In una prima fase di analisi e progettazione, il gruppo ha svolto un meeting iniziale finalizzato alla definizione dell’architettura generale del progetto, durante il quale sono stati stabiliti anche la durata degli sprint e le modalità delle iterazioni successive.
 
-Il team ha deciso di adottare *sprint settimanali*, ad eccezione del primo, della durata di due settimane, necessario per le configurazioni iniziali del progetto.
+Il team ha deciso di adottare *sprint settimanali/bisettimanali* in base alle disponibilità del team.
 
-La scelta di organizzare sprint brevi è stata motivata dall’obiettivo di sviluppare funzionalità in tempi ridotti e ottenere feedback frequenti dallo stakeholder.
+La scelta di organizzare sprint di lunghezza moderata è stata motivata dall’obiettivo di sviluppare funzionalità in tempi ridotti e ottenere feedback frequenti dallo stakeholder, mantenendo un equilibrio tra la qualità del prodotto e la velocità di sviluppo.
 
 ## Modalità di revisione in itinere dei task
 
 La revisione del lavoro è stata gestita tramite un meccanismo basato sulle *pull request*.  
 Ogni funzionalità è stata sviluppata in un branch dedicato e successivamente integrata nel branch *develop*, consentendo ai membri del team di lavorare in parallelo senza interferire con il flusso principale.
 
-Al termine di ciascuno sprint, le modifiche consolidate in *develop* sono state unite nel branch *main* mediante *pull request*.  
-Per essere approvata, ogni *pull request* ha dovuto ricevere l’approvazione di tutti i membri del gruppo.  
+Al termine di ciascuno sprint, le modifiche consolidate in *develop* sono state unite nel branch *main* mediante *pull request*.
+Per essere approvata, ogni *pull request* su develop ha dovuto ricevere l’approvazione di tutti i membri del gruppo.
 Questo approccio ha garantito un aggiornamento costante tra i membri e un ulteriore livello di controllo e validazione del codice prima della sua integrazione definitiva.
 
 ## Scelta degli strumenti di test, build e Continuous Integration (CI)
@@ -58,6 +58,7 @@ Questo approccio ha garantito un aggiornamento costante tra i membri e un ulteri
 Per il **testing automatico** è stato scelto **ScalaTest**, strumento noto e facilmente integrabile con l’ambiente di sviluppo.  
 Come **build tool** è stato adottato **sbt**, pensato specificamente per progetti Scala.  
 Per mantenere una formattazione coerente del codice è stato impiegato **scalafmt**, che assicura uno stile uniforme all’interno del team.
+Per corregge possibili errori di stile e sintassi è stato integrato **scalafix**, che segnala come warning al programmatore problemi di sintassi, miglioramenti nella sicurezza del codice, cleanup del codice non utilizzato.    
 
 L’intero progetto e la relativa relazione sono stati gestiti tramite **GitHub**.  
 Per automatizzare i processi di test e controllo qualità, è stata configurata una pipeline di Continuous Integration mediante **GitHub Actions**, la quale si attiva automaticamente a ogni nuova *pull request* sul branch di sviluppo.
@@ -67,7 +68,7 @@ I workflow configurati eseguono le seguenti azioni:
 - **Build e test**: compilazione e test automatici del codice su più piattaforme (Ubuntu, Windows, macOS) e versioni di Java (17 e 21), garantendo compatibilità cross-platform e prevenendo regressioni. Il processo viene eseguito a ogni push, assicurando un monitoraggio continuo dello stato del software.  
 - **Controllo della formattazione**: verifica della conformità del codice agli standard di formattazione definiti dal team tramite il comando `scalafmtCheckAll`, per mantenere una codebase coerente e leggibile.  
 - **Validazione dei commit**: implementazione di un controllo automatico sui messaggi di commit, secondo le specifiche di **Conventional Commits**, al fine di garantire chiarezza e coerenza nella cronologia del progetto.
-- **Rilascio automatico**: al momento del merge di una *pull request* sul branch *main* viene eseguito un rilascio automatico tramite **Semantic Release** che aggiorna la versione del software, genera le note di rilascio e pubblica il pacchetto, semplificando la gestione delle release e garantendo una documentazione accurata di ogni nuova versione
+- **Rilascio automatico**: al momento del merge di una *pull request* sul branch *main* viene eseguito un rilascio automatico tramite **Semantic Release** che aggiorna la versione del software e genera le note di rilascio, semplificando la gestione delle release e garantendo una documentazione accurata di ogni nuova versione.
 
 ---
 
@@ -77,5 +78,7 @@ I workflow configurati eseguono le seguenti azioni:
 3. [Design architetturale](3-architettura.md)
 4. [Design di dettaglio](4-design-dettaglio.md)
 5. [Implementazione](5-implementazione.md)
+    - [Francesco Carlucci](./implementazione/carlucci.md)
+    - [Marco Raggini](./implementazione/raggini.md)
 6. [Testing](6-testing.md)
 7. [Retrospettiva](7-retrospettiva.md)

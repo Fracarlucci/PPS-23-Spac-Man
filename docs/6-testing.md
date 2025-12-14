@@ -1,9 +1,11 @@
 # Testing
 
 ## Tecnologie utilizzate
+
 Per quanto riguarda il testing è stata utilizzata la libreria `ScalaTest`, uno dei tool più popolari per il testing in Scala. I vantaggi che abbiamo riscontrato usando questa libreria sono la semplicità di utilizzo e la leggibilità del codice che viene prodotto. Inoltre, i `Matchers` hanno reso possibile un ulteriore miglioramento nella leggibilità dei test grazie a asserzioni come `shouldBe` e `should`.
 
 ## Metodologie di testing
+
 Per la scrittura dei test ci siamo ispirati all'approccio Test Driven Development (TDD). L'approccio non è stato sempre seguito in modo rigido, ma si è cercato sempre di scrivere i test contemporaneamente all'implementazione.
 
 Sono state adottate diverse contromisure per essere sicuri che l'intera applicazione fosse ben testata e stabile:
@@ -14,4 +16,21 @@ Sono state adottate diverse contromisure per essere sicuri che l'intera applicaz
 ## Risultati coverage
 Per quanto riguarda la coverage dell'applicazione si è cercato di dare enfasi al testing delle classi del model. Il controller e la view sono state testate attraverso test manuali e grafici, questo perchè i test servivano principalmente per feedback grafici.
 
-// TODO mostrare i risultati della coverage attraverso file o immagini e dire la percentuale media di coverage del model.
+Qui è riportato il risultato di `sbt clean coverage test`.
+
+<img src="./img/Model-coverage.png" alt="Coverage del model" style="width: 50%; margin: 0 auto;">
+
+[Coverage del model](model.html)
+
+---
+
+0. [Introduzione](../README.md)
+1. [Processo di sviluppo](1-processo.md)
+2. [Requisiti](2-requisiti.md)
+3. [Design architetturale](3-architettura.md)
+4. [Design di dettaglio](4-design-dettaglio.md)
+5. [Implementazione](5-implementazione.md)
+    - [Francesco Carlucci](./implementazione/carlucci.md)
+    - [Marco Raggini *(prev)*](./implementazione/raggini.md)
+6. [Testing](6-testing.md)
+7. [**Retrospettiva (next)**](7-retrospettiva.md)

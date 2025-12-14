@@ -14,9 +14,9 @@ Di seguito sono riassunti i principali elementi e funzionalità dell'applicazion
 
 Funzionalità addizionali, nel caso avanzi del tempo:
 
-- [ ] Oggetti che permettono di mangiare i nemici (cambiamento di stato dei fantasmi)
-- [ ] Vite del giocatore ed oggetti per recuperarle
-- [ ] Comportamenti differenti per ciascun fantasma
+- [x] Oggetti che permettono di mangiare i nemici (cambiamento di stato dei fantasmi)
+- [x] Vite del giocatore ed oggetti per recuperarle
+- [x] Comportamenti differenti per ciascun fantasma
 - [ ] Altre mappe
 
 ## Autori
@@ -32,6 +32,8 @@ Funzionalità addizionali, nel caso avanzi del tempo:
 3. [Design architetturale](docs/3-architettura.md)
 4. [Design di dettaglio](docs/4-design-dettaglio.md)
 5. [Implementazione](docs/5-implementazione.md)
+    - [Francesco Carlucci](./docs/implementazione/carlucci.md)
+    - [Marco Raggini](./docs/implementazione/raggini.md)
 6. [Testing](docs/6-testing.md)
 7. [Retrospettiva](docs/7-retrospettiva.md)
 

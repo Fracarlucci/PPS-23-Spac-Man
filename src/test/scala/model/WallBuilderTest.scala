@@ -28,6 +28,8 @@ class WallBuilderTest extends AnyFlatSpec with Matchers:
       Wall(Position2D(-3, 0))
     )
 
+    walls shouldBe assertWalls
+
   it should "create an vertical Walls" in:
     val endPos = Position2D(0, 3)
     val walls  = WallBuilder.createWalls(startPosition, endPos)

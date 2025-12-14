@@ -3,9 +3,14 @@ package view
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
+/** Loads and caches sprite images for the game. */
 object SpriteLoader:
     private val cache = scala.collection.mutable.Map[String, BufferedImage]()
 
+    /** Loads a sprite image by name.
+      * @param name The name of the sprite (without file extension).
+      * @return An Option containing the BufferedImage if found, None otherwise.
+      */
     def load(name: String): Option[BufferedImage] =
         cache.get(name).orElse {
             try
@@ -40,7 +45,9 @@ object SpriteLoader:
           "arrow_up",
           "wall",
           "dot",
+          "dot_power",
           "apple",
-          "strawberry"
+          "strawberry",
+          "fruit"
         )
         sprites.foreach(load)

@@ -66,12 +66,12 @@ Il dominio del progetto si basa sui seguenti elementi principali:
 
   - Renderizzare graficamente il labirinto, Pac-Man, i fantasmi e gli elementi collezionabili
   - Aggiornare la visualizzazione del punteggio
-  - Mostrare il menu iniziale con le opzioni "Gioca" ed "Esci"
+  - Mostrare il menu iniziale con il pulsante "Gioca"
 
 ## Requisiti non funzionali
 
 - **RNF1 - Prestazioni**
-  - Il tempo di risposta ai comandi dell’utente deve essere inferiore a 200 ms.
+  - Il tempo di risposta ai comandi dell’utente deve essere sufficientemente rapido.
 
 - **RNF2 - Usabilità**
   - I controlli devono essere intuitivi.
@@ -115,5 +115,7 @@ Il dominio del progetto si basa sui seguenti elementi principali:
 3. [**Design architetturale (next)**](3-architettura.md)
 4. [Design di dettaglio](4-design-dettaglio.md)
 5. [Implementazione](5-implementazione.md)
+    - [Francesco Carlucci](./implementazione/carlucci.md)
+    - [Marco Raggini](./implementazione/raggini.md)
 6. [Testing](6-testing.md)
 7. [Retrospettiva](7-retrospettiva.md)
