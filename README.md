@@ -14,9 +14,9 @@ Di seguito sono riassunti i principali elementi e funzionalità dell'applicazion
 
 Funzionalità addizionali, nel caso avanzi del tempo:
 
-- [ ] Oggetti che permettono di mangiare i nemici (cambiamento di stato dei fantasmi)
-- [ ] Vite del giocatore ed oggetti per recuperarle
-- [ ] Comportamenti differenti per ciascun fantasma
+- [x] Oggetti che permettono di mangiare i nemici (cambiamento di stato dei fantasmi)
+- [x] Vite del giocatore ed oggetti per recuperarle
+- [x] Comportamenti differenti per ciascun fantasma
 - [ ] Altre mappe
 
 ## Autori

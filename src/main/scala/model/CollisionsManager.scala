@@ -101,9 +101,8 @@ object CollisionsManager:
 
     private def getRandomSpawnPosition(gameMap: GameMap): Position2D =
         val spawnPoints = gameMap.ghostSpawnPoints.toSeq
-        val free = spawnPoints.filter { pos =>
+        val free = spawnPoints.filter: pos =>
             gameMap.entityAt(pos).toOption.forall(!_.exists(_.isInstanceOf[GhostBasic]))
-        }
         val available = if free.nonEmpty then free else spawnPoints
         available(scala.util.Random.nextInt(available.size))
 
