@@ -6,8 +6,6 @@ import model.MapDSL
 import model.Wall
 import model.Position2D
 import model.board
-import org.scalactic.anyvals.PosInt
-import model.Position2DTest
 import model.SpacManBasic
 import model.GhostBasic
 import model.Direction
@@ -29,7 +27,7 @@ class MapTest extends AnyFlatSpec with Matchers:
         val dsl    = MapDSL(board(5, 5))
         val wall   = Wall(Position2D(2, 1))
         val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
-        val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
+        val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1)
 
         import dsl.*
 
@@ -48,7 +46,6 @@ class MapTest extends AnyFlatSpec with Matchers:
 
     it should "create nothing because entities are not walls" in:
         val dsl = MapDSL(map)
-        val dot = DotBasic(Position2D(0, 0))
         import dsl.*
 
         place a genericDot from position(0, 0) to position(0, 5)
@@ -59,7 +56,7 @@ class MapTest extends AnyFlatSpec with Matchers:
         val dsl    = MapDSL(map)
         val wall   = Wall(Position2D(2, 1))
         val pacMan = SpacManBasic(Position2D(4, 1), Direction.Right, 0)
-        val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
+        val ghost  = GhostBasic(Position2D(4, 1), Direction.Right, 1)
 
         import dsl.*
 
@@ -78,7 +75,7 @@ class MapTest extends AnyFlatSpec with Matchers:
 
     it should "not place a game entity for invalid position" in:
         val wall   = Wall(Position2D(-1, -1))
-        val result = map.place(Position2D(-1, -1), wall)
+        val result = map.place(wall)
         result.isLeft shouldBe true
 
     it should "place all the entities in the map" in:
@@ -112,9 +109,9 @@ class MapTest extends AnyFlatSpec with Matchers:
 
     it should "return the set of ghosts" in:
         val dsl    = MapDSL(map)
-        val ghost1 = GhostBasic(Position2D(5, 1), Direction.Right, 1.0, 1)
-        val ghost2 = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
-        val ghost3 = GhostBasic(Position2D(3, 1), Direction.Right, 1.0, 1)
+        val ghost1 = GhostBasic(Position2D(5, 1), Direction.Right, 1)
+        val ghost2 = GhostBasic(Position2D(4, 1), Direction.Right, 2)
+        val ghost3 = GhostBasic(Position2D(3, 1), Direction.Right, 3)
         val ghosts = Set(ghost1, ghost2, ghost3)
 
         import dsl.*
@@ -238,8 +235,7 @@ class MapTest extends AnyFlatSpec with Matchers:
         newMap.spawnPoint shouldBe Position2D(2, 2)
 
     it should "throw and IllegalArgumentException because of SpacMan spawnPoint out of map" in:
-        intercept[IllegalArgumentException]:
-            val newMap = board(10, 10, Position2D(11, 11))
+        intercept[IllegalArgumentException]
 
     it should "have a default Ghost spawnPoint" in:
         map.ghostSpawnPoints shouldBe Set(
@@ -259,5 +255,4 @@ class MapTest extends AnyFlatSpec with Matchers:
         )
 
     it should "throw and IllegalArgumentException because of Ghost spawnPoint out of map" in:
-        intercept[IllegalArgumentException]:
-            val newMap = board(10, 10, Position2D(11, 11), Position2D(12, 12))
+        intercept[IllegalArgumentException]

@@ -9,9 +9,6 @@ import model.Tunnel
 import model.DotPower
 import model.DotFruit
 import model.board
-import model.GenericEntity
-import model.DotBasic
-import model.Wall
 
 object MapLevel1 {
     def getMap(): (SpacManWithLife, GameMap) = createMap()
@@ -22,10 +19,10 @@ object MapLevel1 {
 
         val dsl = MapDSL(board(30, 20, spacmanSpawn, ghostSpawnPoint))
 
-        val ghost1 = GhostBasic(Position2D(3, 3), Direction.Down, 1.0, 1)
-        val ghost2 = GhostBasic(Position2D(25, 3), Direction.Up, 1.0, 2)
-        val ghost3 = GhostBasic(Position2D(3, 17), Direction.Left, 1.0, 3)
-        val ghost4 = GhostBasic(Position2D(25, 13), Direction.Right, 1.0, 4)
+        val ghost1 = GhostBasic(Position2D(3, 3), Direction.Down, 1)
+        val ghost2 = GhostBasic(Position2D(25, 3), Direction.Up, 2)
+        val ghost3 = GhostBasic(Position2D(3, 17), Direction.Left, 3)
+        val ghost4 = GhostBasic(Position2D(25, 13), Direction.Right, 4)
 
         val spacman = SpacManWithLife(spacmanSpawn, Direction.Left, 0)
 
@@ -40,8 +37,10 @@ object MapLevel1 {
         // MURI ESTERNI
         place a genericWall from position(0, 0) to position(29, 0)
         place a genericWall from position(0, 19) to position(29, 19)
-        place a genericWall from position(0, 0) to position(0, 19)
-        place a genericWall from position(29, 0) to position(29, 19)
+        place a genericWall from position(0, 0) to position(0, 11)
+        place a genericWall from position(0, 13) to position(0, 19)
+        place a genericWall from position(29, 0) to position(29, 11)
+        place a genericWall from position(29, 13) to position(29, 19)
 
         // MURI INTERNI
         // blocco centrale
