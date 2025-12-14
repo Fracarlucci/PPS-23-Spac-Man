@@ -9,9 +9,6 @@ import model.Tunnel
 import model.DotPower
 import model.DotFruit
 import model.board
-import model.GenericEntity
-import model.DotBasic
-import model.Wall
 
 object MapLevel1 {
     def getMap(): (SpacManWithLife, GameMap) = createMap()

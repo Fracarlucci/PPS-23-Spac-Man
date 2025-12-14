@@ -1,7 +1,6 @@
 package model
 
 import model.map.GameMap
-import model.map.GameMapImpl
 import model.map.GameMapFactory
 
 trait WallEntityBuilderLike:
@@ -30,7 +29,7 @@ class MapDSL(var map: GameMap):
     object place:
         def a(e: GenericEntity): GameEntityBuilder = GameEntityBuilder(e)
         def the(e: GameEntity): Unit =
-            map = map.place(e.position, e).fold(_ => map, identity)
+            map = map.place(e).fold(_ => map, identity)
         def multiple[E <: GameEntity](gameEntitySet: Set[E]): Unit =
             map = map.placeAll(gameEntitySet).fold(_ => map, identity)
 
@@ -41,7 +40,7 @@ class MapDSL(var map: GameMap):
 
         infix def at(pos: Position2D): GameEntity =
             val gameEntity = createGenericEntity(e, pos)
-            map = map.place(pos, gameEntity).fold(_ => map, identity)
+            map = map.place(gameEntity).fold(_ => map, identity)
             gameEntity
 
         private def createGenericEntity(

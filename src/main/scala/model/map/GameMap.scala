@@ -17,7 +17,7 @@ trait GameMap:
     def getGhosts: Set[GhostBasic]
     def getDots: Set[Dot]
     def entityAt(pos: Position2D): Either[String, Set[GameEntity]]
-    def place(pos: Position2D, entity: GameEntity): Either[String, GameMap]
+    def place(entity: GameEntity): Either[String, GameMap]
     def placeAll[E <: GameEntity](entities: Set[E]): Either[String, GameMap]
     def replaceEntityTo(entity: GameEntity, movedEntity: GameEntity): Either[String, GameMap]
     def remove(entity: GameEntity): Either[String, GameMap]
@@ -54,16 +54,16 @@ case class GameMapImpl(
             case Some(value) => Right(value)
             case None        => Left("Invalid position " + pos)
 
-    override def place(pos: Position2D, entity: GameEntity): Either[String, GameMap] =
-        grid.get(pos) match
+    override def place(entity: GameEntity): Either[String, GameMap] =
+        grid.get(entity.position) match
             case Some(entities) =>
-                Right(copy(grid = grid.updated(pos, entities + entity)))
+                Right(copy(grid = grid.updated(entity.position, entities + entity)))
             case None =>
-                Left("Invalid position" + pos)
+                Left("Invalid position" + entity.position)
 
     override def placeAll[E <: GameEntity](entities: Set[E]): Either[String, GameMap] =
         entities.foldLeft[Either[String, GameMap]](Right(this)) { (result, entity) =>
-            result.flatMap(_.place(entity.position, entity))
+            result.flatMap(_.place(entity))
         }
 
     override def remove(entity: GameEntity): Either[String, GameMap] =
@@ -79,7 +79,7 @@ case class GameMapImpl(
         movedEntity: GameEntity
     ): Either[String, GameMap] =
         remove(entity) match
-            case Right(map) => map.place(movedEntity.position, movedEntity)
+            case Right(map) => map.place(movedEntity)
             case Left(err)  => Left(err)
 
     override def canMove(entity: MovableEntity, dir: Direction): Boolean =

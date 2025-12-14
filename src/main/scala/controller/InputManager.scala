@@ -1,7 +1,8 @@
-package model
+package controller
 
 import java.awt.event.{KeyAdapter, KeyEvent}
 import javax.swing.JComponent
+import model.Direction
 
 trait InputManager:
     def start(): Unit
