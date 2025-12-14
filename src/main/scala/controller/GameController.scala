@@ -37,7 +37,7 @@ object GameController:
     def startGame(): Unit =
         val (spacman, map) = MapLevel1.getMap()
         val gameManager    = SimpleGameManager(spacman, map)
-        val view           = SimpleSwingApp.create(gameManager.getGameMap)
+        val view           = SimpleSwingApp.create(gameManager.getState.gameMap)
         val inputManager   = SwingInputManager(view.getGamePanel)
 
         inputManager.start()
@@ -59,8 +59,8 @@ object GameController:
         state match
             case GameState.Win =>
                 Swing.onEDT:
-                    view.displayWin(gameManager.getSpacMan.score)
+                    view.displayWin(gameManager.getState.spacMan.score)
             case GameState.GameOver =>
                 Swing.onEDT:
-                    view.displayGameOver(gameManager.getSpacMan.score)
+                    view.displayGameOver(gameManager.getState.spacMan.score)
             case _ => ()
