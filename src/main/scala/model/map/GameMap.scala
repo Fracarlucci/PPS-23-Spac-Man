@@ -8,49 +8,48 @@ import model.Wall
 import model.GhostBasic
 import model.Dot
 
-/**
- * It represents the game map with its entities.
- */
+/** It represents the game map with its entities. */
 trait GameMap:
     val width: Int
     val height: Int
+
     /** Spacman spawnPoint */
     val spawnPoint: Position2D
     val ghostSpawnPoints: Set[Position2D]
     def getWalls: Set[Wall]
     def getGhosts: Set[GhostBasic]
     def getDots: Set[Dot]
-    /** 
-      * @param pos Position to check
+
+    /** @param pos Position to check
       * @return Either an error message or the set of entities at that position
       */
     def entityAt(pos: Position2D): Either[String, Set[GameEntity]]
-    /** 
-     * @param entity Entity to place
-     * @return Either an error message or the new map with the entity placed
-     */
+
+    /** @param entity Entity to place
+      * @return Either an error message or the new map with the entity placed
+      */
     def place(entity: GameEntity): Either[String, GameMap]
-    /** 
-     * @param entities Entities to place, polymorphic in type because of Scala's type inference limitations
-     * @return Either an error message or the new map with the entities placed
-     */
+
+    /** @param entities Entities to place, polymorphic in type because of Scala's type inference limitations
+      * @return Either an error message or the new map with the entities placed
+      */
     def placeAll[E <: GameEntity](entities: Set[E]): Either[String, GameMap]
-    /** 
-     * @param entity Entity to replace
-     * @param movedEntity New entity to place
-     * @return Either an error message or the new map with the entity replaced
-     */
+
+    /** @param entity Entity to replace
+      * @param movedEntity New entity to place
+      * @return Either an error message or the new map with the entity replaced
+      */
     def replaceEntityTo(entity: GameEntity, movedEntity: GameEntity): Either[String, GameMap]
-    /** 
-     * @param entity Entity to remove
-     * @return Either an error message or the new map with the entity removed
-     */
+
+    /** @param entity Entity to remove
+      * @return Either an error message or the new map with the entity removed
+      */
     def remove(entity: GameEntity): Either[String, GameMap]
-    /** 
-     * @param entity Movable entity to check
-     * @param dir Direction to move
-     * @return true if the entity can move in the given direction, false otherwise
-     */
+
+    /** @param entity Movable entity to check
+      * @param dir Direction to move
+      * @return true if the entity can move in the given direction, false otherwise
+      */
     def canMove(entity: MovableEntity, dir: Direction): Boolean
 
 case class GameMapImpl(
@@ -61,9 +60,7 @@ case class GameMapImpl(
     grid: Map[Position2D, Set[GameEntity]]
 ) extends GameMap:
 
-    /**
-      * Ghost spawn points are the 4 cells starting from the ghostSpawnPointStartingCell
-      */
+    /** Ghost spawn points are the 4 cells starting from the ghostSpawnPointStartingCell */
     val ghostSpawnPoints: Set[Position2D] = Set(
       ghostSpawnPointStartingCell,
       Position2D(ghostSpawnPointStartingCell.x + 1, ghostSpawnPointStartingCell.y),
@@ -128,9 +125,7 @@ case class GameMapImpl(
     private def isOutOfMap(p: Position2D): Boolean =
         p.x >= width || p.x < 0 || p.y >= height || p.y < 0
 
-/**
-  * Factory object for creating GameMap instances with the right grids but without entities.
-  */
+/** Factory object for creating GameMap instances with the right grids but without entities. */
 object GameMapFactory:
     def apply(
         width: Int,

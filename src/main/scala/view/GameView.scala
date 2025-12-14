@@ -111,30 +111,30 @@ class GameView(gameMap: GameMap) extends MainFrame:
         }
 
 class InfoPanel(private var lives: Int, private var score: Int) extends Panel:
-    final val INFO_SIZE = 1000
-    final val INFO_VERTICAL_SIZE = 60 
+    final val INFO_SIZE          = 1000
+    final val INFO_VERTICAL_SIZE = 60
     private final val HEART_SIZE = 32
-    private final val PADDING = 10
-    
+    private final val PADDING    = 10
+
     preferredSize = new Dimension(INFO_SIZE, INFO_VERTICAL_SIZE)
     background = Color.BLACK
-    
+
     override def paintComponent(g: Graphics2D): Unit =
         super.paintComponent(g)
-        
+
         g.setColor(Color.BLACK)
         g.fillRect(0, 0, size.width, size.height)
-        
+
         for i <- 0 until lives do
             SpriteLoader.load("life") match
                 case Some(sprite) =>
                     g.drawImage(
-                        sprite,
-                        PADDING + (i * (HEART_SIZE + 5)),
-                        PADDING,
-                        HEART_SIZE,
-                        HEART_SIZE,
-                        null
+                      sprite,
+                      PADDING + (i * (HEART_SIZE + 5)),
+                      PADDING,
+                      HEART_SIZE,
+                      HEART_SIZE,
+                      null
                     )
                 case None =>
                     g.setColor(Color.RED)
@@ -144,7 +144,7 @@ class InfoPanel(private var lives: Int, private var score: Int) extends Panel:
         g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 24))
         g.drawString(s"Score: $score", size.width - 200, 35)
         g.drawString(s"Score: $score", size.width - 200, 35)
-    
+
     def updateInfo(newLives: Int, newScore: Int): Unit =
         lives = newLives
         score = newScore

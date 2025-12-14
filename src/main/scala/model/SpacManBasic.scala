@@ -47,8 +47,8 @@ case class SpacManWithLife(
         this.copy(position = newPosition, direction = newDirection)
 
     protected def updateLife(newLives: Int): SpacManWithLife = this.copy(lives = newLives)
-    
-    protected def updateScore(points: Int): SpacManWithLife  = this.copy(score = points)
+
+    protected def updateScore(points: Int): SpacManWithLife = this.copy(score = points)
 
     override def equals(obj: Any): Boolean = obj match
         case that: SpacManWithLife =>
