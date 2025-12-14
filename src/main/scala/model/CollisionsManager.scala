@@ -12,6 +12,8 @@ enum CollisionType:
     case TunnelCollision(tunnel: Tunnel)
     case NoCollision
 
+val CHASE_TIME_MS: Long = 10000L
+
 object CollisionsManager:
 
     def detectCollision(
@@ -56,7 +58,7 @@ object CollisionsManager:
             case DotPowerCollision(dot) =>
                 val updatedMap = gameMap.remove(dot).getOrElse(gameMap)
                 val updatedSp  = spacMan.addScore(dot.score)
-                addChaseTime(10000)
+                addChaseTime(CHASE_TIME_MS)
                 Some((updatedMap, updatedSp))
 
             case DotFruitCollision(fruit) =>
