@@ -1,6 +1,6 @@
 package model
 
-case class Position2D(x: Int, y: Int): 
+case class Position2D(x: Int, y: Int):
     def calculatePos(dir: Direction): Position2D = dir match
         case Direction.Up    => Position2D(x, y - 1)
         case Direction.Down  => Position2D(x, y + 1)
@@ -8,4 +8,3 @@ case class Position2D(x: Int, y: Int):
         case Direction.Right => Position2D(x + 1, y)
 
     override def toString(): String = s"($x, $y)"
-    
