@@ -4,7 +4,7 @@ import scala.swing.Label
 import scala.swing.Alignment
 import scala.swing.Font
 
-private final val TITLE_SIZE = 36
+private final val TITLE_SIZE  = 36
 private final val NORMAL_SIZE = 25
 
 object LabelFactory:

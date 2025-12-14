@@ -33,6 +33,6 @@ case class DotFruit(position: Position2D) extends Dot:
 
 case class Wall(position: Position2D) extends GameEntity
 
-case class Tunnel(position: Position2D, toPos: Position2D, correctDirection: Direction) extends GameEntity:
+case class Tunnel(position: Position2D, toPos: Position2D, correctDirection: Direction)
+    extends GameEntity:
     def canTeleport(dir: Direction): Boolean = dir == correctDirection
-

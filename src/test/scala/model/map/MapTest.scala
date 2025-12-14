@@ -12,6 +12,7 @@ import model.Direction
 import model.GameEntity
 import model.DotBasic
 import model.WallBuilder
+import model.DotFruit
 
 class MapTest extends AnyFlatSpec with Matchers:
 
@@ -34,6 +35,13 @@ class MapTest extends AnyFlatSpec with Matchers:
         place the wall
         place the pacMan
         place the ghost
+
+    it should "create a generic entity" in:
+        val dsl    = MapDSL(board(5, 5))
+        import dsl.*
+
+        place a genericDotFruit at position(2, 1)
+        dsl.map.entityAt(position(2, 1)) shouldBe Right(Set(DotFruit(Position2D(2, 1))))
 
     it should "create and place a set of Wall" in:
         val dsl = MapDSL(map)

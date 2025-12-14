@@ -4,9 +4,9 @@ import scala.swing.Button
 import scala.swing.Dimension
 import java.awt.Font
 
-val BUTTON_BIG_HORIZONTAL_SIZE = 300
-val BUTTON_NORMAL_HORIZONTAL_SIZE =100
-val BUTTON_VERTICAL_SIZE = 50
+val BUTTON_BIG_HORIZONTAL_SIZE    = 300
+val BUTTON_NORMAL_HORIZONTAL_SIZE = 100
+val BUTTON_VERTICAL_SIZE          = 50
 
 enum ButtonSize:
     case Big

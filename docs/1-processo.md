@@ -58,6 +58,7 @@ Questo approccio ha garantito un aggiornamento costante tra i membri e un ulteri
 Per il **testing automatico** è stato scelto **ScalaTest**, strumento noto e facilmente integrabile con l’ambiente di sviluppo.  
 Come **build tool** è stato adottato **sbt**, pensato specificamente per progetti Scala.  
 Per mantenere una formattazione coerente del codice è stato impiegato **scalafmt**, che assicura uno stile uniforme all’interno del team.
+Per corregge possibili errori di stile e sintassi è stato integrato **scalafix**, che segnala come warning al programmatore problemi di sintassi, miglioramenti nella sicurezza del codice, cleanup del codice non utilizzato.    
 
 L’intero progetto e la relativa relazione sono stati gestiti tramite **GitHub**.  
 Per automatizzare i processi di test e controllo qualità, è stata configurata una pipeline di Continuous Integration mediante **GitHub Actions**, la quale si attiva automaticamente a ogni nuova *pull request* sul branch di sviluppo.
@@ -67,7 +68,7 @@ I workflow configurati eseguono le seguenti azioni:
 - **Build e test**: compilazione e test automatici del codice su più piattaforme (Ubuntu, Windows, macOS) e versioni di Java (17 e 21), garantendo compatibilità cross-platform e prevenendo regressioni. Il processo viene eseguito a ogni push, assicurando un monitoraggio continuo dello stato del software.  
 - **Controllo della formattazione**: verifica della conformità del codice agli standard di formattazione definiti dal team tramite il comando `scalafmtCheckAll`, per mantenere una codebase coerente e leggibile.  
 - **Validazione dei commit**: implementazione di un controllo automatico sui messaggi di commit, secondo le specifiche di **Conventional Commits**, al fine di garantire chiarezza e coerenza nella cronologia del progetto.
-- **Rilascio automatico**: al momento del merge di una *pull request* sul branch *main* viene eseguito un rilascio automatico tramite **Semantic Release** che aggiorna la versione del software e genera le note di rilascio, semplificando la gestione delle release e garantendo una documentazione accurata di ogni nuova versione
+- **Rilascio automatico**: al momento del merge di una *pull request* sul branch *main* viene eseguito un rilascio automatico tramite **Semantic Release** che aggiorna la versione del software e genera le note di rilascio, semplificando la gestione delle release e garantendo una documentazione accurata di ogni nuova versione.
 
 ---
 

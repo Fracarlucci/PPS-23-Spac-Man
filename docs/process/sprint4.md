@@ -6,7 +6,7 @@ L'obiettivo di questo quarto Sprint è di perfezionare il codice per renderlo il
 
 ## Deadline
 
-La scadenza dello sprint è il 10/12/2025.
+La scadenza dello sprint è il 14/12/2025.
 
 ## Backlog
 
@@ -287,7 +287,7 @@ La scadenza dello sprint è il 10/12/2025.
         <td>0</td>
         <td>0</td>
         <td>0</td>
-        <td>3</td>
+        <td>8</td>
         <td>0</td>
     </tr>
     <tr>
@@ -327,10 +327,17 @@ La scadenza dello sprint è il 10/12/2025.
         <td>5</td>
         <td>5</td>
         <td>5</td>
-        <td>0</td>
+        <td>5</td>
     </tr>
     </tbody>
 </table>
+
+## Sprint Review 
+Lo stakeholder e gli sviluppatori sono soddisfatti del prodotto finale. È stata presentata la versione completa e funzionante del gioco con alcune funzionalità aggiuntive che hanno migliorato la qualità del gioco.
+
+## Sprint Retrospective
+
+Il refactor svolto da tutto il team è stato molto importante e necessario. L'aggiunta delle feature opzionali è stata agevole grazie alla predisposizione del codice sviluppato in precedenza.  
 
 ---
 0. [Introduzione](../../README.md)
