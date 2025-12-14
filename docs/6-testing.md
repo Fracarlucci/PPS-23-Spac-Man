@@ -16,7 +16,11 @@ Sono state adottate diverse contromisure per essere sicuri che l'intera applicaz
 ## Risultati coverage
 Per quanto riguarda la coverage dell'applicazione si è cercato di dare enfasi al testing delle classi del model. Il controller e la view sono state testate attraverso test manuali e grafici, questo perchè i test servivano principalmente per feedback grafici.
 
-// TODO mostrare i risultati della coverage attraverso file o immagini e dire la percentuale media di coverage del model.
+Qui è riportato il risultato di `sbt clean coverage test`.
+
+<img src="./img/Model-coverage.png" alt="Coverage del model" style="width: 50%; margin: 0 auto;">
+
+[Coverage del model](model.html)
 
 ---
 
