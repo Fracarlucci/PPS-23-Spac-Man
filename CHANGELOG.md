@@ -1,3 +1,30 @@
+## [1.3.0](https://github.com/Fracarlucci/PPS-23-Spac-Man/compare/v1.2.1...v1.3.0) (2025-12-14)
+
+### Features
+
+* add a real map ([7e66a3e](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/7e66a3e7ab6060a77166331473df1b8be78a8ee4))
+* add CollsionManager ([d80e5d5](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/d80e5d5a52f432e3e271e6e3afccdc7cdea73e43))
+* add continuos movement to ghosts ([be6370f](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/be6370fb5fd27c9ca8304f6e9510b6114c27a242))
+* add continuous movement to SpacMan ([040d918](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/040d9189e83290870e633ae9cf48baa1cba2233e))
+* add different behaviours for ghosts ([d368b5b](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/d368b5bfd19b63e56173bd9f80da04a5975008e9))
+* add DotPower ([a065682](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/a06568216c54235e91fd59ccbbe14c4287ab5ec5))
+* add GhostCollision in ChaseState and DotPowerCollsion ([bfa88e4](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/bfa88e407e11d970d81e8233d80807e489522e3a))
+* add ghosts spawn points in GameMap ([e8a4c3b](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/e8a4c3b9fd6a20aa3a48045a0b2fcbee84961a47))
+* add scalafix ([ce62df1](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/ce62df1ba994e4e1ffdf55e938ca33fb433bbf70))
+* add score to GhostBasic ([bc3474f](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/bc3474f2b16ed8fd646caf3387722e002ff7d92a))
+* implement lives in SpacMan ([9d0188a](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/9d0188adbee9e8bdd5b1256f02819aa92c484179))
+* implementation of fruit that add a life ([e777174](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/e777174792b880782447f37837e195ec7eb454c8))
+
+### Bug Fixes
+
+* add missing resource in SpriteLoader ([c82f987](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/c82f9878d7e473ece330585b513608e5ec8c1847))
+* fix external walls in level1 ([b20112c](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/b20112c69f4c76c6e6d0c680ce2570348f65b5a7))
+* fix GameManagerTest ([29c6214](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/29c6214025fc0212ff492693068cc6c4b3a1977a))
+* fix indentation ([29343e1](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/29343e19353a13e23014605a7921cacd5ed22d63))
+* fix typo ([90f9d59](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/90f9d59c75fa1d8da259a81de0837bd4215add1f))
+* remove unused imports and variables ([72b57d6](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/72b57d66219855ffaceb7c92a60f77d960cf7bde))
+* update tests with the new GhostBasic ([24b18f5](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/24b18f52dcfe9ff09a56113354f2e83b9adcd6bd))
+
 ## [1.2.1](https://github.com/Fracarlucci/PPS-23-Spac-Man/compare/v1.2.0...v1.2.1) (2025-12-01)
 
 ### Bug Fixes
