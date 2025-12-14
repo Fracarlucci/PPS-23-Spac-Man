@@ -4,16 +4,32 @@ import model.GameManager
 import view.GameView
 import scala.swing.Swing
 import controller.GameState
+import model.Direction
 
 private final val DEFAULT_GHOST_DELAY_MS       = 350
 private final val DEFAULT_GHOST_DELAY_CHASE_MS = 500
 private final val DEFAULT_SPACMAN_DELAY_MS     = 250
 
+/** Rapprenta il loop principale del gioco
+  *
+  * @param gameManager
+  * @param inputManager
+  * @param view
+  */
 case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: GameView):
+    // Salvato nelle variabili per la possibilità di modificarle in futuro
+    // tramite moltiplicatori di velocità o power-up
     val ghostDelayNormal = DEFAULT_GHOST_DELAY_MS
     val ghostDelayChase  = DEFAULT_GHOST_DELAY_CHASE_MS
     val spacmanDelay     = DEFAULT_SPACMAN_DELAY_MS
 
+    /** Funzione ricorsiva che rappresenta il loop principale del gioco
+      * @param state Stato attuale del gioco
+      * @param lastGhostMove Timestamp dell'ultimo movimento dei fantasmi
+      * @param lastPacmanMove Timestamp dell'ultimo movimento dello SpacMan
+      * @param lastUpdateTime Timestamp dell'ultimo aggiornamento del gioco
+      * @return Lo stato finale del gioco (Win o GameOver)
+      */
     def loop(
         state: GameState = GameState.Running,
         lastGhostMove: Long = System.currentTimeMillis(),
@@ -36,17 +52,10 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
                     gameManager.moveGhosts()
                     leatestGhostMove = now
                 if isTimeToMove(now, lastPacmanMove, spacmanDelay) then
-                    val directionToMove = inputManager.processInput() match
-                        case Some(dir) => dir
-                        case None      => gameManager.getSpacMan.direction
+                    val directionToMove = calculateSpacManDirection()
                     gameManager.moveSpacMan(directionToMove)
                     leatestSpacManMove = now
-                    Swing.onEDT:
-                        view.update(
-                          gameManager.getGameMap,
-                          gameManager.getSpacMan.lives,
-                          gameManager.getSpacMan.score
-                        )
+                    updateView()
                 Thread.sleep(50)
                 val newState = checkGameState(gameManager)
                 loop(newState, leatestGhostMove, leatestSpacManMove, now)
@@ -63,3 +72,19 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
         lastMovableEntityMove: Long,
         entityDelay: Long
     ): Boolean = currTime - lastMovableEntityMove >= entityDelay
+
+    /** Calcola la nuova direzione del SpacMan in base all'input ricevuto
+      * @return La nuova direzione calcolata
+      */
+    private def calculateSpacManDirection(): Direction =
+        inputManager.processInput() match
+            case Some(dir) => dir
+            case None      => gameManager.getSpacMan.direction
+
+    private def updateView(): Unit =
+        Swing.onEDT:
+            view.update(
+              gameManager.getGameMap,
+              gameManager.getSpacMan.lives,
+              gameManager.getSpacMan.score
+            )
