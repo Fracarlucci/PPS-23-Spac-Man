@@ -28,8 +28,8 @@ class MapDSL(var map: GameMap):
     /** Val is created for writing codes 'human-like' */
     val genericWall     = GenericEntity.GenericWall
     val genericDot      = GenericEntity.GenericDot
-    val GenericDotPower = GenericEntity.GenericDotPower
-    val GenericDotFruit = GenericEntity.GenericDotFruit
+    val genericDotPower = GenericEntity.GenericDotPower
+    val genericDotFruit = GenericEntity.GenericDotFruit
 
     object place:
         /** DSL helper for writing 'a entity from/to position' or 'the entity at position'
