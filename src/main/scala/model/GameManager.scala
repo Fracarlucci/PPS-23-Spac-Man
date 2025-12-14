@@ -97,8 +97,7 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
          * Checks collisions for all moved ghosts.
          */
         val finalState =
-            movedGhosts.foldLeft(state.copy(gameMap = updatedMap)):
-                (currentState, ghost) =>
+            movedGhosts.foldLeft(state.copy(gameMap = updatedMap)): (currentState, ghost) =>
                 CollisionsManager
                     .checkGhostCollision(
                       ghost,
