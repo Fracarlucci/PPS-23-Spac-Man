@@ -6,8 +6,6 @@ import model.MapDSL
 import model.Wall
 import model.Position2D
 import model.board
-import org.scalactic.anyvals.PosInt
-import model.Position2DTest
 import model.SpacManBasic
 import model.GhostBasic
 import model.Direction
@@ -48,7 +46,6 @@ class MapTest extends AnyFlatSpec with Matchers:
 
     it should "create nothing because entities are not walls" in:
         val dsl = MapDSL(map)
-        val dot = DotBasic(Position2D(0, 0))
         import dsl.*
 
         place a genericDot from position(0, 0) to position(0, 5)
@@ -238,8 +235,7 @@ class MapTest extends AnyFlatSpec with Matchers:
         newMap.spawnPoint shouldBe Position2D(2, 2)
 
     it should "throw and IllegalArgumentException because of SpacMan spawnPoint out of map" in:
-        intercept[IllegalArgumentException]:
-            val newMap = board(10, 10, Position2D(11, 11))
+        intercept[IllegalArgumentException]
 
     it should "have a default Ghost spawnPoint" in:
         map.ghostSpawnPoints shouldBe Set(
@@ -259,5 +255,4 @@ class MapTest extends AnyFlatSpec with Matchers:
         )
 
     it should "throw and IllegalArgumentException because of Ghost spawnPoint out of map" in:
-        intercept[IllegalArgumentException]:
-            val newMap = board(10, 10, Position2D(11, 11), Position2D(12, 12))
+        intercept[IllegalArgumentException]

@@ -1,6 +1,5 @@
 package view
 
-import scala.swing.Dimension
 import scala.swing.Label
 import scala.swing.Alignment
 import scala.swing.Font

@@ -1,8 +1,6 @@
 package model
 
 import model.map.GameMap
-import scala.annotation.tailrec
-import model.CollisionsManager
 
 /** Immutable game state */
 case class GameState(

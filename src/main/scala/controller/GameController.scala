@@ -1,25 +1,11 @@
 package controller
 
-import model.MapDSL
-import model.board
-import model.DotBasic
-import model.Position2D
-import model.GhostBasic
-import model.Direction
 import model.map.GameMap
 import model.GameManager
 import model.SimpleGameManager
 import model.SpacManWithLife
-import view.GameView
-import view.SimpleSwingApp
-import scala.swing.Frame
 import view.{GameView, SimpleSwingApp}
 import scala.swing.Swing
-import java.awt.event.{KeyAdapter, KeyEvent}
-import controller.GameLoop
-import model.Tunnel
-import model.DotPower
-import model.DotFruit
 import model.map.MapLevel1
 
 enum GameState:

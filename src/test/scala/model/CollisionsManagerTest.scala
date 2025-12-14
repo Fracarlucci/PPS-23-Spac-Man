@@ -1,18 +1,7 @@
 package model
 
 import org.scalatest.flatspec.AnyFlatSpec
-import model.map.GameMapFactory
 import org.scalatest.matchers.should.Matchers
-import model.MapDSL
-import model.Position2D
-import model.GhostBasic
-import model.Direction
-import model.GameEntity
-import model.DotBasic
-import model.DotPower
-import model.board
-import model.Wall
-import model.Tunnel
 
 class CollisionsManagerTest extends AnyFlatSpec with Matchers:
     def createBasicTestSetup(): SimpleGameManager =
@@ -82,7 +71,7 @@ class CollisionsManagerTest extends AnyFlatSpec with Matchers:
 
         SimpleGameManager(spacMan, dsl.map)
 
-    it should "eat basicDot and increase score" in:
+    "CollisionsManager" should "eat basicDot and increase score" in:
         val gameManager = createBasicTestSetup()
         gameManager.moveSpacMan(Direction.Right)
 

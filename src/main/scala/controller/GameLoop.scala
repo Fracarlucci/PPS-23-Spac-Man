@@ -3,7 +3,6 @@ package controller
 import model.GameManager
 import view.GameView
 import scala.swing.Swing
-import controller.GameState
 import model.Direction
 
 private final val DEFAULT_GHOST_DELAY_MS       = 350

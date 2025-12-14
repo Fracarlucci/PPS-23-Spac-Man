@@ -1,7 +1,6 @@
 package model
 
 import model.map.GameMap
-import model.map.GameMapImpl
 import model.map.GameMapFactory
 
 trait WallEntityBuilderLike:

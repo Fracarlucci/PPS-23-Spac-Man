@@ -1,18 +1,7 @@
 package model
 
 import org.scalatest.flatspec.AnyFlatSpec
-import model.map.GameMapFactory
 import org.scalatest.matchers.should.Matchers
-import model.MapDSL
-import model.Position2D
-import model.GhostBasic
-import model.Direction
-import model.GameEntity
-import model.DotBasic
-import model.DotPower
-import model.board
-import model.Wall
-import model.Tunnel
 
 class GameManagerTest extends AnyFlatSpec with Matchers:
     def createBasicTestSetup(): SimpleGameManager =
@@ -65,7 +54,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
         SimpleGameManager(spacMan, dsl.map)
 
-    it should "create a GameManager" in:
+    "GameManager" should "create a GameManager" in:
         val spacMan     = SpacManWithLife(Position2D(1, 1), Direction.Right, 0, 1)
         val map         = board(10, 10)
         val gameManager = SimpleGameManager(spacMan, map)
@@ -130,7 +119,7 @@ class GameManagerTest extends AnyFlatSpec with Matchers:
 
     it should "move Ghosts" in:
         val gameManager = createBasicTestSetup()
-        val movedGhosts = gameManager.moveGhosts()
+        gameManager.moveGhosts()
 
         assert(gameManager.getState.gameMap.getGhosts.head.position != Position2D(1, 2))
         assert(gameManager.getState.gameMap.entityAt(Position2D(1, 2)).getOrElse(Set()).isEmpty)

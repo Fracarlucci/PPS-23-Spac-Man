@@ -95,7 +95,7 @@ class GhostTest extends AnyFlatSpec:
         val spacManPos = Position2D(9, 1)
         val spacManDir = Direction.Left
 
-        var direction =
+        val direction =
             PredictiveBehavior.chooseDirection(GhostContext(ghost, spacManPos, spacManDir, gameMap))
         assert(direction == Direction.Left || direction == Direction.Down)
 
