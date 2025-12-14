@@ -163,9 +163,8 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
 
         state = finalState
 
-    /**
-     * Creates a new game manager.
-     */
+/** Companion object for SimpleGameManager. */
+object SimpleGameManager:
     def apply(
         spacMan: SpacManWithLife,
         gameMap: GameMap,
