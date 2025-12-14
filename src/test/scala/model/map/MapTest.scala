@@ -78,7 +78,7 @@ class MapTest extends AnyFlatSpec with Matchers:
 
     it should "not place a game entity for invalid position" in:
         val wall   = Wall(Position2D(-1, -1))
-        val result = map.place(Position2D(-1, -1), wall)
+        val result = map.place(wall)
         result.isLeft shouldBe true
 
     it should "place all the entities in the map" in:
