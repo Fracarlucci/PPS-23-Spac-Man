@@ -25,7 +25,7 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
         val now                = System.currentTimeMillis()
         val deltaTime          = now - lastUpdateTime
 
-        gameManager.updateChaseTime(deltaTime)
+        val _ = gameManager.updateChaseTime(deltaTime)
 
         val currentGhostDelay =
             if gameManager.isChaseMode then ghostDelayChase else ghostDelayNormal
@@ -33,19 +33,21 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
         state match
             case GameState.Running | GameState.Chase =>
                 if isTimeToMove(now, lastGhostMove, currentGhostDelay) then
-                    gameManager.moveGhosts()
+                    val _ = gameManager.moveGhosts()
                     leatestGhostMove = now
                 if isTimeToMove(now, lastPacmanMove, spacmanDelay) then
+                    val currentState = gameManager.getState
                     val directionToMove = inputManager.processInput() match
                         case Some(dir) => dir
-                        case None      => gameManager.getSpacMan.direction
-                    gameManager.moveSpacMan(directionToMove)
+                        case None      => currentState.spacMan.direction
+                    val _ = gameManager.moveSpacMan(directionToMove)
                     leatestSpacManMove = now
+                    val updatedState = gameManager.getState
                     Swing.onEDT:
                         view.update(
-                          gameManager.getGameMap,
-                          gameManager.getSpacMan.lives,
-                          gameManager.getSpacMan.score
+                          updatedState.gameMap,
+                          updatedState.spacMan.lives,
+                          updatedState.spacMan.score
                         )
                 Thread.sleep(50)
                 val newState = checkGameState(gameManager)
