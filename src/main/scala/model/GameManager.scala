@@ -21,7 +21,7 @@ case class SimpleGameManager(
     private var _chaseTimeRemaining: Long = 0
 ) extends GameManager:
 
-    def getSpacMan: SpacManWithLife          = _spacMan
+    def getSpacMan: SpacManWithLife = _spacMan
 
     def getGameMap: GameMap = _gameMap
 
