@@ -9,8 +9,6 @@ import model.Direction
 import model.map.GameMap
 import model.GameManager
 import model.SimpleGameManager
-import model.InputManager
-import model.SwingInputManager
 import model.SpacManWithLife
 import view.GameView
 import view.SimpleSwingApp

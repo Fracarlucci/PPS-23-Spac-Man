@@ -1,7 +1,6 @@
 package controller
 
 import model.GameManager
-import model.InputManager
 import view.GameView
 import scala.swing.Swing
 import controller.GameState
@@ -40,7 +39,7 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
                     val directionToMove = inputManager.processInput() match
                         case Some(dir) => dir
                         case None      => gameManager.getSpacMan.direction
-                    gameManager.moveSpacManAndCheck(directionToMove)
+                    gameManager.moveSpacMan(directionToMove)
                     leatestSpacManMove = now
                     Swing.onEDT:
                         view.update(

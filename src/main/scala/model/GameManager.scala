@@ -21,7 +21,6 @@ case class SimpleGameManager(
     private var _chaseTimeRemaining: Long = 0
 ) extends GameManager:
 
-    val collisionsManager: CollisionsManager = SimpleCollisionsManager(this)
     def getSpacMan: SpacManWithLife          = _spacMan
 
     def getGameMap: GameMap = _gameMap
@@ -64,100 +63,52 @@ case class SimpleGameManager(
                 .getOrElse(ghost)
         }
 
-        movedGhosts.foreach(checkCollisionWithGhost)
+        movedGhosts.foreach { ghost =>
+            CollisionsManager
+                .checkGhostCollision(
+                    ghost,
+                    _spacMan,
+                    _gameMap,
+                    isChaseMode,
+                    () => _gameOver = true
+                )
+                .foreach { (updatedMap, updatedSpacMan) =>
+                    _gameMap = updatedMap
+                    _spacMan = updatedSpacMan
+                }
+        }
 
-    override def moveSpacMan(dir: Direction): Unit =
-        if !_gameMap.canMove(_spacMan, dir) then
+    override def moveSpacMan(direction: Direction): Unit =
+        if !_gameMap.canMove(_spacMan, direction) then
             return
         
-        val movedSpacMan = _spacMan.move(dir).asInstanceOf[SpacManWithLife]
+        val movedSpacMan = _spacMan.move(direction).asInstanceOf[SpacManWithLife]
         
         _gameMap.replaceEntityTo(_spacMan, movedSpacMan) match
             case Right(updatedMap) =>
                 _gameMap = updatedMap
                 _spacMan = movedSpacMan
-                checkCollisions(movedSpacMan, dir)
             case Left(error) =>
                 println(s"Warning: Could not move SpacMan - $error")
 
-    private def applyCollisionEffect(
-        collision: CollisionType
-    ): Unit =
-        import CollisionType.*
-        collision match
-            case GhostCollision(ghost) =>
-                handleGhostCollision(ghost)
-                // if isChaseMode then Some(_spacMan) else None
-            case DotBasicCollision(dot) =>
-                _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
-                _spacMan = _spacMan.addScore(dot.score)
-            case DotPowerCollision(dot) =>
-                _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
-                _spacMan = _spacMan.addScore(dot.score)
-                _chaseTimeRemaining = 10000
-            case DotFruitCollision(fruit) =>
-                _gameMap = _gameMap.remove(fruit).getOrElse(_gameMap)
-                _spacMan = _spacMan.addScore(fruit.score).addLife()
-            case TunnelCollision(tunnel) =>
-                val teleportedSpacMan =
-                    _spacMan.teleport(tunnel.toPos).asInstanceOf[SpacManWithLife]
-                _gameMap.replaceEntityTo(_spacMan, teleportedSpacMan) match
-                    case Right(updatedMap) =>
-                        _gameMap = updatedMap
-                        _spacMan = teleportedSpacMan
-                    case Left(err) =>
-                        println(s"Error teleporting SpacMan: $err")
-            case NoCollision =>
+        val entities =
+            _gameMap.entityAt(movedSpacMan.position).toOption.getOrElse(Set.empty)
 
-    private def getRandomSpawnPosition(): Position2D =
-        val spawnPoints = _gameMap.ghostSpawnPoints.toSeq
-        val freeSpawnPoints = spawnPoints.filter { pos =>
-            _gameMap.entityAt(pos).toOption
-                .map(entities => !entities.exists(_.isInstanceOf[GhostBasic]))
-                .getOrElse(true)
-        }
-        val availablePoints = if freeSpawnPoints.nonEmpty then freeSpawnPoints else spawnPoints
-        availablePoints(scala.util.Random.nextInt(availablePoints.size))
+        val collision =
+            CollisionsManager.detectCollision(entities, direction)
 
-    private def handleGhostCollision(ghost: GhostBasic): Unit =
-        if isChaseMode then
-            val randomSpawnPos  = getRandomSpawnPosition()
-            val teleportedGhost = ghost.teleport(randomSpawnPos).asInstanceOf[GhostBasic]
-            _gameMap.replaceEntityTo(ghost, teleportedGhost) match
-                case Right(updatedMap) =>
-                    _gameMap = updatedMap
-                case Left(error) =>
-                    println(s"Error teleporting ghost: $error")
-        else if _spacMan.lives > 0 then
-            _spacMan = _spacMan.removeLife()
-            _gameOver = isSpacManDead()
-            _gameOver match
-                case false =>
-                    val teleportedSpacMan = handleRemoveSpacManLife()
-                    _gameMap =
-                        _gameMap.replaceEntityTo(_spacMan, teleportedSpacMan).getOrElse(_gameMap)
-                    _spacMan = teleportedSpacMan
-                case true =>
-                    _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
-        else
-            _gameOver = true
-            _gameMap = _gameMap.remove(_spacMan).getOrElse(_gameMap)
-
-    private def isSpacManDead(): Boolean = _spacMan.lives == 0
-
-    private def handleRemoveSpacManLife(): SpacManWithLife =
-        _spacMan.teleport(_gameMap.spawnPoint).asInstanceOf[SpacManWithLife]
-
-    private def checkCollisionWithGhost(ghost: GhostBasic): Unit =
-        if ghost.position == _spacMan.position then
-            handleGhostCollision(ghost)
-
-    private def checkCollisions(
-        spacMan: SpacManWithLife,
-        direction: Direction
-    ): Unit =
-        _gameMap.entityAt(spacMan.position).toOption match
-            case Some(entities) =>
-                collisionsManager.detectCollision(entities, direction) match
-                    case collision => applyCollisionEffect(collision)
-            case None => ()
+        CollisionsManager
+            .applyCollisionEffect(
+                collision,
+                direction,
+                _gameMap,
+                _spacMan,
+                isChaseMode,
+                delta => _chaseTimeRemaining += delta,
+                () => _gameOver = true
+            )
+            .map { (updatedMap, updatedSpacMan) =>
+                _gameMap = updatedMap
+                _spacMan = updatedSpacMan
+                updatedSpacMan
+            }

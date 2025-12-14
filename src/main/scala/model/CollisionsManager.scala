@@ -1,10 +1,8 @@
 package model
 
-trait CollisionsManager:
-    def detectCollision(
-        entities: Set[GameEntity],
-        direction: Direction
-    ): CollisionType
+import model.*
+import model.map.GameMap
+import CollisionType.*
 
 enum CollisionType:
     case GhostCollision(ghost: GhostBasic)
@@ -14,56 +12,114 @@ enum CollisionType:
     case TunnelCollision(tunnel: Tunnel)
     case NoCollision
 
-/** Responsabile del rilevamento delle collisioni tra SpacMan e altre entità.
-     * Implementa una priorità specifica: fantasmi > frutti > power dots > dots > tunnel.
-     */
-class SimpleCollisionsManager(gameManager: GameManager) extends CollisionsManager:
+object CollisionsManager:
 
-    /** Rileva il tipo di collisione analizzando le entità presenti in una posizione.
-      *
-      * @param entities Set di entità nella posizione corrente
-      * @param direction Direzione del movimento (necessaria per i tunnel)
-        * @return Il tipo di collisione rilevato, None se nessuna collisione
-        */
     def detectCollision(
         entities: Set[GameEntity],
         direction: Direction
     ): CollisionType =
-        import CollisionType.*
-
-        // Priorità delle collisioni: Ghost > Fruit > PowerDot > BasicDot > Tunnel
-        findGhost(entities)
-            .orElse(findFruit(entities))
-            .orElse(findPowerDot(entities))
-            .orElse(findBasicDot(entities))
-            .orElse(findTunnel(entities, direction))
+        entities.collectFirst { case g: GhostBasic => GhostCollision(g) }
+            .orElse(entities.collectFirst { case f: DotFruit => DotFruitCollision(f) })
+            .orElse(entities.collectFirst { case p: DotPower => DotPowerCollision(p) })
+            .orElse(entities.collectFirst { case d: DotBasic => DotBasicCollision(d) })
+            .orElse(
+              entities.collectFirst {
+                  case t: Tunnel if t.canTeleport(direction) => TunnelCollision(t)
+              }
+            )
             .getOrElse(NoCollision)
 
-    private def findGhost(entities: Set[GameEntity]): Option[CollisionType] =
-        entities.collectFirst {
-            case ghost: GhostBasic => CollisionType.GhostCollision(ghost)
-        }
+    def applyCollisionEffect(
+        collision: CollisionType,
+        direction: Direction,
+        gameMap: GameMap,
+        spacMan: SpacManWithLife,
+        isChaseMode: Boolean,
+        addChaseTime: Long => Unit,
+        onGameOver: () => Unit
+    ): Option[(GameMap, SpacManWithLife)] =
+        collision match
+            case GhostCollision(ghost) =>
+                handleGhostCollision(
+                  ghost,
+                  gameMap,
+                  spacMan,
+                  isChaseMode,
+                  onGameOver
+                )
 
-    private def findFruit(entities: Set[GameEntity]): Option[CollisionType] =
-        entities.collectFirst {
-            case fruit: DotFruit => CollisionType.DotFruitCollision(fruit)
-        }
+            case DotBasicCollision(dot) =>
+                val updatedMap = gameMap.remove(dot).getOrElse(gameMap)
+                val updatedSp  = spacMan.addScore(dot.score)
+                Some((updatedMap, updatedSp))
 
-    private def findPowerDot(entities: Set[GameEntity]): Option[CollisionType] =
-        entities.collectFirst {
-            case dot: DotPower => CollisionType.DotPowerCollision(dot)
-        }
+            case DotPowerCollision(dot) =>
+                val updatedMap = gameMap.remove(dot).getOrElse(gameMap)
+                val updatedSp  = spacMan.addScore(dot.score)
+                addChaseTime(10000)
+                Some((updatedMap, updatedSp))
 
-    private def findBasicDot(entities: Set[GameEntity]): Option[CollisionType] =
-        entities.collectFirst {
-            case dot: DotBasic => CollisionType.DotBasicCollision(dot)
-        }
+            case DotFruitCollision(fruit) =>
+                val updatedMap = gameMap.remove(fruit).getOrElse(gameMap)
+                val updatedSp  = spacMan.addScore(fruit.score).addLife()
+                Some((updatedMap, updatedSp))
 
-    private def findTunnel(
-        entities: Set[GameEntity],
-        direction: Direction
-    ): Option[CollisionType] =
-        entities.collectFirst {
-            case tunnel: model.Tunnel if tunnel.canTeleport(direction) =>
-                CollisionType.TunnelCollision(tunnel)
+            case TunnelCollision(tunnel) =>
+                val teleported = spacMan.teleport(tunnel.toPos).asInstanceOf[SpacManWithLife]
+                gameMap.replaceEntityTo(spacMan, teleported) match
+                    case Right(updated) => Some((updated, teleported))
+                    case Left(_)        => None
+
+            case NoCollision =>
+                Some((gameMap, spacMan))
+
+    private def handleGhostCollision(
+        ghost: GhostBasic,
+        gameMap: GameMap,
+        spacMan: SpacManWithLife,
+        isChaseMode: Boolean,
+        onGameOver: () => Unit
+    ): Option[(GameMap, SpacManWithLife)] =
+        if isChaseMode then
+            val updatedSp  = spacMan.addScore(ghost.score)
+            val pos        = getRandomSpawnPosition(gameMap)
+            val teleported = ghost.teleport(pos).asInstanceOf[GhostBasic]
+            val updatedMap =
+                gameMap.replaceEntityTo(ghost, teleported).getOrElse(gameMap)
+            Some((updatedMap, updatedSp))
+        else
+            val damaged = spacMan.removeLife()
+            if damaged.lives <= 0 then
+                onGameOver()
+                Some((gameMap.remove(spacMan).getOrElse(gameMap), damaged))
+            else
+                val respawned =
+                    damaged.teleport(gameMap.spawnPoint).asInstanceOf[SpacManWithLife]
+                val updatedMap =
+                    gameMap.replaceEntityTo(spacMan, respawned).getOrElse(gameMap)
+                Some((updatedMap, respawned))
+
+    private def getRandomSpawnPosition(gameMap: GameMap): Position2D =
+        val spawnPoints = gameMap.ghostSpawnPoints.toSeq
+        val free = spawnPoints.filter { pos =>
+            gameMap.entityAt(pos).toOption.forall(!_.exists(_.isInstanceOf[GhostBasic]))
         }
+        val available = if free.nonEmpty then free else spawnPoints
+        available(scala.util.Random.nextInt(available.size))
+
+    def checkGhostCollision(
+        ghost: GhostBasic,
+        spacMan: SpacManWithLife,
+        gameMap: GameMap,
+        isChaseMode: Boolean,
+        onGameOver: () => Unit
+    ): Option[(GameMap, SpacManWithLife)] =
+        if ghost.position != spacMan.position then None
+        else
+            handleGhostCollision(
+              ghost,
+              gameMap,
+              spacMan,
+              isChaseMode,
+              onGameOver
+            )
