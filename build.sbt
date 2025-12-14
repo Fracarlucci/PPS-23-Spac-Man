@@ -10,3 +10,13 @@ lazy val root = project
     libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
     libraryDependencies += "org.jline" % "jline" % "3.25.1"
   )
+
+scalacOptions ++= Seq("-Wunused:all", "-Werror")
+
+inThisBuild(
+  List(
+    scalaVersion := "3.3.5",
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision
+  )
+)
