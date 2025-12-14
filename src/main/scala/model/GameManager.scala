@@ -28,6 +28,11 @@ trait GameManager:
     def moveGhosts(): Unit
     def updateChaseTime(deltaTime: Long): Unit
 
+/**
+  * Game manager implementation.
+  *
+  * @param state The current game state.
+  */
 class SimpleGameManager(private var state: GameState) extends GameManager:
 
     def getState: GameState = state
@@ -38,11 +43,20 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
 
     override def isChaseMode: Boolean = state.isChaseMode
 
+    /**
+     * Updates the chase time remaining.
+     */
     override def updateChaseTime(deltaTime: Long): Unit =
         state = state.updateChaseTime(deltaTime)
 
+    /**
+     * Moves all ghosts in the game.
+     */
     override def moveGhosts(): Unit =
 
+        /**
+         * Attempts to move a ghost to the next position.
+         */
         def attemptMove(
             ghost: GhostBasic,
             currentMap: GameMap,
@@ -56,6 +70,9 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
             Option.when(currentMap.canMove(ghost, nextDirection)):
                 ghost.move(nextDirection).asInstanceOf[GhostBasic]
 
+        /**
+         * Applies a move to a ghost.
+         */
         def applyMove(ghost: GhostBasic, movedGhost: GhostBasic, currentMap: GameMap): GameMap =
             currentMap.replaceEntityTo(ghost, movedGhost) match
                 case Right(updatedMap) => updatedMap
@@ -63,7 +80,9 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
                     println(s"Warning: Could not move ghost ${ghost.id} - $error")
                     currentMap
 
-        // Move all ghosts
+        /**
+         * Moves all ghosts in the game.
+         */
         val (updatedMap, movedGhosts) =
             state.gameMap.getGhosts.foldLeft((state.gameMap, List.empty[GhostBasic])):
                 case ((currentMap, ghosts), ghost) =>
@@ -74,7 +93,9 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
                         case None =>
                             (currentMap, ghost :: ghosts)
 
-        // Check collisions for all moved ghosts
+        /**
+         * Checks collisions for all moved ghosts.
+         */
         val finalState =
             movedGhosts.foldLeft(state.copy(gameMap = updatedMap)):
                 (currentState, ghost) =>
@@ -97,6 +118,9 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
 
         state = finalState
 
+    /**
+     * Moves the SpacMan in the given direction.
+     */
     override def moveSpacMan(direction: Direction): Unit =
         if !state.gameMap.canMove(state.spacMan, direction) then
             return
@@ -140,7 +164,9 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
 
         state = finalState
 
-object SimpleGameManager:
+    /**
+     * Creates a new game manager.
+     */
     def apply(
         spacMan: SpacManWithLife,
         gameMap: GameMap,

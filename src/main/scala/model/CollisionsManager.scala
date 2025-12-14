@@ -4,6 +4,9 @@ import model.*
 import model.map.GameMap
 import CollisionType.*
 
+/**
+ * Enum representing the type of collision that occurred.
+ */
 enum CollisionType:
     case GhostCollision(ghost: GhostBasic)
     case DotBasicCollision(dot: DotBasic)
@@ -14,8 +17,14 @@ enum CollisionType:
 
 val CHASE_TIME_MS: Long = 10000L
 
+/**
+ * Handles collisions between entities.
+ */
 object CollisionsManager:
 
+    /**
+     * Detects the type of collision that occurred.
+     */
     def detectCollision(
         entities: Set[GameEntity],
         direction: Direction
@@ -31,6 +40,9 @@ object CollisionsManager:
             )
             .getOrElse(NoCollision)
 
+    /**
+     * Applies the effect of a collision.
+     */
     def applyCollisionEffect(
         collision: CollisionType,
         direction: Direction,
@@ -75,6 +87,9 @@ object CollisionsManager:
             case NoCollision =>
                 Some((gameMap, spacMan))
 
+    /**
+     * Handles a ghost collision with SpacMan.
+     */
     private def handleGhostCollision(
         ghost: GhostBasic,
         gameMap: GameMap,
@@ -101,6 +116,9 @@ object CollisionsManager:
                     gameMap.replaceEntityTo(spacMan, respawned).getOrElse(gameMap)
                 Some((updatedMap, respawned))
 
+    /**
+     * Returns a random spawn position for a ghost after being eated by SpacMan.
+     */
     private def getRandomSpawnPosition(gameMap: GameMap): Position2D =
         val spawnPoints = gameMap.ghostSpawnPoints.toSeq
         val free = spawnPoints.filter: pos =>
@@ -108,6 +126,9 @@ object CollisionsManager:
         val available = if free.nonEmpty then free else spawnPoints
         available(scala.util.Random.nextInt(available.size))
 
+    /**
+     * Checks if a ghost collides with SpacMan.
+     */
     def checkGhostCollision(
         ghost: GhostBasic,
         spacMan: SpacManWithLife,
