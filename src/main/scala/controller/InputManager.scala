@@ -20,6 +20,7 @@ class SwingInputManager(component: JComponent) extends InputManager:
             case KeyEvent.VK_S | KeyEvent.VK_DOWN  => pendingMove = Some(Direction.Down)
             case KeyEvent.VK_D | KeyEvent.VK_RIGHT => pendingMove = Some(Direction.Right)
             case _                                 =>
+
     def processInput(): Option[Direction] =
         pendingMove match
             case Some(dir) =>

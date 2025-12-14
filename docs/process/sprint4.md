@@ -1,13 +1,12 @@
-# Sprint 3
+# Sprint 4
 
 ## Obiettivo
 
-L'obiettivo di questo terzo Sprint è quello di riuscire a presentare la versione completa del gioco, senza le feature opzionali che, in caso, saranno svilippate nel quarto sprint.
+L'obiettivo di questo quarto Sprint è di perfezionare il codice per renderlo il più facilmente estendibile e comprensibile. Inoltre si cercherà di aggiungere delle feature opzionali a seconda del tempo rimanente e delle priorità dello stakeholder.
 
 ## Deadline
-Visti i numerosi impegni degli sviluppatori si è deciso di aumentare la durata di questo sprint a 2 settimane.
 
-La scadenza dello sprint è il 30/11/2025.
+La scadenza dello sprint è il 14/12/2025.
 
 ## Backlog
 
@@ -23,6 +22,7 @@ La scadenza dello sprint è il 30/11/2025.
       <th>Stima Sprint 1</th>
       <th>Stima Sprint 2</th>
       <th>Stima Sprint 3</th>
+      <th>Stima Sprint 4</th>
     </tr>
   </thead>
   <tbody>
@@ -36,11 +36,13 @@ La scadenza dello sprint è il 30/11/2025.
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Studio dell'architettura</td>
       <td>Marco e Francesco</td>
       <td>4</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -52,6 +54,7 @@ La scadenza dello sprint è il 30/11/2025.
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
         <td>Setup documentazione</td>
@@ -60,11 +63,13 @@ La scadenza dello sprint è il 30/11/2025.
         <td>0</td>
         <td>0</td>
         <td>0</td>
+        <td>0</td>
     </tr>
     <tr>
         <td>Setup progetto Scala</td>
         <td>Marco</td>
         <td>1</td>
+        <td>0</td>
         <td>0</td>
         <td>0</td>
         <td>0</td>
@@ -79,11 +84,13 @@ La scadenza dello sprint è il 30/11/2025.
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Implementazione posizione e direzione</td>
       <td>Marco</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -95,6 +102,7 @@ La scadenza dello sprint è il 30/11/2025.
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Input utente</td>
@@ -103,12 +111,14 @@ La scadenza dello sprint è il 30/11/2025.
       <td>3</td>
       <td>3</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>DSL mappa</td>
       <td>Marco</td>
       <td>8</td>
       <td>3</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -122,12 +132,14 @@ La scadenza dello sprint è il 30/11/2025.
       <td>1</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
         <td>Creazione logica di movimento semplice</td>
         <td>Marco</td>
         <td>3</td>
         <td>3</td>
+        <td>0</td>
         <td>0</td>
         <td>0</td>
     </tr>
@@ -141,6 +153,7 @@ La scadenza dello sprint è il 30/11/2025.
       <td>4</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Gestione delle collisioni</td>
@@ -149,12 +162,14 @@ La scadenza dello sprint è il 30/11/2025.
       <td>4</td>
       <td>3</td>
       <td>0</td>
+      <td>0</td>
     </tr>
       <tr>
       <td>Creazione dei tunnel</td>
       <td>Marco</td>
       <td>3</td>
       <td>3</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -168,6 +183,7 @@ La scadenza dello sprint è il 30/11/2025.
       <td>1</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td rowspan="2">6</td>
@@ -179,12 +195,14 @@ La scadenza dello sprint è il 30/11/2025.
       <td>10</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Creazione di un game loop</td>
       <td>Marco</td>
       <td>3</td>
       <td>3</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -198,6 +216,7 @@ La scadenza dello sprint è il 30/11/2025.
       <td>4</td>
       <td>3</td>
       <td>2</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>Documentazione</td>
@@ -206,6 +225,7 @@ La scadenza dello sprint è il 30/11/2025.
       <td>4</td>
       <td>3</td>
       <td>3</td>
+      <td>0</td>
     </tr>
     <tr>
       <td rowspan="1">8</td>
@@ -216,6 +236,7 @@ La scadenza dello sprint è il 30/11/2025.
       <td>6</td>
       <td>6</td>
       <td>6</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -228,6 +249,7 @@ La scadenza dello sprint è il 30/11/2025.
       <td>8</td>
       <td>8</td>
       <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
         <td>Visualizzazione pagina iniziale</td>
@@ -236,6 +258,7 @@ La scadenza dello sprint è il 30/11/2025.
         <td>3</td>
         <td>3</td>
         <td>0</td>
+        <td>0</td>
     </tr>
         <tr>
         <td>Schermata vincita/perdita</td>
@@ -243,6 +266,7 @@ La scadenza dello sprint è il 30/11/2025.
         <td>2</td>
         <td>2</td>
         <td>2</td>
+        <td>0</td>
         <td>0</td>
     </tr>
     <tr>
@@ -255,6 +279,7 @@ La scadenza dello sprint è il 30/11/2025.
         <td>0</td>
         <td>5</td>
         <td>3</td>
+        <td>0</td>
     </tr>
     <tr>
         <td>Refactor codice</td>
@@ -262,21 +287,61 @@ La scadenza dello sprint è il 30/11/2025.
         <td>0</td>
         <td>0</td>
         <td>0</td>
+        <td>8</td>
         <td>0</td>
+    </tr>
+    <tr>
+        <td rowspan="4">11</td>
+        <td rowspan="4">Opzionali</td>
+        <td rowspan="4">Come utente, vorrei avere una versione più avanzata del gioco</td>
+        <td>Vite Spacman</td>
+        <td>Marco</td>
+        <td>4</td>
+        <td>4</td>
+        <td>4</td>
+        <td>4</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>Pallino mangia fantasmi</td>
+        <td>Francesco</td>
+        <td>5</td>
+        <td>5</td>
+        <td>5</td>
+        <td>5</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>Fantasmi: logiche di movimento avanzate</td>
+        <td>Francesco</td>
+        <td>5</td>
+        <td>5</td>
+        <td>5</td>
+        <td>5</td>
+        <td>0</td>
+    </tr>
+        <tr>
+        <td>Sistema a livelli con più mappe</td>
+        <td>Marco</td>
+        <td>5</td>
+        <td>5</td>
+        <td>5</td>
+        <td>5</td>
+        <td>5</td>
     </tr>
     </tbody>
 </table>
 
 ## Sprint Review 
-Lo stakeholder e gli sviluppatori sono soddisfatti di questo sprint poichè gli obbiettivi prefissati sono stati raggiunti. È stata presentata, quindi, la versione completa e funzionante del gioco (priva di aggiunte opzionali) ed è stata ritenuta conforme alle aspettative dallo stakeholder.
+Lo stakeholder e gli sviluppatori sono soddisfatti del prodotto finale. È stata presentata la versione completa e funzionante del gioco con alcune funzionalità aggiuntive che hanno migliorato la qualità del gioco.
 
 ## Sprint Retrospective
 
-La suddivisione del lavoro è risultata bilanciata. L'interdipendenza di view e controller ha creato preventivati rallentamenti nello sviluppo del codice, ma la scelta di rendere lo sprint più lungo ha permesso di superare tali difficoltà senza grossi problemi e di raggiungere gli obbiettivi prefissati.
+Il refactor svolto da tutto il team è stato molto importante e necessario. L'aggiunta delle feature opzionali è stata agevole grazie alla predisposizione del codice sviluppato in precedenza.  
 
 ---
 0. [Introduzione](../../README.md)
 1. [Sprint 1](./sprint1.md)
 2. [Sprint 2](./sprint2.md)
 3. [Sprint 3](./sprint3.md)
-4. [**Sprint 4 (next)**](./sprint4.md)
+4. [Sprint 4](./sprint4.md)

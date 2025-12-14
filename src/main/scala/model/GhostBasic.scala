@@ -14,6 +14,14 @@ case class GhostBasic(
     override def withPosAndDir(newPosition: Position2D, newDirection: Direction): GhostBasic =
         copy(position = newPosition, direction = newDirection)
 
+    /**
+     * Returns the next direction for the ghost.
+     *
+     * @param spacManPos the position of the SpacMan
+     * @param spacManDir the direction of the SpacMan
+     * @param gameMap the game map
+     * @return the next direction for the ghost
+     */
     def nextMove(
         spacManPos: Position2D,
         spacManDir: Direction,

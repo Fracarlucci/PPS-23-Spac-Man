@@ -15,7 +15,7 @@ Questa separazione facilita la manutenibilità e l'estensibilità del codice, co
 
 ## Struttura del progetto
 
-<img src="./img/Design_architetturale.png" alt="Struttura del progetto" style="width: 50%; display: block; margin: 0 auto;">
+<img src="./img/Design_architetturale.png" alt="Struttura del progetto" style="width: 40%; display: block; margin: 0 auto;">
 
 <div style="text-align: center;">
 *Struttura del progetto evidenziando Controller (blu); Model (rosso); View (giallo)*
@@ -48,5 +48,7 @@ Come da pattern MVC, la struttura del progetto è divisa in 3 moduli principali:
 3. [Design architetturale](3-architettura.md)
 4. [**Design di dettaglio (next)**](4-design-dettaglio.md)
 5. [Implementazione](5-implementazione.md)
+    - [Francesco Carlucci](./implementazione/carlucci.md)
+    - [Marco Raggini](./implementazione/raggini.md)
 6. [Testing](6-testing.md)
 7. [Retrospettiva](7-retrospettiva.md)

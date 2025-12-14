@@ -24,10 +24,15 @@ trait GameManager:
     def isWin(): Boolean
     def isGameOver(): Boolean
     def isChaseMode: Boolean
-    def moveSpacMan(dir: Direction): GameState
-    def moveGhosts(): GameState
-    def updateChaseTime(deltaTime: Long): GameState
+    def moveSpacMan(dir: Direction): Unit
+    def moveGhosts(): Unit
+    def updateChaseTime(deltaTime: Long): Unit
 
+/**
+  * Game manager implementation.
+  *
+  * @param state The current game state.
+  */
 class SimpleGameManager(private var state: GameState) extends GameManager:
 
     def getState: GameState = state
@@ -38,12 +43,20 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
 
     override def isChaseMode: Boolean = state.isChaseMode
 
-    override def updateChaseTime(deltaTime: Long): GameState =
+    /**
+     * Updates the chase time remaining.
+     */
+    override def updateChaseTime(deltaTime: Long): Unit =
         state = state.updateChaseTime(deltaTime)
-        state
 
-    override def moveGhosts(): GameState =
+    /**
+     * Moves all ghosts in the game.
+     */
+    override def moveGhosts(): Unit =
 
+        /**
+         * Attempts to move a ghost to the next position.
+         */
         def attemptMove(
             ghost: GhostBasic,
             currentMap: GameMap,
@@ -54,22 +67,24 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
               currentSpacMan.direction,
               currentMap
             )
-
-            Option.when(currentMap.canMove(ghost, nextDirection)) {
+            Option.when(currentMap.canMove(ghost, nextDirection)):
                 ghost.move(nextDirection).asInstanceOf[GhostBasic]
-            }
 
+        /**
+         * Applies a move to a ghost.
+         */
         def applyMove(ghost: GhostBasic, movedGhost: GhostBasic, currentMap: GameMap): GameMap =
             currentMap.replaceEntityTo(ghost, movedGhost) match
-                case Right(updatedMap) =>
-                    updatedMap
+                case Right(updatedMap) => updatedMap
                 case Left(error) =>
                     println(s"Warning: Could not move ghost ${ghost.id} - $error")
                     currentMap
 
-        // Move all ghosts
+        /**
+         * Moves all ghosts in the game.
+         */
         val (updatedMap, movedGhosts) =
-            state.gameMap.getGhosts.foldLeft((state.gameMap, List.empty[GhostBasic])) {
+            state.gameMap.getGhosts.foldLeft((state.gameMap, List.empty[GhostBasic])):
                 case ((currentMap, ghosts), ghost) =>
                     attemptMove(ghost, currentMap, state.spacMan) match
                         case Some(movedGhost) =>
@@ -77,45 +92,45 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
                             (newMap, movedGhost :: ghosts)
                         case None =>
                             (currentMap, ghost :: ghosts)
-            }
 
-        // Check collisions for all moved ghosts
+        /**
+         * Checks collisions for all moved ghosts.
+         */
         val finalState =
-            movedGhosts.foldLeft(state.copy(gameMap = updatedMap)) { (currentState, ghost) =>
+            movedGhosts.foldLeft(state.copy(gameMap = updatedMap)): (currentState, ghost) =>
                 CollisionsManager
                     .checkGhostCollision(
                       ghost,
                       currentState.spacMan,
                       currentState.gameMap,
                       currentState.isChaseMode,
-                      () => ()
+                      () => {}
                     )
-                    .map { (newMap, newSpacMan) =>
+                    .map: (newMap, newSpacMan) =>
                         val gameOver = newSpacMan.lives <= 0
                         currentState.copy(
                           gameMap = newMap,
                           spacMan = newSpacMan,
                           gameOver = gameOver
                         )
-                    }
                     .getOrElse(currentState)
-            }
 
         state = finalState
-        state
 
-    override def moveSpacMan(direction: Direction): GameState =
+    /**
+     * Moves the SpacMan in the given direction.
+     */
+    override def moveSpacMan(direction: Direction): Unit =
         if !state.gameMap.canMove(state.spacMan, direction) then
-            return state
+            return
 
         val movedSpacMan = state.spacMan.move(direction).asInstanceOf[SpacManWithLife]
 
         val updatedMapAfterMove = state.gameMap.replaceEntityTo(state.spacMan, movedSpacMan) match
-            case Right(updatedMap) =>
-                updatedMap
+            case Right(updatedMap) => updatedMap
             case Left(error) =>
                 println(s"Warning: Could not move SpacMan - $error")
-                return state
+                return
 
         val entities = updatedMapAfterMove
             .entityAt(movedSpacMan.position)
@@ -137,19 +152,18 @@ class SimpleGameManager(private var state: GameState) extends GameManager:
               delta => chaseTimeDelta += delta,
               () => gameOverFlag = true
             )
-            .map { (finalMap, finalSpacMan) =>
+            .map: (finalMap, finalSpacMan) =>
                 state.copy(
                   gameMap = finalMap,
                   spacMan = finalSpacMan,
                   chaseTimeRemaining = state.chaseTimeRemaining + chaseTimeDelta,
                   gameOver = gameOverFlag || finalSpacMan.lives <= 0
                 )
-            }
             .getOrElse(state.copy(gameMap = updatedMapAfterMove, spacMan = movedSpacMan))
 
         state = finalState
-        state
 
+/** Companion object for SimpleGameManager. */
 object SimpleGameManager:
     def apply(
         spacMan: SpacManWithLife,

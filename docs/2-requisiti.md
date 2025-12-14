@@ -115,5 +115,7 @@ Il dominio del progetto si basa sui seguenti elementi principali:
 3. [**Design architetturale (next)**](3-architettura.md)
 4. [Design di dettaglio](4-design-dettaglio.md)
 5. [Implementazione](5-implementazione.md)
+    - [Francesco Carlucci](./implementazione/carlucci.md)
+    - [Marco Raggini](./implementazione/raggini.md)
 6. [Testing](6-testing.md)
 7. [Retrospettiva](7-retrospettiva.md)
