@@ -132,6 +132,16 @@ object WallBuilder:
       case BuildDirection.Complex    => createComplexWall(startPos, endPos)
       case BuildDirection.Single     => Set(Wall(startPos))
 ```
+Per ogni metodo di creazione di muri sono stati utilizzati i **for-comprehension**.
+```scala
+private def createComplexWall(startPos: Position2D, endPos: Position2D): Set[Wall] =
+    val (x1, x2) = orderPosition(startPos.x, endPos.x)
+    val (y1, y2) = orderPosition(startPos.y, endPos.y)
+    (for
+        x <- x1 to x2
+        y <- y1 to y2
+    yield Wall(Position2D(x, y))).toSet
+```
 ### SpacMan
 Per l'implementazione dello SpacMan ho deciso di utilizzare un approccio basato su mixin, al fine di comporre l’entità di gioco combinando diversi comportamenti. Questa scelta consente di:
 - separare le responsabilità (in questo caso movimento, vite e punteggio)
@@ -188,17 +198,10 @@ state match
             gameManager.moveGhosts()
             leatestGhostMove = now
         if isTimeToMove(now, lastPacmanMove, spacmanDelay) then
-            val directionToMove = inputManager.processInput() match
-                case Some(dir) => dir
-                case None      => gameManager.getSpacMan.direction
-            gameManager.moveSpacManAndCheck(directionToMove)
+            val directionToMove = calculateSpacManDirection()
+            gameManager.moveSpacMan(directionToMove)
             leatestSpacManMove = now
-            Swing.onEDT:
-                view.update(
-                    gameManager.getGameMap,
-                    gameManager.getSpacMan.lives,
-                    gameManager.getSpacMan.score
-                )
+            updateView()
         Thread.sleep(50)
         val newState = checkGameState(gameManager)
         loop(newState, leatestGhostMove, leatestSpacManMove, now)
