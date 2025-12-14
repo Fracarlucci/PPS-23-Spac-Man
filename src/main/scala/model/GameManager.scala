@@ -2,14 +2,15 @@ package model
 
 import model.map.GameMap
 import scala.annotation.tailrec
+import model.CollisionsManager
 
 trait GameManager:
     def getGameMap: GameMap
     def getSpacMan: SpacManWithLife
     def isWin(): Boolean
     def isGameOver(): Boolean
-    def moveSpacManAndCheck(newDirection: Direction): Option[SpacManWithLife]
-    def moveGhosts(): Set[GhostBasic]
+    def moveSpacMan(dir: Direction): Unit
+    def moveGhosts(): Unit
     def isChaseMode: Boolean
     def updateChaseTime(deltaTime: Long): Unit
 
@@ -20,7 +21,8 @@ case class SimpleGameManager(
     private var _chaseTimeRemaining: Long = 0
 ) extends GameManager:
 
-    def getSpacMan: SpacManWithLife = _spacMan
+    val collisionsManager: CollisionsManager = SimpleCollisionsManager(this)
+    def getSpacMan: SpacManWithLife          = _spacMan
 
     def getGameMap: GameMap = _gameMap
 
@@ -34,121 +36,78 @@ case class SimpleGameManager(
         if _chaseTimeRemaining > 0 then
             _chaseTimeRemaining = Math.max(0, _chaseTimeRemaining - deltaTime)
 
-    override def moveGhosts(): Set[GhostBasic] =
+    override def moveGhosts(): Unit =
 
         def attemptMove(ghost: GhostBasic): Option[GhostBasic] =
             val nextDirection = ghost.nextMove(
-                _spacMan.position,
-                _spacMan.direction,
-                _gameMap
+              _spacMan.position,
+              _spacMan.direction,
+              _gameMap
             )
-            
+
             Option.when(_gameMap.canMove(ghost, nextDirection)) {
                 ghost.move(nextDirection).asInstanceOf[GhostBasic]
             }
-        
+
         def applyMove(ghost: GhostBasic, movedGhost: GhostBasic): GhostBasic =
             _gameMap.replaceEntityTo(ghost, movedGhost) match
-            case Right(updatedMap) =>
-                _gameMap = updatedMap
-                movedGhost
-            case Left(error) =>
-                println(s"Warning: Could not move ghost ${ghost.id} - $error")
-                ghost
-        
+                case Right(updatedMap) =>
+                    _gameMap = updatedMap
+                    movedGhost
+                case Left(error) =>
+                    println(s"Warning: Could not move ghost ${ghost.id} - $error")
+                    ghost
+
         val movedGhosts = _gameMap.getGhosts.map { ghost =>
             attemptMove(ghost)
                 .map(applyMove(ghost, _))
                 .getOrElse(ghost)
         }
-        
+
         movedGhosts.foreach(checkCollisionWithGhost)
-        movedGhosts
 
-    private def moveSpacMan(newDirection: Direction): SpacManWithLife =
-        if !_gameMap.canMove(_spacMan, newDirection) then
-            _spacMan
+    override def moveSpacMan(dir: Direction): Unit =
+        if !_gameMap.canMove(_spacMan, dir) then
+            return
         
-        else
-            val movedSpacMan = _spacMan.move(newDirection).asInstanceOf[SpacManWithLife]
-            
-            _gameMap.replaceEntityTo(_spacMan, movedSpacMan) match
-                case Right(updatedMap) =>
-                    _gameMap = updatedMap
-                    _spacMan = movedSpacMan
-                    movedSpacMan
-                case Left(error) =>
-                    println(s"Warning: Could not move SpacMan - $error")
-                    _spacMan
-
-    private enum CollisionResult:
-        case GhostCollision(ghost: GhostBasic)
-        case DotBasicCollision(dot: DotBasic)
-        case DotPowerCollision(dot: DotPower)
-        case DotFruitCollision(fruit: DotFruit)
-        case TunnelCollision(tunnel: Tunnel)
-        case NoCollision
-
-    private def detectCollision(
-        entities: Set[GameEntity],
-        direction: Direction
-    ): CollisionResult =
-        import CollisionResult.*
-        entities.collectFirst { case ghost: GhostBasic =>
-            GhostCollision(ghost)
-        }.orElse(
-            entities.collectFirst { case fruit: DotFruit =>
-                DotFruitCollision(fruit)
-            }
-        ).orElse(
-            entities.collectFirst { case dot: DotPower =>
-                DotPowerCollision(dot)
-            }
-        ).orElse(
-            entities.collectFirst { case dot: DotBasic =>
-                DotBasicCollision(dot)
-            }
-        ).orElse(
-            entities.collectFirst {
-                case tunnel: Tunnel if tunnel.canTeleport(direction) =>
-                    TunnelCollision(tunnel)
-            }
-        ).getOrElse(NoCollision)
+        val movedSpacMan = _spacMan.move(dir).asInstanceOf[SpacManWithLife]
+        
+        _gameMap.replaceEntityTo(_spacMan, movedSpacMan) match
+            case Right(updatedMap) =>
+                _gameMap = updatedMap
+                _spacMan = movedSpacMan
+                checkCollisions(movedSpacMan, dir)
+            case Left(error) =>
+                println(s"Warning: Could not move SpacMan - $error")
 
     private def applyCollisionEffect(
-        spacMan: SpacManWithLife,
-        collision: CollisionResult
-    ): Option[SpacManWithLife] =
-        import CollisionResult.*
+        collision: CollisionType
+    ): Unit =
+        import CollisionType.*
         collision match
             case GhostCollision(ghost) =>
                 handleGhostCollision(ghost)
-                if isChaseMode then Some(_spacMan) else None
+                // if isChaseMode then Some(_spacMan) else None
             case DotBasicCollision(dot) =>
                 _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
                 _spacMan = _spacMan.addScore(dot.score)
-                Some(_spacMan)
             case DotPowerCollision(dot) =>
                 _gameMap = _gameMap.remove(dot).getOrElse(_gameMap)
                 _spacMan = _spacMan.addScore(dot.score)
                 _chaseTimeRemaining = 10000
-                Some(_spacMan)
             case DotFruitCollision(fruit) =>
                 _gameMap = _gameMap.remove(fruit).getOrElse(_gameMap)
                 _spacMan = _spacMan.addScore(fruit.score).addLife()
-                Some(_spacMan)
             case TunnelCollision(tunnel) =>
-                val teleportedSpacMan = spacMan.teleport(tunnel.toPos).asInstanceOf[SpacManWithLife]
-                _gameMap.replaceEntityTo(spacMan, teleportedSpacMan) match
+                val teleportedSpacMan =
+                    _spacMan.teleport(tunnel.toPos).asInstanceOf[SpacManWithLife]
+                _gameMap.replaceEntityTo(_spacMan, teleportedSpacMan) match
                     case Right(updatedMap) =>
                         _gameMap = updatedMap
                         _spacMan = teleportedSpacMan
-                        Some(_spacMan)
                     case Left(err) =>
                         println(s"Error teleporting SpacMan: $err")
-                        None
             case NoCollision =>
-                Some(_spacMan)
 
     private def getRandomSpawnPosition(): Position2D =
         val spawnPoints = _gameMap.ghostSpawnPoints.toSeq
@@ -162,7 +121,6 @@ case class SimpleGameManager(
 
     private def handleGhostCollision(ghost: GhostBasic): Unit =
         if isChaseMode then
-            _spacMan = _spacMan.addScore(ghost.score)
             val randomSpawnPos  = getRandomSpawnPosition()
             val teleportedGhost = ghost.teleport(randomSpawnPos).asInstanceOf[GhostBasic]
             _gameMap.replaceEntityTo(ghost, teleportedGhost) match
@@ -197,11 +155,9 @@ case class SimpleGameManager(
     private def checkCollisions(
         spacMan: SpacManWithLife,
         direction: Direction
-    ): Option[SpacManWithLife] =
-        _gameMap.entityAt(spacMan.position).toOption
-            .map(entities => detectCollision(entities, direction))
-            .map(collision => applyCollisionEffect(spacMan, collision))
-            .getOrElse(Some(_spacMan))
-
-    def moveSpacManAndCheck(dir: Direction): Option[SpacManWithLife] =
-        checkCollisions(moveSpacMan(dir), dir)
+    ): Unit =
+        _gameMap.entityAt(spacMan.position).toOption match
+            case Some(entities) =>
+                collisionsManager.detectCollision(entities, direction) match
+                    case collision => applyCollisionEffect(collision)
+            case None => ()
