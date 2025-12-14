@@ -32,6 +32,8 @@ Funzionalità addizionali, nel caso avanzi del tempo:
 3. [Design architetturale](docs/3-architettura.md)
 4. [Design di dettaglio](docs/4-design-dettaglio.md)
 5. [Implementazione](docs/5-implementazione.md)
+    - [Francesco Carlucci](./docs/implementazione/carlucci.md)
+    - [Marco Raggini](./docs/implementazione/raggini.md)
 6. [Testing](docs/6-testing.md)
 7. [Retrospettiva](docs/7-retrospettiva.md)
 

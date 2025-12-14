@@ -217,3 +217,17 @@ Come già accennato nella sezione precedente, i test sono stati fondamentali per
 È stato posto un impegno significativo nel raggiungere una percentuale di **code coverage** di almeno il **90%** per le classi appartenenti al model. Questo approccio ha permesso di individuare la maggior parte degli errori nelle prime fasi dell’implementazione e di garantire una maggiore stabilità del sistema anche in presenza di piccoli cambiamenti al codice.
 
 Il **DSL** è stato ampiamente utilizzato per il testing della mappa e, sebbene non riduca in modo significativo il numero di righe di codice, ha consentito una maggiore velocità di scrittura dei test e una migliore leggibilità degli stessi.
+
+---
+
+0. [Introduzione](../../README.md)
+1. [Processo di sviluppo](../1-processo.md)
+2. [Requisiti](../2-requisiti.md)
+3. [Design architetturale](../3-architettura.md)
+4. [Design di dettaglio](../4-design-dettaglio.md)
+5. [Implementazione](../5-implementazione.md)
+    - [Francesco Carlucci *(prev*)](./carlucci.md)
+    - [Marco Raggini](./raggini.md)
+6. [**Testing (next)**](../6-testing.md)
+7. [Retrospettiva](../7-retrospettiva.md)
+

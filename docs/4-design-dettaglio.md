@@ -56,11 +56,15 @@ GridMapper: Utilizzato per convertire le coordinate fisiche (pixel) in coordinat
 
 <img src="./img/View.png" alt="Diagramma della View" style="width: 100%; display: block; margin: 0 auto;">
 
+---
+
 0. [Introduzione](../README.md)
 1. [Processo di sviluppo](1-processo.md)
 2. [Requisiti](2-requisiti.md)
 3. [Design architetturale *(prev)*](3-architettura.md)
 4. [Design di dettaglio](4-design-dettaglio.md)
 5. [**Implementazione (next)**](5-implementazione.md)
+    - [Francesco Carlucci](./implementazione/carlucci.md)
+    - [Marco Raggini](./implementazione/raggini.md)
 6. [Testing](6-testing.md)
 7. [Retrospettiva](7-retrospettiva.md)

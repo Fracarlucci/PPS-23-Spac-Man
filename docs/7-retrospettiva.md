@@ -18,11 +18,15 @@ In conclusione, il progetto ha rappresentato un'ottima opportunità per mettere 
 
 L'utilizzo dell'approccio TDD, pur non essendo stato applicato in maniera completamente rigorosa, ha contribuito a migliorare la correttezza del codice, a velocizzare il processo di sviluppo e a individuare più rapidamente eventuali errori.
 
+---
+
 0. [Introduzione](../README.md)
 1. [Processo di sviluppo](1-processo.md)
 2. [Requisiti](2-requisiti.md)
 3. [Design architetturale](3-architettura.md)
 4. [Design di dettaglio](4-design-dettaglio.md)
 5. [Implementazione](5-implementazione.md)
+    - [Francesco Carlucci](./implementazione/carlucci.md)
+    - [Marco Raggini](./implementazione/raggini.md)
 6. [Testing *(prev)*](6-testing.md)
 7. [Retrospettiva](7-retrospettiva.md)
