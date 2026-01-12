@@ -64,12 +64,8 @@ Le startegie di comportamento implementate sono:
 
 ### Input Manager
 
-Responsabilità: Validare e interpretare l'input grezzo dell'utente
-Componenti:
-InputSystem: Riceve le coordinate grezze del mouse click dalla GameView (inoltrate tramite ViewController e GameController)
-InputProcessor: Contiene la logica per verificare se un click (MouseClick) ricade all'interno dell'area valida della griglia (isInGridArea)
-ClickResult: case class che rappresenta l'esito della validazione dell'input (posizione valida/invalida, eventuale messaggio di errore)
-GridMapper: Utilizzato per convertire le coordinate fisiche (pixel) in coordinate logiche (riga/colonna) se il click è valido. L'EventHandler riceverà poi un GridClicked event con le coordinate logiche
+L'`InputManager` si occupa di interpretare l'input da tastiera dell'utente per convertirlo in direzioni valide da fornire al `GameController`.
+Il metodo `processInput` restituisce l’ultima direzione richiesta e, allo stesso tempo, resetta lo stato interno, assicurando che ogni input venga consumato una sola volta.
 
 ## View
 

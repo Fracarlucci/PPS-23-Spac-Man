@@ -176,7 +176,7 @@ Gli elementi di Scala più rilevanti utilizzati sono:
     ```
 
 - companion object come registry per i comportamenti dei fantasmi, espandibile e centralizzato:
-    ```
+    ```scala
     object GhostBehavior:
         private val behaviorRegistry: Map[Int, GhostBehavior] = Map(
             1 -> ChaseBehavior,

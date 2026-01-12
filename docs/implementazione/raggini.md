@@ -25,16 +25,16 @@ Tra gli aspetti rilevanti:
 - **Uso di Either per la gestione degli errori**: l'utilizzo degli `Either` viene dall'esigenza di gestire gli errori che potrebbero esserci durante l'utilizzo dei metodi della mappa, se non gestiti, questi errori possono portare ad eccezioni. Usando gli `Either` viene forzata la gestione degli errori evitando malfunzionamenti dell'applicazione.
 - **GameMapFactory**: per la creazione di mappe vuote creando già la griglia. 
 
-```scala
-// Esempio di uso di pattern matching con Either
-override def remove(entity: GameEntity): Either[String, GameMap] =
-    grid.get(entity.position) match
-        case Some(entities) => entities.contains(entity) match
-                case true =>
-                    Right(copy(grid = grid.updated(entity.position, entities - entity)))
-                case false => Left("No entity found")
-        case None => Left("Invalid position" + entity.position)
-```
+    ```scala
+    // Esempio di uso di pattern matching con Either
+    override def remove(entity: GameEntity): Either[String, GameMap] =
+        grid.get(entity.position) match
+            case Some(entities) => entities.contains(entity) match
+                    case true =>
+                        Right(copy(grid = grid.updated(entity.position, entities - entity)))
+                    case false => Left("No entity found")
+            case None => Left("Invalid position" + entity.position)
+    ```
 
 ### DSL
 Il **DSL** proposto ha come obbiettivo quello di rendere il codice per la creazione della mappa molto più leggibile e al tempo stesso che facilitasse la creazione di entità da inserire nella mappa.
@@ -43,43 +43,52 @@ Si è voluto dare particolare enfasi nel creare un DSL che a prima vista non sem
 Le azioni possibili sono tre:
 
 - `place the`: permette di piazzare nella mappa oggetti già creati in precedenza, alcuni oggetti come ad esempio lo SpacMan molto spesso sono già creati in precedenza per via delle variabili che si possono settare al suo interno ed anche perché si vuole mantenere un riferimento ad esso. In questo caso non conviene creare semplicemente piazzare l'entità prendendo il riferimento all'oggetto.
-```scala
-// esempio di 'place the'
-val dsl    = MapDSL(board(5, 5))
-val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
-import dsl.*
-place the pacMan
-```
+
+    ```scala
+    // esempio di 'place the'
+    val dsl    = MapDSL(board(5, 5))
+    val pacMan = SpacManBasic(Position2D(3, 1), Direction.Right, 0)
+    import dsl.*
+    place the pacMan
+    ```
+
 - `place multiple`: la funzione è simile alla precedente, ma questa volta è permesso il piazzamento di più entità contemporaneamente. Anche in questo caso si tratta di piazzare oggetti già creati in precedenza, può tornare utile, ad esempio, per piazzare dei fantasmi.
-```scala
-// esempio di 'place multiple'
-val dsl    = MapDSL(map)
-val ghost1 = GhostBasic(Position2D(5, 1), Direction.Right, 1.0, 1)
-val ghost2 = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
-val ghost3 = GhostBasic(Position2D(3, 1), Direction.Right, 1.0, 1)
-val ghosts = Set(ghost1, ghost2, ghost3)
 
-import dsl.*
+    ```scala
+    // esempio di 'place multiple'
+    val dsl    = MapDSL(map)
+    val ghost1 = GhostBasic(Position2D(5, 1), Direction.Right, 1.0, 1)
+    val ghost2 = GhostBasic(Position2D(4, 1), Direction.Right, 1.0, 1)
+    val ghost3 = GhostBasic(Position2D(3, 1), Direction.Right, 1.0, 1)
+    val ghosts = Set(ghost1, ghost2, ghost3)
 
-place multiple ghosts
-// oppure anche 
-place multiple Set(ghost1, ghost2, ghost3)
-```
+    import dsl.*
+
+    place multiple ghosts
+    // oppure anche 
+    place multiple Set(ghost1, ghost2, ghost3)
+    ```
+
 - `place a genericEntity at position x`: questo metodo è stato pensato per tutte le entità in cui non c'è bisogno di una creazione precedente dell'oggetto e in cui il riferimento nella mappa è sufficiente. In questo modo attraverso questo metodo è possibile creare l'entità e piazzarla nello stesso momento. Per fare ciò è stato creato un enum che memorizza il tipo dell'entità, che poi verrà utilizzato dal DSL per la creazione dell'entità e il successivo piazzamento nella mappa. Per rendere il codice ancora più 'human-like', i casi dell'enum sono stati memorizzati in variabili.
-```scala
-val dsl    = MapDSL(map)
-import dsl.*
-// crea un DotBasic alla posizione (1, 1) e lo piazza nella mappa
-place a genericDot at position(1, 1)
-```
+
+    ```scala
+    val dsl    = MapDSL(map)
+    import dsl.*
+    // crea un DotBasic alla posizione (1, 1) e lo piazza nella mappa
+    place a genericDot at position(1, 1)
+    ```
+
 C'è un'ultima casistica disponibile in questo momento solo per i muri che serve a facilitare la creazione di più muri contemporaneamente ed è la seguente `place a genericWall from position x to position y`:
+
 ```scala
 val dsl    = MapDSL(map)
 import dsl.*
 // crea e piazza i muri: Wall(0, 0), Wall(0, 1), ..., Wall(0, 5)
 place a genericWall from position(0, 0) to position(0, 5)
 ```
+
 ### Creazione mappa senza DSL
+
 ```scala
 val map    = GameMapImpl(30, 30)
 val ghost1 = GhostBasic(Position2D(3, 3), Direction.Down, 1.0, 1)
@@ -100,7 +109,9 @@ map = map.place(dp)
 map = map.place(fruit)
 map = map.placeAll(walls)
 ```
+
 ### Creazione mappa con DSL 
+
 ```scala
 val dsl = MapDSL(board(30, 30))
 val ghost1 = GhostBasic(Position2D(3, 3), Direction.Down, 1.0, 1)
@@ -132,7 +143,9 @@ object WallBuilder:
       case BuildDirection.Complex    => createComplexWall(startPos, endPos)
       case BuildDirection.Single     => Set(Wall(startPos))
 ```
+
 Per ogni metodo di creazione di muri sono stati utilizzati i **for-comprehension**.
+
 ```scala
 private def createComplexWall(startPos: Position2D, endPos: Position2D): Set[Wall] =
     val (x1, x2) = orderPosition(startPos.x, endPos.x)
@@ -142,6 +155,7 @@ private def createComplexWall(startPos: Position2D, endPos: Position2D): Set[Wal
         y <- y1 to y2
     yield Wall(Position2D(x, y))).toSet
 ```
+
 ### SpacMan
 Per l'implementazione dello SpacMan ho deciso di utilizzare un approccio basato su mixin, al fine di comporre l’entità di gioco combinando diversi comportamenti. Questa scelta consente di:
 - separare le responsabilità (in questo caso movimento, vite e punteggio)
@@ -149,6 +163,7 @@ Per l'implementazione dello SpacMan ho deciso di utilizzare un approccio basato 
 - classi e trait facilmente manutenibili ed estendibili
 
 In questo caso i trait implementati sono `Life` e `Score`, progettati in modo da rendere la classe che li utilizza **immutabile**, restituendo una nuova istanza dell’oggetto a ogni modifica di stato.
+
 ```scala
 trait Life[E <: Life[E]]:
     val lives: Int
@@ -175,6 +190,7 @@ case class SpacManWithLife(
     val lives: Int = DEFAULT_LIVES
 ) extends MovableEntity with Life[SpacManWithLife] with Score[SpacManWithLife]:
 ```
+
 La scelta di utilizzare l’**F-bounded polymorphism** è stata adottata per garantire la type safety.
 In assenza di questo vincolo, un tipo generico `E` non avrebbe garantito che i metodi restituissero il tipo concreto dell’oggetto, rendendo necessari cast espliciti e introducendo il rischio di errori a runtime.
 Il vincolo `E <: Life[E]` (e analogamente per Score) assicura invece che le operazioni restituiscano sempre un’istanza del tipo corretto.
