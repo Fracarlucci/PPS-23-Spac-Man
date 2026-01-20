@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/Fracarlucci/PPS-23-Spac-Man/compare/v1.3.0...v1.3.1) (2026-01-20)
+
+### Bug Fixes
+
+* add tailrec annotation for loop method ([a44a6fd](https://github.com/Fracarlucci/PPS-23-Spac-Man/commit/a44a6fdf86f86346060c211750b4508b7496cf8e))
+
 ## [1.3.0](https://github.com/Fracarlucci/PPS-23-Spac-Man/compare/v1.2.1...v1.3.0) (2025-12-14)
 
 ### Features
