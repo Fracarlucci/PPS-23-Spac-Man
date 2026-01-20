@@ -4,6 +4,7 @@ import model.GameManager
 import view.GameView
 import scala.swing.Swing
 import model.Direction
+import scala.annotation.tailrec
 
 private final val DEFAULT_GHOST_DELAY_MS       = 350
 private final val DEFAULT_GHOST_DELAY_CHASE_MS = 500
@@ -28,7 +29,8 @@ case class GameLoop(gameManager: GameManager, inputManager: InputManager, view: 
       * @param lastUpdateTime Timestamp of the last update
       * @return Final game state when the game ends
       */
-    def loop(
+    @tailrec
+    final def loop(
         state: GameState = GameState.Running,
         lastGhostMove: Long = System.currentTimeMillis(),
         lastPacmanMove: Long = System.currentTimeMillis(),
